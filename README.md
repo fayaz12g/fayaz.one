@@ -1,3 +1,5 @@
-![Improvimania Logo](./improv-client/src/title.png)
+# The FAYAZ.ONE Game Pack, includes the following games:
 
-# A New Game by Fayaz
+![Improvimania Logo](./improv-client/src/image/title.png)
+
+
