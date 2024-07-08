@@ -361,7 +361,7 @@ function App() {
         {!socket ? (
             <div>
                 <div className="animated-title-container">
-                    <AnimatedTitle />
+                    <AnimatedTitle title="fayaz.One" />
                 </div>
                 
                 <div className="centered-image-container">
