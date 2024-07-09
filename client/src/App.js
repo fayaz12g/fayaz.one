@@ -168,6 +168,9 @@ function App() {
                 setRole('player');
                 }
             }
+            else {
+                setRole('host');
+            }
         });
         
 

@@ -44,6 +44,8 @@ function loadScripts() {
 
 io.on('connection', (socket) => {
     const playerId = socket.handshake.query.playerId;
+    console.log('New client connected:', socket.id);
+
     if (socket.id !== playerId) {
         console.log(`Attemping to reconnect ${socket.id} as ${playerId}`);
         for (const shortSessionId in sessions) {
@@ -65,8 +67,6 @@ io.on('connection', (socket) => {
             }
         }
     }
-
-    console.log('New client connected:', socket.id);
 
     // Emit the server version to the client upon connection
     socket.emit('serverVersion', serverVersion); 
