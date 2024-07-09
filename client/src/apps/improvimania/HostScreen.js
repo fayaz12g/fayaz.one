@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import AnimatedTitle from './AnimatedTitle';
-import SoundEffect from '../apps/SoundEffect';
-import finishTheme from '../sound/finish.m4a';
+import AnimatedTitle from '../AnimatedTitle';
+import SoundEffect from '../SoundEffect';
+import finishTheme from '../sound/improvomania/finish.m4a';
 
 const HostScreen = ({
   socket,

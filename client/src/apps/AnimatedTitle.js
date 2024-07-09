@@ -2,10 +2,10 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useSpring, animated, config } from "react-spring";
 import styled, { keyframes } from "styled-components";
 import "./AnimatedStyle.css";
-import eyes from "../image/eyes/eyes.png";
-import eyesLeft from "../image/eyes/eyesleft.png";
-import eyesRight from "../image/eyes/eyesright.png";
-import discoBall from "../image/disco.png";
+import eyes from "../image/improvomania/eyes/eyes.png";
+import eyesLeft from "../image/improvomania/eyes/eyesleft.png";
+import eyesRight from "../image/improvomania/eyes/eyesright.png";
+import discoBall from "../image/improvomania/disco.png";
 
 const bounce = keyframes`
   0%, 20%, 50%, 80%, 100% {

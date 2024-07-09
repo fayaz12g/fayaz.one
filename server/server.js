@@ -7,13 +7,15 @@ const os = require('os');
 
 const app = express();
 
-const options = {
-    key: fs.readFileSync('./privkey.pem'),
-    cert: fs.readFileSync('./fullchain.pem')
-};
-
 const server = http.createServer(app);
-const io = socketIO(server);
+
+// Initialize Socket.IO for the server
+const io = socketIO(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 
 app.use(express.static('build'));
 
@@ -21,9 +23,24 @@ let sessions = {};
 let currentSession = 0;
 let guesses = 0;
 
-// Load scripts from JSON file
-const scripts = JSON.parse(fs.readFileSync('./scripts.json', 'utf8'));
-console.log('Loaded scripts.');
+// Initialize an empty array for scripts
+let scripts = [];
+
+// Initialize the script file name with a default value
+let scriptFileName = 'scripts';
+
+// Function to load scripts from JSON file
+function loadScripts() {
+    try {
+        const filePath = path.join(__dirname, `${scriptFileName}.json`);
+        const data = fs.readFileSync(filePath, 'utf8');
+        scripts = JSON.parse(data);
+        console.log(`Scripts reloaded successfully from ${scriptFileName}.json`);
+    } catch (err) {
+        console.error('Error loading scripts:', err);
+        scripts = []; // Ensure scripts is an empty array if loading fails
+    }
+}
 
 io.on('connection', (socket) => {
     const playerId = socket.handshake.query.playerId;
@@ -57,7 +74,6 @@ io.on('connection', (socket) => {
     // Emit the availale sessions to the client upon connection
     const sessionIds = Object.keys(sessions);
     socket.emit('availableSessions', sessionIds); 
-    console.log(`Sent ${sessionIds} to client`)
 
     // Get the server's IP address
     const networkInterfaces = os.networkInterfaces();
@@ -125,7 +141,7 @@ io.on('connection', (socket) => {
             currentSpeaker: null,
             currentRound: 0,
             rounds: 0,
-            gameMode: 'standard', // 'classic' or 'freeforall'
+            gameMode: 'classic', // 'classic' or 'freeforall'
             originalRoles: {} // Store original roles for freeforall mode
         };
         sessions[shortSessionId].hostSocket = socket.id;
@@ -169,22 +185,26 @@ io.on('connection', (socket) => {
         }
       });
 
-    // Server-side update for the startGame event handler
-    socket.on('startGame', ({ sessionId, rounds, gameMode }) => {
-        console.log(`Starting game for session ${sessionId} with ${rounds} rounds in ${gameMode} mode`);
+      socket.on('startGame', ({ sessionId, rounds, gameMode, scriptFile }) => {
+        console.log(`Starting game for session ${sessionId} with ${rounds} rounds in ${gameMode} mode, using script file: ${scriptFile}`);
         if (sessions[sessionId] && sessions[sessionId].players.length === 4) {
-            sessions[sessionId].rounds = rounds; // Set total rounds
-            sessions[sessionId].currentRound = 0; // Initialize current round to 0
-            sessions[sessionId].gameMode = gameMode; // Set game mode
+            sessions[sessionId].rounds = rounds;
+            sessions[sessionId].currentRound = 0;
+            sessions[sessionId].gameMode = gameMode;
+
+            // Update the script file name if provided
+            if (scriptFile) {
+                scriptFileName = scriptFile;
+                loadScripts(); // Reload scripts with the new file
+            }
             
-            // Emit gameStarted event once at the beginning of the game
             io.to(sessionId).emit('gameStarted', { 
                 rounds: sessions[sessionId].rounds,
                 players: sessions[sessionId].players,
                 gameMode: sessions[sessionId].gameMode
             });
             
-            startRound(sessionId); // Start the first round
+            startRound(sessionId);
         } else {
             console.error(`Cannot start game: not enough players or session not found. Session:`, sessions[sessionId]);
             socket.emit('error', 'Cannot start game: not enough players or session not found');
@@ -260,6 +280,11 @@ function startRound(sessionId) {
     const session = sessions[sessionId];
     session.currentRound++;
     console.log('Beginning round', session.currentRound, '/', session.rounds);
+
+    // Check if scripts array is empty and reload if necessary
+    if (scripts.length === 0) {
+        loadScripts();
+    }
 
     // Check for the previous round's Speaker 1
     let previousSpeaker1 = null;
@@ -412,17 +437,18 @@ function endScene(sessionId) {
 }
 
 const PORT = 3000;
+
 server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
+    logServerAddress(PORT);
+});
 
-    // Log server IP address on startup
+function logServerAddress(port) {
     const networkInterfaces = os.networkInterfaces();
     let serverIpAddress = null;
 
-    // Find the first non-internal IPv4 address
     for (const [interfaceName, interfaceInfo] of Object.entries(networkInterfaces)) {
         for (const iface of interfaceInfo) {
-            // Skip over internal (non-IPv4) and loopback addresses
             if (iface.family === 'IPv4' && !iface.internal && iface.address !== '127.0.0.1') {
                 serverIpAddress = iface.address;
                 break;
@@ -434,8 +460,9 @@ server.listen(PORT, () => {
     }
 
     if (serverIpAddress) {
-        console.log(`Server is hosted at: http://${serverIpAddress}:${PORT}`);
+        console.log(`Server is hosted at: http://${serverIpAddress}:${port}`);
+        console.log(`WebSocket server is available at: ws://${serverIpAddress}:${port}`);
     } else {
         console.warn('Server IP address not found.');
     }
-});
+}

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
-import titleImage from './image/title.png';
-import PlayerScreen from './apps/PlayerScreen';
-import HostScreen from './apps//HostScreen';
-import titleTheme from './sound/theme.m4a';
-import speakingTheme from './sound/speaking.m4a';
-import guessingTheme from './sound/guessing.m4a';
-import finishTheme from './sound/finish.m4a';
+
+// Improvimania Imports
+import titleImage from './image/improvomania/title.png';
+import PlayerScreen from './apps/improvimania/PlayerScreen';
+import HostScreen from './apps/improvimania/HostScreen';
+import titleTheme from './sound/improvomania/theme.m4a';
+import speakingTheme from './sound/improvomania/speaking.m4a';
+import guessingTheme from './sound/improvomania/guessing.m4a';
+import finishTheme from './sound/improvomania/finish.m4a';
+
+// Menu Imports
 import BackgroundMusic from './apps/BackgroundMusic';
 import AnimatedTitle from './apps/AnimatedTitle';
 import SoundEffect from './apps/SoundEffect';
@@ -39,6 +43,7 @@ function App() {
     const [clientVersion] = useState('0.6 Sonic Alpha');
     const [serverVersion, setServerV] = useState('Disconnected');
     let [sessionList, setSessionList] = useState([]);
+    const [selectedScriptFile, setSelectedScriptFile] = useState('scripts');
     const [sessionCreated, setSessionCreated] = useState(() => {
         const storedValue = sessionStorage.getItem('sessionCreated');
         return storedValue === 'true' ? true : false;
@@ -203,28 +208,23 @@ function App() {
         
     }
     const connectToServer = () => {
-        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-
-        const octets = ipAddress.split('.'); // Split the ipAddress into octets
-
+        const octets = ipAddress.split('.');
         let fullIpAddress;
       
         if (octets.length === 1) {
-          // If only one octet
-          fullIpAddress = `192.168.1.${octets[0]}`;
+            fullIpAddress = `192.168.1.${octets[0]}`;
         } else if (octets.length === 2) {
-          // If two octets
-          fullIpAddress = `192.168.${octets[0]}.${octets[1]}`;
+            fullIpAddress = `192.168.${octets[0]}.${octets[1]}`;
         } else {
-          // Fallback for unexpected input
-          fullIpAddress = ipAddress;
+            fullIpAddress = ipAddress;
         }
 
-        const url = `${protocol}://${fullIpAddress}:3000`;
+        const url = `ws://${fullIpAddress}:3000`;
         const newSocket = io(url, {
             transports: ['websocket'],
             query: {playerId: sessionStorage.getItem('playerId')}
         });
+
         setConnectionError(false);
         setConnectionWaiting(true);
 
@@ -235,10 +235,11 @@ function App() {
             setConnectionWaiting(false);
             newSocket.close()
         });
+
         newSocket.on('connect', data => {
-          setSocket(newSocket);
-          setConnectionWaiting(false);
-          sessionStorage.setItem('ipAddress', ipAddress);
+            setSocket(newSocket);
+            setConnectionWaiting(false);
+            sessionStorage.setItem('ipAddress', ipAddress);
         });
         newSocket.on('serverVersion', (version) => {
           setServerV(version);
@@ -269,7 +270,12 @@ function App() {
 
     const startGame = () => {
         if (socket) {
-            socket.emit('startGame', { sessionId, rounds });
+            socket.emit('startGame', { 
+                sessionId, 
+                rounds, 
+                gameMode,
+                scriptFile: selectedScriptFile
+            });
         }
     };
 
