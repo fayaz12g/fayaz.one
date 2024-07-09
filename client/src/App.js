@@ -169,7 +169,7 @@ function App() {
                 }
             }
             else {
-                setRole('host');
+                setRole('host'); // might be a stupid change
             }
         });
         
