@@ -3,13 +3,13 @@ import io from 'socket.io-client';
 import './App.css';
 
 // Improvimania Imports
-import titleImage from './image/improvomania/title.png';
+import titleImage from './image/improvimania/title.png';
 import PlayerScreen from './apps/improvimania/PlayerScreen';
 import HostScreen from './apps/improvimania/HostScreen';
-import titleTheme from './sound/improvomania/theme.m4a';
-import speakingTheme from './sound/improvomania/speaking.m4a';
-import guessingTheme from './sound/improvomania/guessing.m4a';
-import finishTheme from './sound/improvomania/finish.m4a';
+import titleTheme from './sound/improvimania/theme.m4a';
+import speakingTheme from './sound/improvimania/speaking.m4a';
+import guessingTheme from './sound/improvimania/guessing.m4a';
+import finishTheme from './sound/improvimania/finish.m4a';
 
 // Menu Imports
 import BackgroundMusic from './apps/BackgroundMusic';
