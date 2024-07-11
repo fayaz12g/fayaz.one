@@ -24,18 +24,35 @@ const colors = [
   'cyan', 'magenta', 'lime', 'pink', 'teal', 'lavender', 'brown'
 ];
 
+
 const TitleChar = styled(animated.span)`
   display: inline-block;
-  margin: 0 2px;
+  margin: 0 1px;
   font-family: 'Alloy Ink', 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
-  font-size: 4rem;
+  font-size: 3rem;
   color: ${(props) => props.color}; 
-  -webkit-text-stroke: 2px white; 
+  -webkit-text-stroke: 2px white;
   position: relative;
   overflow: hidden; 
   animation: ${(props) => (props.bounce ? bounce : "none")} 1s infinite;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   z-index: 1; 
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    font-size: 4rem;
+  }
+  
+  @media (min-width: 481px) and (max-width: 768px) {
+    font-size: 5rem;
+  }
+  
+  @media (min-width: 769px) and (max-width: 1024px) {
+    font-size: 6rem;
+  }
+  
+  @media (min-width: 1025px) {
+    font-size: 8rem;
+  }
 
   /* Gradient overlay */
   background: ${(props) => props.color};
