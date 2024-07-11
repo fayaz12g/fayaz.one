@@ -77,6 +77,7 @@ const PlayerScreen = ({
             </>
         ) : !gameStarted ? (
           <div>
+            <div className="App">
             <h2>Welcome, {playerName}</h2>
             <h3>Joined Session: {sessionId}</h3>
             <h4>Players:</h4>
@@ -91,11 +92,14 @@ const PlayerScreen = ({
                 : "Waiting for 4 players..."}
             </p>
           </div>
+          </div>
         ) : (
           <div>
+           
             {playerRole && playerRole.startsWith('Speaker 1') && (
               <>
-                <h3>Guess the Adlibber!</h3>
+               <div className="App">
+                <h3>Your Role: Adlibber</h3>
                 {isEndScene ? (
                   <div>Try to blend in, make it look like you're picking someone!</div>
                 ) : (
@@ -108,13 +112,17 @@ const PlayerScreen = ({
                     )}
                     {isSpeaker && <button onClick={nextLine}>Next</button>}
                   </>
+                  
                 )}
+                </div>
               </>
             )}
+           
             {playerRole &&
               (playerRole.startsWith('Speaker 2') ||
                 playerRole.startsWith('Speaker 3')) && (
                 <>
+                  <div className="App">
                   <h3>Your Role: Speaker</h3>
                   {isEndScene ? (
                     <div>END SCENE</div>
@@ -126,7 +134,7 @@ const PlayerScreen = ({
                       </div>
                       )}
                       <div>
-                        {currentLine?.text}
+                      <b>{currentLine?.text}</b>
                       </div>
                       {/* {isSpeaker && (
                         <p className="smalltext">(Read your line!)</p>
@@ -134,11 +142,13 @@ const PlayerScreen = ({
                       {isSpeaker && <button onClick={nextLine}>Next</button>}
                     </>
                   )}
+                  </div>
                 </>
               )}
             {playerRole === 'Guesser' &&
               (isEndScene ? (
                 <div>
+                    <div className="App">
                     <h3>Guess the Adlibber!</h3>
                     {!sentGuess && <p>Choose the person you think was making up their lines:</p>}
                     {sentGuess && <p>Your guess was sent.</p>}
@@ -154,11 +164,14 @@ const PlayerScreen = ({
                         )
                     ))}
                 </div>
+                </div>
               ) : (
                 <div>
+                   <div className="App">
                   <h3>Your Role: Guesser</h3>
                   <p>Listen carefully and try to guess the adlibber!</p>
-                  <p>{currentLine?.text}</p>
+                  <b>{currentLine?.text}</b>
+                </div>
                 </div>
               ))}
           </div>
@@ -166,6 +179,7 @@ const PlayerScreen = ({
       </div>
     ) : (
       <div>
+        <div className="App">
         <SoundEffect audioSrc={finishTheme}/>
         <h3>Game Results</h3>
         <ul>
@@ -175,6 +189,7 @@ const PlayerScreen = ({
             </li>
           ))}
         </ul>
+      </div>
       </div>
     )}
   </div>

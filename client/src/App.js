@@ -346,7 +346,7 @@ function App() {
     );
 
   return (
-    <div className="App">
+    <div>
     {/* Background music components */}
     <BackgroundMusic audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
     {/* <BackgroundMusic audioSrc={finishTheme} loopStart={0} loopEnd={8} isPlaying={isEndGame}/> */}
@@ -357,6 +357,7 @@ function App() {
     {/* Main content */}
     <div className="main-content">
         {!socket ? (
+            <div className="App">
             <div>
                 <div className="animated-title-container">
                     <AnimatedTitle title="fayaz.One" />
@@ -374,6 +375,7 @@ function App() {
                 {!connectionWaiting && !kicked && <button onClick={connectToServer}>Connect</button>}
                 {connectionWaiting && <h2>Attempting connection, please wait.</h2>}
                 {connectionError && <p style={{ color: 'red' }}>Connection failed. Please check the IP address and try again.</p>}
+            </div>
             </div>
         ) : !role ? (
             <div>
