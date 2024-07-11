@@ -28,9 +28,9 @@ const TitleChar = styled(animated.span)`
   display: inline-block;
   margin: 0 2px;
   font-family: 'Alloy Ink', 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
-  font-size: 6rem;
+  font-size: 4rem;
   color: ${(props) => props.color}; 
-  -webkit-text-stroke: 4px white; 
+  -webkit-text-stroke: 2px white; 
   position: relative;
   overflow: hidden; 
   animation: ${(props) => (props.bounce ? bounce : "none")} 1s infinite;
