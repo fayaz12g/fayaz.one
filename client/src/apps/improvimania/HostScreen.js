@@ -13,7 +13,6 @@ const HostScreen = ({
   players,
   rounds,
   setRounds,
-  startGame,
   currentRound,
   sessionList,
   leaderboard,
@@ -27,6 +26,7 @@ const HostScreen = ({
   setGameMode,
   currentLine,
   isEndGame,
+  scriptFile,
 }) => {
 
   const handleRemovePlayer = (playerToRemove) => {
@@ -59,7 +59,13 @@ const HostScreen = ({
 
   const handleStartGame = () => {
     if (socket) {
-      socket.emit('startGame', { sessionId, rounds, gameMode });
+        console.log(`Starting game with script file: ${scriptFile}`);
+        socket.emit('startGame', { 
+            sessionId, 
+            rounds, 
+            gameMode,
+            scriptFile
+        });
     }
   };
 

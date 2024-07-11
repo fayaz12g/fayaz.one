@@ -271,17 +271,6 @@ function App() {
         }
     };
 
-    const startGame = () => {
-        if (socket) {
-            socket.emit('startGame', { 
-                sessionId, 
-                rounds, 
-                gameMode,
-                scriptFile
-            });
-        }
-    };
-
     const nextLine = () => {
         if (socket) {
             socket.emit('nextLine', { sessionId: sessionId.toUpperCase() });
@@ -311,7 +300,6 @@ function App() {
         players={players}
         rounds={rounds}
         setRounds={setRounds}
-        startGame={startGame}
         currentRound={currentRound}
         sessionList={sessionList}
         leaderboard={leaderboard}
@@ -325,6 +313,7 @@ function App() {
         setGameMode={setGameMode}
         currentLine={currentLine}
         isEndGame={isEndGame}
+        scriptFile={scriptFile}
       />
     );
 

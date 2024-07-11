@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const socketIO = require('socket.io');
 const serverVersion = '0.6 Sonic Alpha';
