@@ -277,7 +277,7 @@ function App() {
                 sessionId, 
                 rounds, 
                 gameMode,
-                scriptFile: selectedScriptFile
+                selectedScriptFile
             });
         }
     };
