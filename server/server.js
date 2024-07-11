@@ -186,7 +186,7 @@ io.on('connection', (socket) => {
       });
 
       socket.on('startGame', ({ sessionId, rounds, gameMode, scriptFile }) => {
-        console.log(`Starting game for session ${sessionId} with ${rounds} rounds in ${gameMode} mode, using script file: ${scriptFile}`);
+        console.log(`Starting game for session ${sessionId} with ${rounds} rounds in ${gameMode} mode, using script file: ${scriptFile}.json`);
         if (sessions[sessionId] && sessions[sessionId].players.length === 4) {
             sessions[sessionId].rounds = rounds;
             sessions[sessionId].currentRound = 0;

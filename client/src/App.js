@@ -43,7 +43,7 @@ function App() {
     const [clientVersion] = useState('0.6 Sonic Alpha');
     const [serverVersion, setServerV] = useState('Disconnected');
     let [sessionList, setSessionList] = useState([]);
-    const [selectedScriptFile, setSelectedScriptFile] = useState('scripts');
+    const [scriptFile, setScriptFile] = useState('scripts');
     const [sessionCreated, setSessionCreated] = useState(() => {
         const storedValue = sessionStorage.getItem('sessionCreated');
         return storedValue === 'true' ? true : false;
@@ -277,7 +277,7 @@ function App() {
                 sessionId, 
                 rounds, 
                 gameMode,
-                selectedScriptFile
+                scriptFile
             });
         }
     };
