@@ -82,7 +82,7 @@ const HostScreen = ({
         <div>
           <div className="animated-title-container">
             <AnimatedTitle />
-            <h1>Join at <a href="http://fayaz.one" className="red-link">Fayaz.One</a> in your browser!</h1>
+            <h1>Join at <h1 class="red-text">Fayaz.One</h1> in your browser!</h1>
           </div>
           <h2>Room Code: {ipAddress}</h2>
           
