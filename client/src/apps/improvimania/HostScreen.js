@@ -69,8 +69,10 @@ const HostScreen = ({
     }
   };
 
-  return (
+  return (      
+  <div className="App">
     <div>
+
       <div className="animated-title-container">
         <AnimatedTitle />
       </div>
@@ -144,6 +146,7 @@ const HostScreen = ({
           </ul>
         </div>
       )}
+    </div>
     </div>
   );
 };

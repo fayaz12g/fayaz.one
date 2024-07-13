@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import { useLocation } from 'react-router-dom';
 import './App.css';
 
 // Improvimania Imports
@@ -57,6 +58,24 @@ function App() {
     //         }
     //     }
     // }, [role]);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const customIpAddress = searchParams.get('ipAddress');
+        
+        if (customIpAddress) {  // Changed from 'ipAddress' to 'customIpAddress'
+          sessionStorage.setItem('ipAddress', customIpAddress);
+          setIpAddress(customIpAddress);
+          console.log('Session storage set: ipAddress =', customIpAddress);
+          connectToServer();
+          
+          // Remove the query parameter from the URL without reloading the page
+          const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+          window.history.replaceState({path: newUrl}, '', newUrl);
+        } else {
+          console.log('No ipAddress found in URL parameters');
+        }
+      }, [setIpAddress, ipAddress]);
 
     useEffect(() => {
         if (socket) {
@@ -211,15 +230,22 @@ function App() {
         
     }
     const connectToServer = () => {
-        const octets = ipAddress.split('.');
+        let octets = ('localhost');
+        if (ipAddress) {
+            octets = ipAddress.split('.');
+        }
+
         let fullIpAddress;
       
         if (octets.length === 1) {
             fullIpAddress = `192.168.1.${octets[0]}`;
         } else if (octets.length === 2) {
             fullIpAddress = `192.168.${octets[0]}.${octets[1]}`;
-        } else {
+        } else if (ipAddress) {
             fullIpAddress = ipAddress;
+        }
+        else {
+            fullIpAddress = ('localhost');
         }
 
         const url = `ws://${fullIpAddress}:3000`;
