@@ -15,6 +15,23 @@ function Install-NodeJS {
     Remove-Item $nodeInstallerPath
 }
 
+# Function to open Chrome in full-screen mode
+function Open-FullScreenChrome {
+    param (
+        [string]$Url
+    )
+    
+    $chromePath = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+    $chromeArguments = "--new-window", "--start-fullscreen", $Url
+    
+    if (Test-Path $chromePath) {
+        Start-Process -FilePath $chromePath -ArgumentList $chromeArguments
+    } else {
+        Write-Output "Chrome not found. Opening in default browser..."
+        Start-Process $Url
+    }
+}
+
 # Navigate to the script's directory
 cd $PSScriptRoot
 
@@ -30,6 +47,6 @@ if (-Not (CheckNodeJS)) {
 Write-Output "Starting Node.js server..."
 Start-Process "node" -ArgumentList "server.js"
 
-# Open fayaz.one with a query parameter
+# Open fayaz.one with a query parameter in a full-screen Chrome window
 Write-Output "Opening browser window..."
-Start-Process "http://fayaz.one?ipAddress=localhost"
+Open-FullScreenChrome -Url "http://fayaz.one?ipAddress=localhost"
