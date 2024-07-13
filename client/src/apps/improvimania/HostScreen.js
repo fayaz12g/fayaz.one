@@ -75,8 +75,8 @@ const HostScreen = ({
         <div>        
           <h3>Pick a Game:</h3>
           <button onClick={createSession}><AnimatedTitle /></button>
-          <button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
-          <button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
+          <br /><button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
+          <br /><button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
         </div>
       ) : (
         <div>
