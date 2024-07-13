@@ -42,6 +42,7 @@ const PlayerScreen = ({
         <div>
           {!joinedSession ? (
             <>
+              <div className="App">
               {(sessionList.length > 0) && <h2>Join a Game</h2>}
               {(sessionList.length > 0) && <div>
                 <input
@@ -74,6 +75,7 @@ const PlayerScreen = ({
                 )}
               </div>
               {noName && <p style={{ color: 'red' }}>First enter a name to join Session {sessionId}</p>}
+            </div>
             </>
         ) : !gameStarted ? (
           <div>

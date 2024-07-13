@@ -75,6 +75,7 @@ const HostScreen = ({
 
       <div className="animated-title-container">
         <AnimatedTitle />
+        <h1>Join at <a href="http://fayaz.one" class="red-link">Fayaz.One</a> in your browser!</h1>
       </div>
       <h2>Room Code: {ipAddress}</h2>
       {!sessionCreated ? (
