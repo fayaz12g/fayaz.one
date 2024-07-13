@@ -1,7 +1,7 @@
 # Function to check if Node.js is installed
 function CheckNodeJS {
     $nodePath = Get-Command "node" -ErrorAction SilentlyContinue
-    return $nodePath -ne $null
+    return $null -ne $nodePath
 }
 
 # Function to install Node.js
