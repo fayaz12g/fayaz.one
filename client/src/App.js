@@ -268,7 +268,13 @@ function App() {
         newSocket.on('connect', data => {
             setSocket(newSocket);
             setConnectionWaiting(false);
-            sessionStorage.setItem('ipAddress', ipAddress);
+            if (ipAddress) {
+                sessionStorage.setItem('ipAddress', ipAddress);
+            }
+            else {
+                sessionStorage.setItem('ipAddress', 'localhost');
+            }
+            
         });
         newSocket.on('serverVersion', (version) => {
           setServerV(version);
