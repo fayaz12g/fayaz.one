@@ -69,85 +69,92 @@ const HostScreen = ({
     }
   };
 
-  return (      
-  <div className="App">
-    <div>
-
-      <div className="animated-title-container">
-        <AnimatedTitle />
-        <h1>Join at <a href="http://fayaz.one" class="red-link">Fayaz.One</a> in your browser!</h1>
-      </div>
-      <h2>Room Code: {ipAddress}</h2>
+  return (
+    <div className="App">
       {!sessionCreated ? (
-        <button onClick={createSession}>Create Session</button>
-      ) : !gameStarted ? (
-        <div>
-          {isEndGame && <SoundEffect audioSrc={finishTheme}/>}
-          <h3>Session {sessionId}</h3>
-          <h4>Players:</h4>
-          <ul>
-            {players.map((player) => (
-              <PlayerListItem key={player.id} player={player} />
-            ))}
-          </ul>
-          <div>
-            <p style={{ fontFamily: 'Alloy Ink' }}>
-              Game Settings:
-            </p>
-            <label>
-              Number of rounds:
-                            <br />
-              <input
-                type="number"
-                min="1"
-                max="12"
-                value={rounds}
-                onChange={(e) => setRounds(parseInt(e.target.value))}
-              />
-            </label>
-            <label>
-              <br />
-              Game Mode:
-              <div className="button-wrapper">
-                <game-mode-button onClick={toggleGameMode} className="game-mode-button">
-                  {gameMode === 'classic' ? 'Classic' : 'Free for All'}
-                </game-mode-button>
-              </div>
-              <br />
-            </label>
-            <button onClick={handleStartGame} disabled={players.length !== 4}>
-              {players.length === 4 ? "Start Game" : "Waiting for 4 players..."}
-            </button>
-          </div>
-        </div>
-      ) : !isEndScene ? (
-        <div>
-          <h3>Round: {currentRound}/{rounds}</h3>
-          <h3>{currentLine?.text}</h3>
-          <h4>Leaderboard:</h4>
-          <ul>
-            {Object.entries(leaderboard)
-              .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
-              .map(([name, score]) => (
-                <li key={name}>{name}: {score}</li>
-              ))}
-          </ul>
+        <div>        
+          <h3>Pick a Game:</h3>
+          <button onClick={createSession}><AnimatedTitle /></button>
+          <button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
+          <button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
         </div>
       ) : (
         <div>
-          <h3>Round: {currentRound}/{rounds}</h3>
-          <h3>The Guesser is Guessing</h3>
-          <h4>Leaderboard:</h4>
-          <ul>
-            {Object.entries(leaderboard)
-              .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
-              .map(([name, score]) => (
-                <li key={name}>{name}: {score}</li>
-              ))}
-          </ul>
+          <div className="animated-title-container">
+            <AnimatedTitle />
+            <h1>Join at <a href="http://fayaz.one" className="red-link">Fayaz.One</a> in your browser!</h1>
+          </div>
+          <h2>Room Code: {ipAddress}</h2>
+          
+          {!gameStarted ? (
+            <div>
+              {isEndGame && <SoundEffect audioSrc={finishTheme}/>}
+              <h3>Session {sessionId}</h3>
+              <h4>Players:</h4>
+              <ul>
+                {players.map((player) => (
+                  <PlayerListItem key={player.id} player={player} />
+                ))}
+              </ul>
+              <div>
+                <p style={{ fontFamily: 'Alloy Ink' }}>
+                  Game Settings:
+                </p>
+                <label>
+                  Number of rounds:
+                  <br />
+                  <input
+                    type="number"
+                    min="1"
+                    max="12"
+                    value={rounds}
+                    onChange={(e) => setRounds(parseInt(e.target.value))}
+                  />
+                </label>
+                <label>
+                  <br />
+                  Game Mode:
+                  <div className="button-wrapper">
+                    <game-mode-button onClick={toggleGameMode} className="game-mode-button">
+                      {gameMode === 'classic' ? 'Classic' : 'Free for All'}
+                    </game-mode-button>
+                  </div>
+                  <br />
+                </label>
+                <button onClick={handleStartGame} disabled={players.length !== 4}>
+                  {players.length === 4 ? "Start Game" : "Waiting for 4 players..."}
+                </button>
+              </div>
+            </div>
+          ) : !isEndScene ? (
+            <div>
+              <h3>Round: {currentRound}/{rounds}</h3>
+              <h3>{currentLine?.text}</h3>
+              <h4>Leaderboard:</h4>
+              <ul>
+                {Object.entries(leaderboard)
+                  .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+                  .map(([name, score]) => (
+                    <li key={name}>{name}: {score}</li>
+                  ))}
+              </ul>
+            </div>
+          ) : (
+            <div>
+              <h3>Round: {currentRound}/{rounds}</h3>
+              <h3>The Guesser is Guessing</h3>
+              <h4>Leaderboard:</h4>
+              <ul>
+                {Object.entries(leaderboard)
+                  .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+                  .map(([name, score]) => (
+                    <li key={name}>{name}: {score}</li>
+                  ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
-    </div>
     </div>
   );
 };
