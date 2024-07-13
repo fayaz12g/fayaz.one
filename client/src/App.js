@@ -50,13 +50,13 @@ function App() {
       });
 
 
-    useEffect(() => {
-        if (socket) {
-            if (role === 'host' && sessionCreated === false) {
-        createSession()
-            }
-        }
-    }, [role]);
+    // useEffect(() => {
+    //     if (socket) {
+    //         if (role === 'host' && sessionCreated === false) {
+    //     createSession()
+    //         }
+    //     }
+    // }, [role]);
 
     useEffect(() => {
         if (socket) {
