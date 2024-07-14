@@ -64,12 +64,61 @@ body.party-mode::before,
 body.party-mode::after {
   background-size: var(--background-size, initial);
   animation-duration: var(--animation-duration, initial);
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
 body.party-mode.light {
-  animation: backgroundShiftDark 5s ease infinite;
+  animation: backgroundShiftLight 5s ease infinite;
 }
 
 body.party-mode.dark {
-  animation: backgroundShiftLight 5s ease infinite;
+  animation: backgroundShiftDark 5s ease infinite;
+}
+
+body.party-mode.light::before,
+body.party-mode.dark::before {
+  animation-name: dotMoveLeft, radialPulsenew;
+}
+
+body.party-mode.light::after,
+body.party-mode.dark::after {
+  top: 15px;
+  animation-name: dotMoveRight, radialPulsenew;
+}
+
+body.party-mode.light::before,
+body.party-mode.light::after {
+  animation-name: dotMoveLeft, radialPulsenew;
+}
+
+body.party-mode.dark::before,
+body.party-mode.dark::after {
+  animation-name: dotMoveLeft, radialPulsenewdark;
+}
+
+body.party-mode.light::after,
+body.party-mode.dark::after {
+  top: 15px;
+  animation-name: dotMoveRight, radialPulsenew;
+}
+
+body.party-mode.dark::after {
+  animation-name: dotMoveRight, radialPulsenewdark;
+}
+
+@keyframes radialPulsenew {
+  0%, 100% { background-image: radial-gradient(circle, rgba(255,255,255,0.8) 10%, rgba(255,255,255,0) 60%); }
+  50% { background-image: radial-gradient(circle, rgba(255,255,255,0.8) 10%, rgba(255,255,255,0) 60%); }
+}
+
+@keyframes radialPulsenewdark {
+  0%, 100% { background-image: radial-gradient(circle, rgba(0,0,0,0.8) 10%, rgba(0,0,0,0) 60%); }
+  50% { background-image: radial-gradient(circle, rgba(0,0,0,0.8) 10%, rgba(0,0,0,0) 60%); }
 }

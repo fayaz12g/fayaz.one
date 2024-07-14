@@ -35,7 +35,7 @@ function App() {
     const [joinedSession, setJoinedSession] = useState(false);
     const [isEndScene, setIsEndScene] = useState(false);
     const [isEndGame, setIsEndGame] = useState(false);
-    const [gameMode, setGameMode] = useState('classic');
+    const [gameMode, setGameMode] = useState('freeforall');
     const [isSpeaker, setIsSpeaker] = useState(false);
     const [connectionError, setConnectionError] = useState(false); 
     const [connectionWaiting, setConnectionWaiting] = useState(false);

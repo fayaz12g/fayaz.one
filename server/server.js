@@ -280,7 +280,34 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
-        // Handle player disconnection here
+        
+        // Check if the disconnected socket was a host
+        for (const sessionId in sessions) {
+            if (sessions[sessionId].hostSocket === socket.id) {
+                console.log('Host disconnected from session:', sessionId);
+                
+                // Notify all clients in the session that the host left
+                io.to(sessionId).emit('hostLeft');
+                
+                // Close the session
+                delete sessions[sessionId];
+                
+                console.log('Session closed:', sessionId);
+                break;
+            }
+        }
+        
+        // Handle player disconnection (existing logic)
+        for (const sessionId in sessions) {
+            const playerIndex = sessions[sessionId].players.findIndex(player => player.socketId === socket.id);
+            if (playerIndex !== -1) {
+                const removedPlayer = sessions[sessionId].players.splice(playerIndex, 1)[0];
+                console.log(`${removedPlayer.name} has disconnected from session ${sessionId}`);
+                io.to(sessionId).emit('playerRemoved', { removedPlayer: socket.id, kickPlayer: false });
+                io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
+                break;
+            }
+        }
     });
 });
 
