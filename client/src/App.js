@@ -13,7 +13,8 @@ import guessingTheme from './sound/improvimania/guessing.m4a';
 import finishTheme from './sound/improvimania/finish.m4a';
 
 // Menu Imports
-import Audio from './apps/Audio';
+import AudioPlayer from './apps/AudioPlayer';
+import Quit from './apps/Quit';
 import AnimatedTitle from './apps/AnimatedTitle';
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
     const [connectionWaiting, setConnectionWaiting] = useState(false);
     const [kicked, setKicked] = useState(false);
     const [theme, setTheme] = useState('light');
+    const [forceRemove, setForceRemove] = useState(false);
+    const [confirmQuit, setConfirmQuit] = useState(false);
     const [clientVersion] = useState('0.6 Sonic Alpha');
     const [serverVersion, setServerV] = useState('Disconnected');
     let [sessionList, setSessionList] = useState([]);
@@ -111,13 +114,12 @@ function App() {
             socket.on('updatePlayers', ({ players }) => {
                 setPlayers(players);
             });
-            socket.on('playerRemoved', ({ removedPlayer }) => {
+            socket.on('playerRemoved', ({ removedPlayer, kickPlayer }) => {
                 console.log(`I heard that ${removedPlayer} was removed. He must've been a bad boy.`)
                 // if playerName equals removedPlayer, then reset all variables and storage
                 if (playerName===removedPlayer) {
                     resetEverything()
-
-                    setKicked(true);
+                    setKicked(kickPlayer);
                 }
             });
             socket.on('gameStarted', ({ rounds, roles, currentround }) => {
@@ -228,6 +230,7 @@ function App() {
         sessionStorage.clear();
         
     }
+
     const connectToServer = () => {
         let octets = ('localhost');
         if (ipAddress) {
@@ -250,7 +253,10 @@ function App() {
         const url = `ws://${fullIpAddress}:3000`;
         const newSocket = io(url, {
             transports: ['websocket'],
-            query: {playerId: sessionStorage.getItem('playerId')}
+            query: {
+                playerId: sessionStorage.getItem('playerId'),
+                role: sessionStorage.getItem('role')
+            }
         });
 
         setConnectionError(false);
@@ -287,19 +293,36 @@ function App() {
         if (socket) {
             socket.emit('createSession');
             sessionStorage.setItem('sessionCreated', true);
+            sessionStorage.setItem('role', role);
         }
     };
     
     const joinSession = (clickedSessionId) => {
-        setSessionId(clickedSessionId);
-        if (socket && sessionId && playerName) {
-            socket.emit('joinSession', { sessionId, playerName });
-            setJoinedSession(true);
-            sessionStorage.setItem("playerId", socket.id);
+        console.log('Attempting to join session:', clickedSessionId);
+        
+        if (!socket) {
+            console.error('Socket is not initialized');
+            return;
         }
+        
         if (!playerName) {
-            console.log("No player name when trying to join!")
+            console.error("No player name when trying to join!");
+            return;
         }
+        
+        // Update the sessionId state
+        setSessionId(clickedSessionId);
+        
+        // Emit the join event
+        console.log('Emitting joinSession event:', { sessionId: clickedSessionId, playerName });
+        socket.emit('joinSession', { sessionId: clickedSessionId, playerName });
+        
+        // Update other states and storage
+        setJoinedSession(true);
+        sessionStorage.setItem("playerId", socket.id);
+        sessionStorage.setItem('role', role);
+        
+        console.log('Join session process completed');
     };
 
     const nextLine = () => {
@@ -315,9 +338,9 @@ function App() {
         }
     };
 
-    const removePlayer = (playerToRemove) => {
+    const removePlayer = (playerToRemove, forceRemove) => {
         console.log(`Asked the server to remove ${playerToRemove}`)
-        socket.emit('removePlayer', { sessionId, playerToRemove });
+        socket.emit('removePlayer', { sessionId, playerToRemove, forceRemove });
       };
 
     const renderHostScreen = () => (
@@ -336,7 +359,7 @@ function App() {
         leaderboard={leaderboard}
         removePlayer={removePlayer}
         titleTheme={titleTheme}
-        Audio={Audio}
+        AudioPlayer={AudioPlayer}
         isEndScene={isEndScene}
         speakingTheme={speakingTheme}
         guessingTheme={guessingTheme}
@@ -345,6 +368,8 @@ function App() {
         currentLine={currentLine}
         isEndGame={isEndGame}
         scriptFile={scriptFile}
+        setForceRemove={setForceRemove}
+        forceRemove={forceRemove}
       />
     );
 
@@ -379,10 +404,10 @@ function App() {
   return (
     <div>
     {/* Audio components */}
-    <Audio audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
-    <Audio audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
-    <Audio audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
-    <Audio audioSrc={finishTheme} loop={false} isPlaying={isEndGame} />
+    <AudioPlayer audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
+    <AudioPlayer audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
+    <AudioPlayer audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
+    <AudioPlayer audioSrc={finishTheme} loop={false} isPlaying={isEndGame} />
     
 
     {/* Main content */}
@@ -417,6 +442,23 @@ function App() {
             >
                 {theme === 'light' ? '☀️' : '🌙'}
             </button>
+            {role && sessionId && (
+            <button 
+                className="exit" 
+                onClick={() => setConfirmQuit(true)}
+            >
+                {theme === 'light' ? '🏃‍♂️' : '🏃🏿'}
+            </button>
+            )}
+
+            {confirmQuit && (
+                <Quit 
+                    playerName={playerName} 
+                    forceRemove={forceRemove} 
+                    removePlayer={removePlayer} 
+                    setConfirmQuit={setConfirmQuit}
+                />
+            )}
           <div className="version-text smalltext">
             Client Version: {clientVersion}
             <br />

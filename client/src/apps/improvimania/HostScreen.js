@@ -17,7 +17,7 @@ const HostScreen = ({
   leaderboard,
   removePlayer,
   titleTheme,
-  Audio,
+  AudioPlayer,
   isEndScene,
   speakingTheme,
   guessingTheme,
@@ -26,10 +26,13 @@ const HostScreen = ({
   currentLine,
   isEndGame,
   scriptFile,
+  setForceRemove,
+  forceRemove,
 }) => {
 
   const handleRemovePlayer = (playerToRemove) => {
-    removePlayer(playerToRemove)
+    setForceRemove(true);
+    removePlayer(playerToRemove, forceRemove)
   };
 
   const toggleGameMode = () => {

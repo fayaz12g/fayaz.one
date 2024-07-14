@@ -306,6 +306,27 @@ body.dark .smalltext {
 
 }
 
+.exit {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+  background-color: var(--toggle-bg-color);
+  color: var(--toggle-color);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.9s ease, color 0.9s ease;
+  z-index: 15;
+
+}
+
 body.light {
   --toggle-bg-color: white;
   --toggle-color: black;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import finishTheme from '../../sound/improvimania/finish.m4a';
-import Audio from '../Audio';
+import AudioPlayer from '../AudioPlayer';
 
 const PlayerScreen = ({
   isEndGame,
@@ -30,7 +30,7 @@ const PlayerScreen = ({
   const [noName, setNoName] = useState(false);
 
   const handleJoinClick = (sessionIds) => {
-    setSessionId(sessionIds);
+    // setSessionId(sessionIds);
     if (!playerName)
       setNoName(true);
     joinSession(sessionIds);
@@ -182,7 +182,7 @@ const PlayerScreen = ({
     ) : (
       <div>
         <div className="App">
-        <Audio audioSrc={finishTheme}/>
+        <AudioPlayer audioSrc={finishTheme}/>
         <h3>Game Results</h3>
         <ul>
           {Object.entries(leaderboard).map(([name, score]) => (

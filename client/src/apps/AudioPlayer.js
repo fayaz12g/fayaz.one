@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const Audio = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = true }) => {
+const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = true }) => {
   const audioRef = useRef(null);
   const isPlayingRef = useRef(false);
   const hasPlayedOnceRef = useRef(false);
@@ -79,4 +79,4 @@ const Audio = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = true }) 
   return null; // This component doesn't render anything
 };
 
-export default Audio;
+export default AudioPlayer;

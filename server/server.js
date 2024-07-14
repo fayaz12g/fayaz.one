@@ -45,28 +45,34 @@ function loadScripts() {
 
 io.on('connection', (socket) => {
     const playerId = socket.handshake.query.playerId;
+    const playerRole = socket.handshake.query.role;
     console.log('New client connected:', socket.id);
 
-    if (socket.id !== playerId) {
-        console.log(`Attemping to reconnect ${socket.id} as ${playerId}`);
-        for (const shortSessionId in sessions) {
-            const session = sessions[shortSessionId];
-            console.log('checking ' + shortSessionId);
-            
-            const player = session.players.find(player => playerId === player.socketId);
-            if (player) {
-                const playerIdx = session.players.indexOf(player);
-                sessions[shortSessionId].players[playerIdx].socketId = socket.id;
-                // player.socketId = socket.id;
-                console.log(`New player array as follows:`);
-                // console.log(player);
-                socket.join(shortSessionId);
-                socket.emit('reconnect', {name: player.name, sessionId: shortSessionId, players: session.players});
-                for (const player in session) {
-                    socket.emit('updatePoints', { points: { [player.name]: player.points } })
+    if ((playerId !== null) && (playerRole == 'player')) {
+        if (socket.id !== playerId) {
+            console.log(`Attemping to reconnect ${socket.id} as ${playerId}`);
+            for (const shortSessionId in sessions) {
+                const session = sessions[shortSessionId];
+                console.log('checking ' + shortSessionId);
+                
+                const player = session.players.find(player => playerId === player.socketId);
+                if (player) {
+                    const playerIdx = session.players.indexOf(player);
+                    sessions[shortSessionId].players[playerIdx].socketId = socket.id;
+                    // player.socketId = socket.id;
+                    console.log(`New player array as follows:`);
+                    // console.log(player);
+                    socket.join(shortSessionId);
+                    socket.emit('reconnect', {name: player.name, sessionId: shortSessionId, players: session.players});
+                    for (const player in session) {
+                        socket.emit('updatePoints', { points: { [player.name]: player.points } })
+                    }
                 }
             }
         }
+    }
+    else if ((playerId !== null) && (playerRole == 'host')) {
+        console.log('The host is trying to reconnect!')
     }
 
     // Emit the server version to the client upon connection
@@ -163,7 +169,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('removePlayer', ({ sessionId, playerToRemove }) => {
+    socket.on('removePlayer', ({ sessionId, playerToRemove, forceRemove }) => {
         if (sessions[sessionId]) {
           const playerIndex = sessions[sessionId].players.findIndex(player => player.name === playerToRemove);
           
@@ -173,9 +179,12 @@ io.on('connection', (socket) => {
             
             console.log(`${removedPlayer.name} has been removed from session ${sessionId}`);
             
+            const kickPlayer = forceRemove;
+
             // Optionally, you might want to notify other clients about the player removal
             io.to(sessionId).emit('playerRemoved', {  
-              removedPlayer: removedPlayer.name 
+              removedPlayer: removedPlayer.name, 
+              kickPlayer: kickPlayer
             });
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
           } else {
