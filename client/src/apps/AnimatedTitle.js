@@ -78,7 +78,7 @@ const EyeImage = styled.img`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -80%);
   z-index: 2;
   opacity: ${props => props.show ? 1 : 0};
   transition: opacity 0.3s ease-in-out;
