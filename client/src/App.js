@@ -390,14 +390,7 @@ function App() {
         {!socket ? (
             <div className="App">
             <div>
-                <div className="animated-title-container">
-                    <AnimatedTitle title="fayaz.One" />
-                </div>
-                
-                <div className="centered-image-container">
-                    {/* <img src={titleImage} alt="Improvomania Logo" className="centered-image" /> */}
-                </div>
-                {/* {!connectionWaiting && !kicked && <h2>Room Code:</h2>} */}
+                <AnimatedTitle title="fayaz.One" />
                 {kicked && <h2 style={{ color: 'red' }}>You have been kicked by the host.</h2>}
                 {!connectionWaiting && !kicked && <input type="text" 
                 value={ipAddress} 
