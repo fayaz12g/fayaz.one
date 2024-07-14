@@ -116,10 +116,9 @@ function App() {
                 setPlayers(players);
             });
             socket.on('playerRemoved', ({ removedPlayer, kickPlayer }) => {
-                console.log(`I heard that ${removedPlayer} was removed. He must've been a bad boy.`)
-                // if playerName equals removedPlayer, then reset all variables and storage
-                if (playerName===removedPlayer) {
-                    resetEverything()
+                console.log(`Player ${removedPlayer} was removed. Kicked: ${kickPlayer}`);
+                if (socket.id === removedPlayer) {
+                    resetEverything();
                     setKicked(kickPlayer);
                 }
             });

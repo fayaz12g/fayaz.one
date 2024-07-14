@@ -32,7 +32,7 @@ const HostScreen = ({
 
   const handleRemovePlayer = (playerToRemove) => {
     setForceRemove(true);
-    removePlayer(playerToRemove, forceRemove)
+    removePlayer(playerToRemove, true);
   };
 
   const toggleGameMode = () => {
@@ -52,7 +52,7 @@ const HostScreen = ({
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={() => handleRemovePlayer(player.name)}
+        onClick={() => handleRemovePlayer(player.socketId)}
       >
         {player.name}
       </li>

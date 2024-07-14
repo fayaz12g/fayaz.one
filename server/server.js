@@ -172,30 +172,35 @@ io.on('connection', (socket) => {
     });
 
     socket.on('removePlayer', ({ sessionId, playerToRemove, forceRemove }) => {
+        console.log(`Received removePlayer request:`, { sessionId, playerToRemove, forceRemove });
+        
         if (sessions[sessionId]) {
-          const playerIndex = sessions[sessionId].players.findIndex(player => player.name === playerToRemove);
-          
-          if (playerIndex !== -1) {
-            // Remove the player from the array
-            const removedPlayer = sessions[sessionId].players.splice(playerIndex, 1)[0];
+            const playerIndex = sessions[sessionId].players.findIndex(player => player.socketId === playerToRemove);
             
-            console.log(`${removedPlayer.name} has been removed from session ${sessionId}`);
-            
-            const kickPlayer = forceRemove;
-
-            // Optionally, you might want to notify other clients about the player removal
-            io.to(sessionId).emit('playerRemoved', {  
-              removedPlayer: removedPlayer.name, 
-              kickPlayer: kickPlayer
-            });
-            io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
-          } else {
-            console.log(`Player ${playerToRemove} not found in session ${sessionId}`);
-          }
+            if (playerIndex !== -1) {
+                const removedPlayer = sessions[sessionId].players.splice(playerIndex, 1)[0];
+                
+                console.log(`${removedPlayer.name} has been removed from session ${sessionId}`);
+                
+                if (forceRemove) {
+                    console.log("Removal was forced by host");
+                } else {
+                    console.log("Player left voluntarily");
+                }
+    
+                // Notify other clients about the player removal
+                io.to(sessionId).emit('playerRemoved', {  
+                    removedPlayer: removedPlayer.socketId, 
+                    kickPlayer: forceRemove
+                });
+                io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
+            } else {
+                console.log(`Player with socket ID ${playerToRemove} not found in session ${sessionId}`);
+            }
         } else {
-          console.log(`Session ${sessionId} not found`);
+            console.log(`Session ${sessionId} not found`);
         }
-      });
+    });
 
       socket.on('startGame', ({ sessionId, rounds, gameMode, scriptFile }) => {
         console.log(`Starting game for session ${sessionId} with ${rounds} rounds in ${gameMode} mode, using script file: ${scriptFile}.json`);
