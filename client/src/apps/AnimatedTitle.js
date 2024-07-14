@@ -56,7 +56,8 @@ const TitleChar = styled(animated.span)`
     -2px -2px 0px rgba(255,255,255,0.3);
   background: linear-gradient(135deg, 
     ${props => props.color} 0%,
-    ${props => lightenColor(props.color, 30, props.partyMode)} 99.99%, 
+    ${props => props.color} 45%,
+    ${props => lightenColor(props.color, 30, props.partyMode)} 95%, 
     ${props => props.color} 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
