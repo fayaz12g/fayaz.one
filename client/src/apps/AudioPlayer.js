@@ -1,21 +1,45 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = true }) => {
   const audioRef = useRef(null);
   const isPlayingRef = useRef(false);
   const hasPlayedOnceRef = useRef(false);
+  const [userInteracted, setUserInteracted] = useState(false);
+
+  const playAudio = () => {
+    const audio = audioRef.current;
+    if (audio && !isPlayingRef.current && isPlaying && (!hasPlayedOnceRef.current || loop) && userInteracted) {
+      audio.play().then(() => {
+        isPlayingRef.current = true;
+        hasPlayedOnceRef.current = true;
+      }).catch(error => {
+        console.error("Error playing audio:", error);
+        // Retry after a short delay
+        setTimeout(playAudio, 1000);
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleInteraction = () => {
+      setUserInteracted(true);
+      // Remove the event listeners once interaction has occurred
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+    };
+
+    document.addEventListener('click', handleInteraction);
+    document.addEventListener('touchstart', handleInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     const audio = new Audio(audioSrc);
     audioRef.current = audio;
-
-    const playAudio = () => {
-      if (!isPlayingRef.current && isPlaying && (!hasPlayedOnceRef.current || loop)) {
-        audio.play();
-        isPlayingRef.current = true;
-        hasPlayedOnceRef.current = true;
-      }
-    };
 
     const handleTimeUpdate = () => {
       if (loopStart !== undefined && loopEnd !== undefined && audio.currentTime >= loopEnd) {
@@ -27,7 +51,7 @@ const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = tr
       if (loop) {
         audio.currentTime = loopStart !== undefined ? loopStart : 0;
         if (isPlaying) {
-          audio.play();
+          playAudio();
         }
       } else {
         isPlayingRef.current = false;
@@ -37,6 +61,9 @@ const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = tr
     const handleLoadedMetadata = () => {
       if (loopStart === undefined) audio.loopStart = 0;
       if (loopEnd === undefined) audio.loopEnd = audio.duration;
+      if (isPlaying) {
+        playAudio();
+      }
     };
 
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
@@ -57,18 +84,16 @@ const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = tr
   }, [audioSrc, loopStart, loopEnd, isPlaying, loop]);
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      if (isPlaying && (!hasPlayedOnceRef.current || loop)) {
-        audio.play().catch(error => console.error("Error playing audio:", error));
-        isPlayingRef.current = true;
-        hasPlayedOnceRef.current = true;
-      } else {
+    if (isPlaying && userInteracted) {
+      playAudio();
+    } else {
+      const audio = audioRef.current;
+      if (audio) {
         audio.pause();
         isPlayingRef.current = false;
       }
     }
-  }, [isPlaying, loop]);
+  }, [isPlaying, loop, userInteracted]);
 
   useEffect(() => {
     if (!isPlaying) {
