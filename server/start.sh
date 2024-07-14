@@ -29,12 +29,12 @@ function install_nodejs {
     fi
 }
 
-# Function to open Chrome in full-screen mode
+# Updated function to open Chrome in full-screen mode
 function open_fullscreen_chrome {
     local url=$1
     if [[ "$OSTYPE" == "darwin"* ]]; then
         if [ -d "/Applications/Google Chrome.app" ]; then
-            open -a "Google Chrome" --args --new-window --start-fullscreen "$url"
+            /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --new-window --start-fullscreen "$url"
         else
             echo "Chrome not found. Opening in default browser..."
             open "$url"
