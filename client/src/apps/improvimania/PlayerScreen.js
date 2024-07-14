@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import finishTheme from '../../sound/improvimania/finish.m4a';
-import Audio from '../apps/Audio';
+import Audio from '../Audio';
 
 const PlayerScreen = ({
   isEndGame,
