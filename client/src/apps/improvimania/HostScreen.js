@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import AnimatedTitle from '../AnimatedTitle';
-import SoundEffect from '../SoundEffect';
 import finishTheme from '../../sound/improvimania/finish.m4a';
 
 const HostScreen = ({
@@ -18,7 +17,7 @@ const HostScreen = ({
   leaderboard,
   removePlayer,
   titleTheme,
-  BackgroundMusic,
+  Audio,
   isEndScene,
   speakingTheme,
   guessingTheme,
@@ -90,7 +89,7 @@ const HostScreen = ({
           
           {!gameStarted ? (
             <div>
-              {isEndGame && <SoundEffect audioSrc={finishTheme}/>}
+              {<Audio audioSrc={finishTheme} isPlaying={isEndGame}/>}
               <h3>Session {sessionId}</h3>
               <h4>Players:</h4>
               <ul>

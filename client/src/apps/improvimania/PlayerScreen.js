@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import SoundEffect from '../SoundEffect';
 import finishTheme from '../../sound/improvimania/finish.m4a';
+import Audio from './apps/Audio';
 
 const PlayerScreen = ({
   isEndGame,
@@ -182,7 +182,7 @@ const PlayerScreen = ({
     ) : (
       <div>
         <div className="App">
-        <SoundEffect audioSrc={finishTheme}/>
+        <Audio audioSrc={finishTheme}/>
         <h3>Game Results</h3>
         <ul>
           {Object.entries(leaderboard).map(([name, score]) => (

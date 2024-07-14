@@ -13,9 +13,8 @@ import guessingTheme from './sound/improvimania/guessing.m4a';
 import finishTheme from './sound/improvimania/finish.m4a';
 
 // Menu Imports
-import BackgroundMusic from './apps/BackgroundMusic';
+import Audio from './apps/Audio';
 import AnimatedTitle from './apps/AnimatedTitle';
-import SoundEffect from './apps/SoundEffect';
 
 function App() {
     const [ipAddress, setIpAddress] = useState(sessionStorage.getItem('ipAddress'));
@@ -337,7 +336,7 @@ function App() {
         leaderboard={leaderboard}
         removePlayer={removePlayer}
         titleTheme={titleTheme}
-        BackgroundMusic={BackgroundMusic}
+        Audio={Audio}
         isEndScene={isEndScene}
         speakingTheme={speakingTheme}
         guessingTheme={guessingTheme}
@@ -370,7 +369,7 @@ function App() {
         leaderboard={leaderboard}
         kicked={kicked}
         titleTheme={titleTheme}
-        BackgroundMusic={BackgroundMusic}
+        Audio={Audio}
         speakingTheme={speakingTheme}
         guessingTheme={guessingTheme}
         sentGuess={sentGuess}
@@ -380,10 +379,10 @@ function App() {
   return (
     <div>
     {/* Background music components */}
-    <BackgroundMusic audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
-    {/* <BackgroundMusic audioSrc={finishTheme} loopStart={0} loopEnd={8} isPlaying={isEndGame}/> */}
-    <BackgroundMusic audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
-    <BackgroundMusic audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
+    <Audio audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
+    <Audio audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
+    <Audio audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
+    <Audio audioSrc={finishTheme} loop={false} isPlaying={isEndGame} />
     
 
     {/* Main content */}
