@@ -56,7 +56,7 @@ const TitleChar = styled(animated.span)`
     -2px -2px 0px rgba(255,255,255,0.3);
   background: linear-gradient(135deg, 
     ${props => props.color} 0%,
-    ${props => lightenColor(props.color, 30)} 50%,
+    ${props => lightenColor(props.color, 30, props.partyMode)} 99.99%, 
     ${props => props.color} 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -64,7 +64,11 @@ const TitleChar = styled(animated.span)`
 `;
 
 // Helper function to lighten a color
-const lightenColor = (color, percent) => {
+const lightenColor = (color, percent, lighten = true) => {
+  if (!lighten) {
+    return color; // Return original color if lighten is false
+  }
+
   const num = parseInt(color.replace("#",""), 16),
         amt = Math.round(2.55 * percent),
         R = (num >> 16) + amt,
