@@ -378,7 +378,7 @@ function App() {
 
   return (
     <div>
-    {/* Background music components */}
+    {/* Audio components */}
     <Audio audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
     <Audio audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
     <Audio audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
