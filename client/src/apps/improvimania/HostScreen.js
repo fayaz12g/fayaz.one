@@ -89,7 +89,6 @@ const HostScreen = ({
           
           {!gameStarted ? (
             <div>
-              {<Audio audioSrc={finishTheme} isPlaying={isEndGame}/>}
               <h3>Session {sessionId}</h3>
               <h4>Players:</h4>
               <ul>
