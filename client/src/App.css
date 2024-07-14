@@ -308,7 +308,7 @@ body.dark .smalltext {
 
 .exit {
   position: fixed;
-  top: 20px;
+  bottom: 20px;
   left: 20px;
   width: 40px;
   height: 40px;
@@ -339,8 +339,8 @@ body.dark {
 
 .version-text {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  top: 5px;
+  left: 15px;
   color: var(--toggle-color);
   transition: color 0.9s ease;
   text-align: left;
@@ -515,6 +515,80 @@ body.dark game-mode-button::before {
   }
 }
 
-.red-link {
+.title-bar {
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: auto;
+  color: white;
+  z-index: 1000;
+  height: auto;
+  max-height: 80px;
+  overflow: hidden;
+}
+
+.title-bar.light {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.title-bar.dark {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.join-message {
+  text-align: center;
+  margin-left: 150px;
+  flex: 1;
+}
+
+.join-message h2 {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.red-text {
   color: red;
+}
+
+.room-info {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.room-info h2,
+.room-info h4 {
+  margin: 0;
+  padding: 2px 0;
+  font-size: 1em;
+  white-space: nowrap;
+}
+
+.room-info h4 {
+  font-size: 0.7em;
+}
+
+@media (max-width: 768px) {
+  .title-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 5px;
+  }
+
+  .join-message,
+  .room-info {
+    text-align: center;
+  }
+
+  .room-info {
+    align-items: center;
+  }
 }

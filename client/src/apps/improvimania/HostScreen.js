@@ -73,26 +73,20 @@ const HostScreen = ({
 
   return (
     <div className="App">
-      {!sessionCreated ? (
-        <div>        
-          <h3>Pick a Game:</h3>
-          <button onClick={createSession}><AnimatedTitle /></button>
-          <br />
-          <button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
-          <br />
-          <button onClick={createSession}><AnimatedTitle title="cOming soon..." /></button>
-        </div>
-      ) : (
         <div>
-          <div className="animated-title-container">
-            <AnimatedTitle />
-            <h1>Join at <h1 class="red-text">Fayaz.One</h1> in your browser!</h1>
-          </div>
+        <AnimatedTitle />
+        <div className="title-bar">
+        <div className="join-message">
+          <h2>Join at <span className="red-text">Fayaz.One</span> in your browser!</h2>
+        </div>
+        <div className="room-info">
           <h2>Room Code: {ipAddress}</h2>
-          
+          <h4>Session: {sessionId}</h4>
+        </div>
+      </div>
           {!gameStarted ? (
             <div>
-              <h3>Session {sessionId}</h3>
+              <h2>Room Code: {ipAddress}</h2>
               <h4>Players:</h4>
               <ul>
                 {players.map((player) => (
@@ -157,7 +151,6 @@ const HostScreen = ({
             </div>
           )}
         </div>
-      )}
     </div>
   );
 };

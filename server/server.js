@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('createSession', () => {
+    socket.on('createSession', ( game ) => {
         // const sessionId = Math.random().toString(36).substring(2, 15).replace(/[0-9]/g, '');
         // const shortSessionId = sessionId.substring(0, 4).toUpperCase();
         const sessionId = ++currentSession;
@@ -141,6 +141,7 @@ io.on('connection', (socket) => {
         }
         sessions[shortSessionId] = { 
             sessionId: shortSessionId, 
+            game: game,
             players: [],
             currentScript: null,
             currentLineIndex: 0,
@@ -155,6 +156,7 @@ io.on('connection', (socket) => {
         socket.join(shortSessionId);
         socket.emit('sessionCreated', { sessionId: shortSessionId });
         console.log('Session created with ID:', shortSessionId);
+        console.log(sessions[shortSessionId]);
     });
 
     socket.on('joinSession', ({ sessionId, playerName }) => {

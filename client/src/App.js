@@ -6,7 +6,7 @@ import './App.css';
 // Improvimania Imports
 import titleImage from './image/improvimania/title.png';
 import PlayerScreen from './apps/improvimania/PlayerScreen';
-import HostScreen from './apps/improvimania/HostScreen';
+import PickGame from './apps/PickGame';
 import titleTheme from './sound/improvimania/theme.m4a';
 import speakingTheme from './sound/improvimania/speaking.m4a';
 import guessingTheme from './sound/improvimania/guessing.m4a';
@@ -43,6 +43,7 @@ function App() {
     const [theme, setTheme] = useState('light');
     const [forceRemove, setForceRemove] = useState(false);
     const [confirmQuit, setConfirmQuit] = useState(false);
+    const [game, setGame] = useState(sessionStorage.getItem('game'));
     const [clientVersion] = useState('0.6 Sonic Alpha');
     const [serverVersion, setServerV] = useState('Disconnected');
     let [sessionList, setSessionList] = useState([]);
@@ -212,6 +213,14 @@ function App() {
 
     const toggleTheme = () => {
       setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+      const titleBar = document.querySelector('.title-bar');
+      if (theme === 'light') {
+        titleBar.classList.remove('dark');
+        titleBar.classList.add('light');
+      } else if (theme === 'dark') {
+        titleBar.classList.remove('light');
+        titleBar.classList.add('dark');
+      }
   };
 
     const resetEverything = () => {
@@ -289,9 +298,9 @@ function App() {
     });
     };
 
-    const createSession = () => {
+    const createSession = ( game ) => {
         if (socket) {
-            socket.emit('createSession');
+            socket.emit('createSession', game);
             sessionStorage.setItem('sessionCreated', true);
             sessionStorage.setItem('role', role);
         }
@@ -343,8 +352,8 @@ function App() {
         socket.emit('removePlayer', { sessionId, playerToRemove, forceRemove });
       };
 
-    const renderHostScreen = () => (
-      <HostScreen
+    const renderPickGame = () => (
+      <PickGame
         socket={socket}
         ipAddress={serverIP}
         sessionCreated={sessionCreated}
@@ -370,6 +379,9 @@ function App() {
         scriptFile={scriptFile}
         setForceRemove={setForceRemove}
         forceRemove={forceRemove}
+        game={game}
+        setGame={setGame}
+        theme={theme}
       />
     );
 
@@ -432,7 +444,7 @@ function App() {
                 <button onClick={() => {setRole('player'); sessionStorage.setItem('role', 'player')}}>Player</button>
             </div>
         ) : role === 'host' ? (
-            renderHostScreen()
+            renderPickGame()
         ) : (
             renderPlayerScreen()
         )}
@@ -456,6 +468,7 @@ function App() {
                     playerName={playerName} 
                     forceRemove={forceRemove} 
                     removePlayer={removePlayer} 
+                    resetEverything={resetEverything}
                     setConfirmQuit={setConfirmQuit}
                 />
             )}

@@ -14,8 +14,6 @@
 }
 
 .AnimatedTitle {
-  height: 100%;
-  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,19 +21,55 @@
   color: white;
   background: none;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  min-height: 60px;
 }
 
 .titleContainer {
   text-align: center;
   position: relative;
   white-space: nowrap;
+  padding: 0;
+  margin: 0;
 }
 
 .animatedTitle {
-  font-size: 10rem;
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  margin: 0;
+  padding: 0;
   position: relative;
   font-family: 'Alloy Ink', 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
+  line-height: 1;
 }
 
+@media (min-width: 320px) and (max-width: 480px) {
+  .animatedTitle { font-size: 2rem; }
+}
 
+@media (min-width: 481px) and (max-width: 768px) {
+  .animatedTitle { font-size: 2.5rem; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .animatedTitle { font-size: 3rem; }
+}
+
+@media (min-width: 1025px) {
+  .animatedTitle { font-size: 3.5rem; }
+}
+
+body.party-mode::before,
+body.party-mode::after {
+  background-size: var(--background-size, initial);
+  animation-duration: var(--animation-duration, initial);
+}
+
+body.party-mode.light {
+  animation: backgroundShiftDark 5s ease infinite;
+}
+
+body.party-mode.dark {
+  animation: backgroundShiftLight 5s ease infinite;
+}

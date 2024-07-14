@@ -24,41 +24,54 @@ const colors = [
   'cyan', 'magenta', 'lime', 'pink', 'teal', 'lavender', 'brown'
 ];
 
-
 const TitleChar = styled(animated.span)`
   display: inline-block;
   margin: 0 1px;
   font-family: 'Alloy Ink', 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
-  font-size: 3rem;
-  color: ${(props) => props.color}; 
-  -webkit-text-stroke: 2px white;
+  font-size: ${props => props.char === 'i' ? '2rem' : '6rem'};
   position: relative;
-  overflow: hidden; 
   animation: ${(props) => (props.bounce ? bounce : "none")} 1s infinite;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   z-index: 1; 
 
   @media (min-width: 320px) and (max-width: 480px) {
-    font-size: 4rem;
+    font-size: ${props => props.char === 'i' ? '3rem' : '2rem'};
   }
   
   @media (min-width: 481px) and (max-width: 768px) {
-    font-size: 5rem;
+    font-size: ${props => props.char === 'i' ? '4rem' : '3rem'};
   }
   
   @media (min-width: 769px) and (max-width: 1024px) {
-    font-size: 6rem;
+    font-size: ${props => props.char === 'i' ? '3rem' : '4rem'};
   }
   
   @media (min-width: 1025px) {
-    font-size: 8rem;
+    font-size: ${props => props.char === 'i' ? '3rem' : '5rem'};
   }
 
-  /* Gradient overlay */
-  background: ${(props) => props.color};
+  /* 3D Gradient effect */
+  color: ${props => props.color};
+  text-shadow: 
+    2px 2px 0px rgba(0,0,0,0.1),
+    -2px -2px 0px rgba(255,255,255,0.3);
+  background: linear-gradient(135deg, 
+    ${props => props.color} 0%,
+    ${props => lightenColor(props.color, 30)} 50%,
+    ${props => props.color} 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: linear-gradient(to bottom right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px rgba(0,0,0,0.1);
 `;
+
+// Helper function to lighten a color
+const lightenColor = (color, percent) => {
+  const num = parseInt(color.replace("#",""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        G = (num >> 8 & 0x00FF) + amt,
+        B = (num & 0x0000FF) + amt;
+  return `#${(0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1)}`;
+};
 
 const EyeImage = styled.img`
   width: 40px;
@@ -74,11 +87,27 @@ const EyeImage = styled.img`
 const DiscoBall = styled.img`
   width: 20px;
   position: absolute;
-  top: -30px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
 `;
+
+const TitleContainer = styled.div`
+  text-align: center;
+  position: relative;
+  white-space: nowrap;
+  padding: 40px 0; // Increased vertical padding
+  margin: 0;
+  overflow: visible;
+`;
+
+const AnimatedTitleWrapper = styled.div`
+  position: relative;
+  display: inline-block; // Changed from block to inline-block
+  padding: 0 20px; // Added horizontal padding
+`;
+
 
 const TitleScreen = ({ title = "IMPROViMANIA" }) => {
   const [bouncingLetters, setBouncingLetters] = useState(new Set());
@@ -86,6 +115,23 @@ const TitleScreen = ({ title = "IMPROViMANIA" }) => {
   const [eyePosition, setEyePosition] = useState(eyes);
   const [initialAnimationComplete, setInitialAnimationComplete] = useState(false);
   const [partyMode, setPartyMode] = useState(false);
+
+  const togglePartyMode = () => {
+    const body = document.body;
+    setPartyMode(!partyMode)
+    if (partyMode) {
+      // For body.dark
+      body.classList.add('party-mode');
+      // For body::before and body::after
+      body.style.setProperty('--background-size', '20px 2px');
+      body.style.setProperty('--animation-duration', '1s, 999s');
+    } else {
+      // Remove party mode classes and styles
+      body.classList.remove('party-mode');
+      body.style.removeProperty('--background-size');
+      body.style.removeProperty('--animation-duration');
+    }
+  };
 
   const getRandomInt = (max) => Math.floor(Math.random() * max);
 
@@ -147,7 +193,7 @@ const TitleScreen = ({ title = "IMPROViMANIA" }) => {
           <DiscoBall 
             src={discoBall} 
             alt="Disco Ball" 
-            onClick={() => setPartyMode(prevMode => !prevMode)}
+            onClick={() => togglePartyMode()}
           />
         )}
       </TitleChar>
@@ -175,9 +221,11 @@ const TitleScreen = ({ title = "IMPROViMANIA" }) => {
   }, [bouncingLetters, initialAnimationComplete, partyMode, title]);
 
   return (
-    <div className="titleContainer">
-      <div className="animatedTitle">{animatedTitle}</div>
-    </div>
+    <TitleContainer>
+      <AnimatedTitleWrapper>
+        <div className="animatedTitle">{animatedTitle}</div>
+      </AnimatedTitleWrapper>
+    </TitleContainer>
   );
 };
 
