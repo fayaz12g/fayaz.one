@@ -282,7 +282,7 @@ function App() {
             }
         }
     
-        const url = `wss://${fullIpAddress}:443`;
+        const url = `ws://${fullIpAddress}:443`;
         console.log("Sending WebSocket request to", url)
     
         // Add a ping to check if server is reachable
