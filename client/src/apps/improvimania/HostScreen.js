@@ -6,7 +6,7 @@ import finishTheme from '../../sound/improvimania/finish.m4a';
 
 const HostScreen = ({
   socket,
-  ipAddress,
+  serverIP,
   sessionCreated,
   createSession,
   gameStarted,
@@ -35,7 +35,7 @@ const HostScreen = ({
   const renderLobby = () => (
     <Lobby
       socket={socket}
-      ipAddress={ipAddress}
+      serverIP={serverIP}
       sessionCreated={sessionCreated}
       createSession={createSession}
       gameStarted={gameStarted}
@@ -66,13 +66,13 @@ const HostScreen = ({
 
         <div>
         <AnimatedTitle />
-        <h2 className="room-code">Room Code: {ipAddress}</h2>
+        <h2 className="room-code">Room Code: {serverIP}</h2>
         <div className="title-bar">
         <div className="join-message">
           <h2>Join at <span className="red-text">Fayaz.One</span> in your browser!</h2>
         </div>
         <div className="room-info">
-          <h2>Room Code: {ipAddress}</h2>
+          <h2>Room Code: {serverIP}</h2>
           <h4>Session: {sessionId}</h4>
         </div>
       </div>    

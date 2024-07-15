@@ -54,15 +54,34 @@ function App() {
         return storedValue === 'true' ? true : false;
       });
 
+    // Conversion functions
+    const numberToLetter = (num) => {
+        const parsedNum = parseInt(num);
+        if (isNaN(parsedNum) || parsedNum < 0 || parsedNum > 9) {
+            return 'X'; // Handle invalid numbers or periods
+        }
+        return String.fromCharCode(65 + parsedNum);
+    };
 
-    // useEffect(() => {
-    //     if (socket) {
-    //         if (role === 'host' && sessionCreated === false) {
-    //     createSession()
-    //         }
-    //     }
-    // }, [role]);
+    const letterToNumber = (letter) => {
+        if (letter === 'X') return '.';
+        return (letter.charCodeAt(0) - 65).toString();
+    };
 
+    const ipToLetters = (ip) => {
+        if (ip === 'localhost') return 'localhost';
+        return ip.split('')
+                .map(char => char === '.' ? 'X' : numberToLetter(char))
+                .join('');
+    };
+
+    const lettersToIp = (letters) => {
+        if (letters === 'localhost') return 'localhost';
+        return letters.split('')
+                    .map(letter => letterToNumber(letter))
+                    .join('');
+    };
+    
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
         const customIpAddress = searchParams.get('ipAddress');
@@ -243,23 +262,23 @@ function App() {
         
     }
 
+    // Client-side connection logic
     const connectToServer = () => {
-        let octets = ('localhost');
-        if (ipAddress) {
-            octets = ipAddress.split('.');
-        }
-
         let fullIpAddress;
-      
-        if (octets.length === 1) {
-            fullIpAddress = `192.168.1.${octets[0]}`;
-        } else if (octets.length === 2) {
-            fullIpAddress = `192.168.${octets[0]}.${octets[1]}`;
-        } else if (ipAddress) {
-            fullIpAddress = ipAddress;
-        }
-        else {
-            fullIpAddress = ('localhost');
+
+        if (ipAddress === 'localhost') {
+            fullIpAddress = 'localhost';
+        } else {
+            const numericIp = lettersToIp(ipAddress);
+            const octets = numericIp.split('.');
+
+            if (octets.length === 1) {
+                fullIpAddress = `192.168.1.${octets[0]}`;
+            } else if (octets.length === 2) {
+                fullIpAddress = `192.168.${octets[0]}.${octets[1]}`;
+            } else {
+                fullIpAddress = numericIp;
+            }
         }
 
         const url = `ws://${fullIpAddress}:3000`;
@@ -274,31 +293,26 @@ function App() {
         setConnectionError(false);
         setConnectionWaiting(true);
 
-        // Handle connection error
         newSocket.on('connect_error', (error) => {
             console.error('Connection error:', error);
             setConnectionError(true);
             setConnectionWaiting(false);
-            newSocket.close()
+            newSocket.close();
         });
 
         newSocket.on('connect', data => {
             setSocket(newSocket);
             setConnectionWaiting(false);
-            if (ipAddress) {
-                sessionStorage.setItem('ipAddress', ipAddress);
-            }
-            else {
-                sessionStorage.setItem('ipAddress', 'localhost');
-            }
-            
+            sessionStorage.setItem('ipAddress', ipAddress);
         });
+
         newSocket.on('serverVersion', (version) => {
-          setServerV(version);
-      });
-      newSocket.on('serverIpAddress', (serverIpAddress) => {
-        setServerIP(serverIpAddress);
-    });
+            setServerV(version);
+        });
+
+        newSocket.on('serverIpAddress', (serverIpAddress) => {
+            setServerIP(serverIpAddress);
+        });
     };
 
     const createSession = ( game ) => {

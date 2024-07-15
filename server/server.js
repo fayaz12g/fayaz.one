@@ -43,6 +43,35 @@ function loadScripts() {
     }
 }
 
+// Conversion functions
+const numberToLetter = (num) => {
+    const parsedNum = parseInt(num);
+    if (isNaN(parsedNum) || parsedNum < 0 || parsedNum > 9) {
+        return 'X'; // Handle invalid numbers or periods
+    }
+    return String.fromCharCode(65 + parsedNum);
+};
+
+const letterToNumber = (letter) => {
+    if (letter === 'X') return '.';
+    return (letter.charCodeAt(0) - 65).toString();
+};
+
+const ipToLetters = (ip) => {
+    if (ip === 'localhost') return 'localhost';
+    return ip.split('')
+             .map(char => char === '.' ? 'X' : numberToLetter(char))
+             .join('');
+};
+
+const lettersToIp = (letters) => {
+    if (letters === 'localhost') return 'localhost';
+    return letters.split('')
+                  .map(letter => letterToNumber(letter))
+                  .join('');
+};
+
+
 io.on('connection', (socket) => {
     const playerId = socket.handshake.query.playerId;
     const playerRole = socket.handshake.query.role;
@@ -100,18 +129,20 @@ io.on('connection', (socket) => {
         }
     }
 
-    // Emit the server IP address to the client
+    // Server-side IP emission logic
     if (serverIpAddress) {
-        let shortenedIP = serverIpAddress
-        const octets = serverIpAddress.split('.'); // Split the IP address into octets
+        let shortenedIP = serverIpAddress;
+        const octets = serverIpAddress.split('.');
         if (octets[0] === '192' && octets[1] === '168') {
-        if (octets[2] === '1') {
-            shortenedIP = octets[3]; // Only the fourth octet
-        } else {
-            shortenedIP = `${octets[2]}.${octets[3]}`; // The last two octets
+            if (octets[2] === '1') {
+                shortenedIP = octets[3]; // Only the fourth octet
+            } else {
+                shortenedIP = `${octets[2]}.${octets[3]}`; // The last two octets
+            }
         }
-    }
-        socket.emit('serverIpAddress', shortenedIP);
+        const letterIP = ipToLetters(shortenedIP);
+        socket.emit('serverIpAddress', letterIP);
+        console.log('Emitted IP', shortenedIP, 'into ', letterIP)
     } else {
         console.warn('Server IP address not found.');
     }

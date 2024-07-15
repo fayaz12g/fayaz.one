@@ -5,7 +5,7 @@ import GuessingHost from './guessing/HostScreen.js';
 
 const Hosts = ({
   socket,
-  ipAddress,
+  serverIP,
   sessionCreated,
   createSession,
   gameStarted,
@@ -30,13 +30,13 @@ const Hosts = ({
   setForceRemove,
   forceRemove,
   game,
-  setGame
+  setGame,
 }) => {
 
   const renderImprovHost = () => (
     <ImprovHost
       socket={socket}
-      ipAddress={ipAddress}
+      serverIP={serverIP}
       sessionCreated={sessionCreated}
       createSession={createSession}
       gameStarted={gameStarted}
@@ -66,7 +66,7 @@ const Hosts = ({
   const renderGuessingHost = () => (
     <GuessingHost
       socket={socket}
-      ipAddress={ipAddress}
+      ipAddress={serverIP}
       sessionCreated={sessionCreated}
       createSession={createSession}
       gameStarted={gameStarted}
