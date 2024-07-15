@@ -262,26 +262,28 @@ function App() {
         
     }
 
+    // Client-side connection logic
     const connectToServer = () => {
-        let octets = ('localhost');
-        if (ipAddress) {
-            octets = ipAddress.split('.');
-        }
-
         let fullIpAddress;
-      
-        if (octets.length === 1) {
-            fullIpAddress = `192.168.1.${octets[0]}`;
-        } else if (octets.length === 2) {
-            fullIpAddress = `192.168.${octets[0]}.${octets[1]}`;
-        } else if (ipAddress) {
-            fullIpAddress = ipAddress;
-        }
-        else {
-            fullIpAddress = ('localhost');
+
+        if (ipAddress === 'localhost') {
+            fullIpAddress = 'localhost';
+        } else {
+            const numericIp = lettersToIp(ipAddress);
+            console.log("Attempting to connect over", numericIp)
+            const octets = numericIp.split('.');
+
+            if (octets.length === 1) {
+                fullIpAddress = `192.168.1.${octets[0]}`;
+            } else if (octets.length === 2) {
+                fullIpAddress = `192.168.${octets[0]}.${octets[1]}`;
+            } else {
+                fullIpAddress = numericIp;
+            }
         }
 
         const url = `ws://${fullIpAddress}:3000`;
+        console.log("Sending request to", url)
         const newSocket = io(url, {
             transports: ['websocket'],
             query: {
@@ -293,32 +295,28 @@ function App() {
         setConnectionError(false);
         setConnectionWaiting(true);
 
-        // Handle connection error
         newSocket.on('connect_error', (error) => {
             console.error('Connection error:', error);
             setConnectionError(true);
             setConnectionWaiting(false);
-            newSocket.close()
+            newSocket.close();
         });
 
         newSocket.on('connect', data => {
             setSocket(newSocket);
             setConnectionWaiting(false);
-            if (ipAddress) {
-                sessionStorage.setItem('ipAddress', ipAddress);
-            }
-            else {
-                sessionStorage.setItem('ipAddress', 'localhost');
-            }
-            
+            sessionStorage.setItem('ipAddress', ipAddress);
         });
+
         newSocket.on('serverVersion', (version) => {
-          setServerV(version);
-      });
-      newSocket.on('serverIpAddress', (serverIpAddress) => {
-        setServerIP(serverIpAddress);
-    });
+            setServerV(version);
+        });
+
+        newSocket.on('serverIpAddress', (serverIpAddress) => {
+            setServerIP(serverIpAddress);
+        });
     };
+
     const createSession = ( game ) => {
         if (socket) {
             socket.emit('createSession', game);
