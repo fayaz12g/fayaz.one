@@ -64,7 +64,7 @@ const HostScreen = ({
   return (
 
         <div>
-        <AnimatedTitle />
+        <AnimatedTitle title="Guessing" />
         <h2 className="room-code">Room Code: {ipAddress}</h2>
         <div className="title-bar">
         <div className="join-message">

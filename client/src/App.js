@@ -15,6 +15,7 @@ import finishTheme from './sound/improvimania/finish.m4a';
 // Menu Imports
 import AudioPlayer from './apps/AudioPlayer';
 import Quit from './apps/Quit';
+import Game from './apps/Game';
 import AnimatedTitle from './apps/AnimatedTitle';
 
 function App() {
@@ -354,41 +355,8 @@ function App() {
         socket.emit('removePlayer', { sessionId, playerToRemove, forceRemove });
       };
 
-    const renderPickGame = () => (
-      <PickGame
-        socket={socket}
-        ipAddress={serverIP}
-        sessionCreated={sessionCreated}
-        createSession={createSession}
-        gameStarted={gameStarted}
-        sessionId={sessionId}
-        players={players}
-        rounds={rounds}
-        setRounds={setRounds}
-        currentRound={currentRound}
-        sessionList={sessionList}
-        leaderboard={leaderboard}
-        removePlayer={removePlayer}
-        titleTheme={titleTheme}
-        AudioPlayer={AudioPlayer}
-        isEndScene={isEndScene}
-        speakingTheme={speakingTheme}
-        guessingTheme={guessingTheme}
-        gameMode={gameMode}
-        setGameMode={setGameMode}
-        currentLine={currentLine}
-        isEndGame={isEndGame}
-        scriptFile={scriptFile}
-        setForceRemove={setForceRemove}
-        forceRemove={forceRemove}
-        game={game}
-        setGame={setGame}
-        theme={theme}
-      />
-    );
-
-    const renderPlayerScreen = () => (
-      <Players
+    const renderGame = () => (
+      <Game
         isEndGame={isEndGame}
         joinedSession={joinedSession}
         sessionId={sessionId}
@@ -408,11 +376,27 @@ function App() {
         leaderboard={leaderboard}
         kicked={kicked}
         titleTheme={titleTheme}
-        Audio={Audio}
+        AudioPlayer={AudioPlayer}
         speakingTheme={speakingTheme}
         guessingTheme={guessingTheme}
         sentGuess={sentGuess}
         game={game}
+        socket={socket}
+        serverIP={serverIP}
+        sessionCreated={sessionCreated}
+        createSession={createSession}
+        rounds={rounds}
+        setRounds={setRounds}
+        currentRound={currentRound}
+        removePlayer={removePlayer}
+        gameMode={gameMode}
+        setGameMode={setGameMode}
+        scriptFile={scriptFile}
+        setForceRemove={setForceRemove}
+        forceRemove={forceRemove}
+        setGame={setGame}
+        theme={theme}
+        role={role}
       />
     );
 
@@ -446,10 +430,8 @@ function App() {
                 <button onClick={() => {setRole('host'); sessionStorage.setItem('role', 'host')}}>Host</button>
                 <button onClick={() => {setRole('player'); sessionStorage.setItem('role', 'player')}}>Player</button>
             </div>
-        ) : role === 'host' ? (
-            renderPickGame()
         ) : (
-            renderPlayerScreen()
+            renderGame()
         )}
             <button 
                 className="theme-toggle" 
