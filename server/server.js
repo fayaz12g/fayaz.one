@@ -8,19 +8,29 @@ const os = require('os');
 
 const app = express();
 
+console.log('Reading SSL certificate files...');
 const options = {
     key: fs.readFileSync('./pem/key.pem'),
     cert: fs.readFileSync('./pem/cert.pem')
 };
+console.log('SSL certificate files read successfully.');
 
 const server = https.createServer(options, app);
 
-// Initialize Socket.IO for the server
+console.log('Initializing Socket.IO...');
+
 const io = socketIO(server, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
     }
+});
+
+console.log('Socket.IO initialized.');
+
+// Add a basic route for testing HTTPS
+app.get('/', (req, res) => {
+    res.send('HTTPS server is running!');
 });
 
 app.use(express.static('build'));
@@ -506,7 +516,7 @@ function endScene(sessionId) {
     io.to(sessionId).emit('endScene');
 }
 
-const PORT = 443; 
+const PORT = 443; // Use 443 for HTTPS/WSS
 server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
     logServerAddress(PORT);
@@ -529,7 +539,7 @@ function logServerAddress(port) {
     }
 
     if (serverIpAddress) {
-        console.log(`Server is hosted at: https://${serverIpAddress}:${port}`);
+        console.log(`HTTPS server is hosted at: https://${serverIpAddress}:${port}`);
         console.log(`WebSocket server is available at: wss://${serverIpAddress}:${port}`);
     } else {
         console.warn('Server IP address not found.');

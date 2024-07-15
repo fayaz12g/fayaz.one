@@ -283,32 +283,63 @@ function App() {
         }
     
         const url = `wss://${fullIpAddress}:443`;
-        console.log("Sending request to", url)
+        console.log("Sending WebSocket request to", url)
+    
+        // Add a ping to check if server is reachable
+        fetch(`https://${fullIpAddress}:443/ping`)
+            .then(() => console.log("Server is reachable"))
+            .catch(error => console.error("Server is not reachable:", error));
+    
         const newSocket = io(url, {
             transports: ['websocket'],
             secure: true,
-            rejectUnauthorized: false, // Only use this for development/testing
-            query: {
-                playerId: sessionStorage.getItem('playerId'),
-                role: sessionStorage.getItem('role')
-            }
+            rejectUnauthorized: false,
+            timeout: 10000, // 10 seconds timeout
+            debug: true // Enable debug mode
         });
-
+    
         setConnectionError(false);
         setConnectionWaiting(true);
-
+    
         newSocket.on('connect_error', (error) => {
-            console.error('Connection error:', error);
+            console.error('WebSocket connection error:', error);
+            if (error.description) {
+                console.error('Error description:', error.description);
+            }
+            if (error.stack) {
+                console.error('Error stack:', error.stack);
+            }
             setConnectionError(true);
             setConnectionWaiting(false);
             newSocket.close();
         });
-
-        newSocket.on('connect', data => {
+    
+        newSocket.on('connect_timeout', () => {
+            console.error('Connection timeout');
+            setConnectionError(true);
+            setConnectionWaiting(false);
+        });
+    
+        newSocket.on('error', (error) => {
+            console.error('Socket error:', error);
+        });
+    
+        newSocket.on('connect', () => {
+            console.log('WebSocket connection established');
             setSocket(newSocket);
             setConnectionWaiting(false);
             sessionStorage.setItem('ipAddress', ipAddress);
         });
+    
+        // Add a timeout
+        setTimeout(() => {
+            if (!newSocket.connected) {
+                console.error('Connection attempt timed out');
+                setConnectionError(true);
+                setConnectionWaiting(false);
+                newSocket.close();
+            }
+        }, 15000); // 15 seconds timeout
 
         newSocket.on('serverVersion', (version) => {
             setServerV(version);
