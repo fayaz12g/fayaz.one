@@ -1,4 +1,4 @@
-const https = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -167,10 +167,8 @@ io.on('connection', (socket) => {
         let shortSessionId;
 
         if (sessionId <= 26) {
-          // Convert to letter A-Z
           shortSessionId = String.fromCharCode(64 + sessionId);
         } else {
-          // Use the number directly
           shortSessionId = shortSessionId;
         }
         sessions[shortSessionId] = { 
@@ -183,8 +181,8 @@ io.on('connection', (socket) => {
             currentSpeaker: null,
             currentRound: 0,
             rounds: 0,
-            gameMode: 'classic', // 'classic' or 'freeforall'
-            originalRoles: {} // Store original roles for freeforall mode
+            gameMode: 'classic',
+            originalRoles: {} 
         };
         sessions[shortSessionId].hostSocket = socket.id;
         socket.join(shortSessionId);
@@ -222,8 +220,6 @@ io.on('connection', (socket) => {
                 } else {
                     console.log("Player left voluntarily");
                 }
-    
-                // Notify other clients about the player removal
                 io.to(sessionId).emit('playerRemoved', {  
                     removedPlayer: removedPlayer.socketId, 
                     kickPlayer: forceRemove
@@ -244,10 +240,9 @@ io.on('connection', (socket) => {
             sessions[sessionId].currentRound = 0;
             sessions[sessionId].gameMode = gameMode;
 
-            // Update the script file name if provided
             if (scriptFile) {
                 scriptFileName = scriptFile;
-                loadScripts(); // Reload scripts with the new file
+                loadScripts();
             }
             
             io.to(sessionId).emit('gameStarted', { 
@@ -289,24 +284,20 @@ io.on('connection', (socket) => {
         if (session.gameMode === 'freeforall') {
             guesses++;
             if (guesses >= 3) {
-                // Check if all rounds are completed
                 if (session.currentRound >= session.rounds) {
                     console.log('Game has ended');
                     io.to(sessionId).emit('endGame');
                 } else {
-                    // Start next round
                     startRound(sessionId);
                 }
             }
 
         }
         else {
-            // Check if all rounds are completed
             if (session.currentRound >= session.rounds) {
                 console.log('Game has ended');
                 io.to(sessionId).emit('endGame');
             } else {
-                // Start next round
                 startRound(sessionId);
             }
     }

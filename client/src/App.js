@@ -265,14 +265,14 @@ function App() {
     // Client-side connection logic
     const connectToServer = () => {
         let fullIpAddress;
-
+    
         if (ipAddress === 'localhost') {
             fullIpAddress = 'localhost';
         } else {
             const numericIp = lettersToIp(ipAddress);
             console.log("Attempting to connect over", numericIp)
             const octets = numericIp.split('.');
-
+    
             if (octets.length === 1) {
                 fullIpAddress = `192.168.1.${octets[0]}`;
             } else if (octets.length === 2) {
@@ -281,11 +281,13 @@ function App() {
                 fullIpAddress = numericIp;
             }
         }
-
-        const url = `ws://${fullIpAddress}:443`;
+    
+        const url = `wss://${fullIpAddress}:443`;
         console.log("Sending request to", url)
         const newSocket = io(url, {
             transports: ['websocket'],
+            secure: true,
+            rejectUnauthorized: false, // Only use this for development/testing
             query: {
                 playerId: sessionStorage.getItem('playerId'),
                 role: sessionStorage.getItem('role')
