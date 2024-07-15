@@ -142,7 +142,7 @@ io.on('connection', (socket) => {
         }
         const letterIP = ipToLetters(shortenedIP);
         socket.emit('serverIpAddress', letterIP);
-        console.log('Emitted IP', shortenedIP, 'into ', letterIP)
+        console.log('Emitted Short IP', shortenedIP, 'into', letterIP, 'to', socket.id)
     } else {
         console.warn('Server IP address not found.');
     }
