@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import AnimatedTitle from './AnimatedTitle';
+import AnimatedTitle from './AnimatedTitle.js';
 import ImprovHost from './improvimania/HostScreen.js';
 import GuessingHost from './guessing/HostScreen.js';
 
-const PickGame = ({
+const Hosts = ({
   socket,
   ipAddress,
   sessionCreated,
@@ -139,4 +139,4 @@ const PickGame = ({
   );
 };
 
-export default PickGame;
+export default Hosts;

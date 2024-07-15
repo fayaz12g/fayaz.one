@@ -6,7 +6,7 @@ import './App.css';
 // Improvimania Imports
 import titleImage from './image/improvimania/title.png';
 import Players from './apps/Players';
-import PickGame from './apps/PickGame';
+import Hosts from './apps/Hosts';
 import titleTheme from './sound/improvimania/theme.m4a';
 import speakingTheme from './sound/improvimania/speaking.m4a';
 import guessingTheme from './sound/improvimania/guessing.m4a';

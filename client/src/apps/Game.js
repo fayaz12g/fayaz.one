@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ImprovPlayer from './improvimania/PlayerScreen';
 import GuessingPlayer from './guessing/PlayerScreen';
 import Players from './Players';
-import PickGame from './PickGame';
+import Hosts from './Hosts';
 
 const Game = ({
     isEndGame,
@@ -48,8 +48,8 @@ const Game = ({
     
 }) => {
   
-    const renderPickGame = () => (
-        <PickGame
+    const renderHosts = () => (
+        <Hosts
           socket={socket}
           serverIP={serverIP}
           sessionCreated={sessionCreated}
@@ -112,7 +112,7 @@ const Game = ({
 
   return (
     <div>
-      {role==='host' && renderPickGame()}
+      {role==='host' && renderHosts()}
       {role==='player' && renderPlayerScreen()}
     </div>
   );
