@@ -5,7 +5,7 @@ import './App.css';
 
 // Improvimania Imports
 import titleImage from './image/improvimania/title.png';
-import PlayerScreen from './apps/improvimania/PlayerScreen';
+import Players from './apps/Players';
 import PickGame from './apps/PickGame';
 import titleTheme from './sound/improvimania/theme.m4a';
 import speakingTheme from './sound/improvimania/speaking.m4a';
@@ -165,6 +165,9 @@ function App() {
             setCurrentLine({ text: line, isAdlib });
             setIsSpeaker(isSpeaker);
             setIsEndScene(false);
+        });
+        socket.on('setGame', ({ game }) => {
+            setGame(game);
         });
         socket.on('updatePoints', ({ points }) => {
             setLeaderboard(prevLeaderboard => ({
@@ -385,7 +388,7 @@ function App() {
     );
 
     const renderPlayerScreen = () => (
-      <PlayerScreen
+      <Players
         isEndGame={isEndGame}
         joinedSession={joinedSession}
         sessionId={sessionId}
@@ -409,6 +412,7 @@ function App() {
         speakingTheme={speakingTheme}
         guessingTheme={guessingTheme}
         sentGuess={sentGuess}
+        game={game}
       />
     );
 

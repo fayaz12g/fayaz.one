@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import AnimatedTitle from '../AnimatedTitle';
 import Lobby from './HostScreen/Lobby';
-import Leaderboard from './Leaderboard';
 import finishTheme from '../../sound/improvimania/finish.m4a';
 
 const HostScreen = ({
@@ -65,7 +64,7 @@ const HostScreen = ({
   return (
 
         <div>
-        <AnimatedTitle title="Guessing" />
+        <AnimatedTitle />
         <h2 className="room-code">Room Code: {ipAddress}</h2>
         <div className="title-bar">
         <div className="join-message">
@@ -76,23 +75,11 @@ const HostScreen = ({
           <h4>Session: {sessionId}</h4>
         </div>
       </div>    
-          {!gameStarted ? (
+          {!gameStarted &&
             <div>
               {renderLobby()}
             </div>
-          ) : !isEndScene ? (
-            <div>
-              <h3>Round: {currentRound}/{rounds}</h3>
-              <h3>{currentLine?.text}</h3>
-              <Leaderboard />
-            </div>
-          ) : (
-            <div>
-              <h3>Round: {currentRound}/{rounds}</h3>
-              <h3>The Guesser is Guessing</h3>
-              <Leaderboard />
-            </div>
-          )}
+          }
         </div>
   );
 };

@@ -27,57 +27,12 @@ const PlayerScreen = ({
   guessingTheme,
   sentGuess,
 }) => {
-  const [noName, setNoName] = useState(false);
-
-  const handleJoinClick = (sessionIds) => {
-    // setSessionId(sessionIds);
-    if (!playerName)
-      setNoName(true);
-    joinSession(sessionIds);
-  };
 
   return (
     <div>
       {!isEndGame ? (
         <div>
-          {!joinedSession ? (
-            <>
-              <div className="App">
-              {(sessionList.length > 0) && <h2>Join a Game</h2>}
-              {(sessionList.length > 0) && <div>
-                <input
-                  type="text"
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  placeholder="Enter Your Name"
-                />
-              </div>}
-              <div>
-              {Array.isArray(sessionList) && sessionList.length > 0 ? (
-                  sessionList.map((sessionIds) => (
-                    <button
-                      style={{ fontWeight: 'bold' }}
-                      key={sessionIds}
-                      onClick={() => handleJoinClick(sessionIds)}
-                      >
-                      {sessionList.length === 1 ? (
-                        "Join Session"
-                      ) : (
-                        <>
-                          Join Session <br />
-                          {sessionIds}
-                        </>
-                      )}
-                    </button>
-                  ))
-                ) : (
-                  <p>No active sessions available.</p>
-                )}
-              </div>
-              {noName && <p style={{ color: 'red' }}>First enter a name to join Session {sessionId}</p>}
-            </div>
-            </>
-        ) : !gameStarted ? (
+          {!gameStarted ? (
           <div>
             <div className="App">
             <h2>Welcome, {playerName}</h2>

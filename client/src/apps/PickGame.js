@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AnimatedTitle from './AnimatedTitle';
 import ImprovHost from './improvimania/HostScreen.js';
+import GuessingHost from './guessing/HostScreen.js';
 
 const PickGame = ({
   socket,
@@ -62,25 +63,78 @@ const PickGame = ({
     />
   );
 
+  const renderGuessingHost = () => (
+    <GuessingHost
+      socket={socket}
+      ipAddress={ipAddress}
+      sessionCreated={sessionCreated}
+      createSession={createSession}
+      gameStarted={gameStarted}
+      sessionId={sessionId}
+      players={players}
+      rounds={rounds}
+      setRounds={setRounds}
+      currentRound={currentRound}
+      sessionList={sessionList}
+      leaderboard={leaderboard}
+      removePlayer={removePlayer}
+      titleTheme={titleTheme}
+      AudioPlayer={AudioPlayer}
+      isEndScene={isEndScene}
+      speakingTheme={speakingTheme}
+      guessingTheme={guessingTheme}
+      gameMode={gameMode}
+      setGameMode={setGameMode}
+      currentLine={currentLine}
+      isEndGame={isEndGame}
+      scriptFile={scriptFile}
+      setForceRemove={setForceRemove}
+      forceRemove={forceRemove}
+    />
+  );
+
 
   return (
     <div>
       {!sessionCreated ? (
         <div className="App">
           <h3>Pick a Game:</h3>
-          <button onClick={() => { setGame('improv'); sessionStorage.setItem('game', 'improv'); createSession('improv'); }}><AnimatedTitle /></button>
+          <button
+            onClick={() => {
+              setGame('improv');
+              sessionStorage.setItem('game', 'improv');
+              createSession('improv');
+            }}
+          >
+            <AnimatedTitle />
+          </button>
           <br />
-          <button onClick={() => { setGame('soon'); createSession('soon'); }}><AnimatedTitle title="cOming soon..." /></button>
+          <button
+            onClick={() => {
+              setGame('guessing');
+              sessionStorage.setItem('game', 'guessing');
+              createSession('guessing');
+            }}
+          >
+            <AnimatedTitle title="Guessing" />
+          </button>
           <br />
-          <button onClick={() => { setGame('soon'); createSession('soon'); }}><AnimatedTitle title="cOming soon..." /></button>
+          <button
+            onClick={() => {
+              setGame('soon');
+              createSession('soon');
+            }}
+          >
+            <AnimatedTitle title="cOming soon..." />
+          </button>
         </div>
-      ) : (
-        game === 'improv' && (
-          <div>
-            {renderImprovHost()}
-          </div>
-        )
-      )}
+      ) : game === 'improv' ? (
+        <div>{renderImprovHost()}</div>
+      ) : game === 'guessing' ? (
+        <div>{renderGuessingHost()}</div>
+      ) : game === 'soon' ? (
+        <div>Coming Soon</div>
+      ) : null}
     </div>
   );
 };

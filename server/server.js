@@ -166,6 +166,7 @@ io.on('connection', (socket) => {
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
             console.log(sessions[sessionId].players);
             console.log('Player joined session:', sessionId, playerName);
+            socket.emit('setGame', { game: sessions[sessionId].game });
         } else {
             socket.emit('error', 'Session not found');
         }
