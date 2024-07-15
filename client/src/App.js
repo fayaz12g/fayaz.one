@@ -282,7 +282,7 @@ function App() {
             }
         }
 
-        const url = `ws://${fullIpAddress}:3000`;
+        const url = `ws://${fullIpAddress}:443`;
         console.log("Sending request to", url)
         const newSocket = io(url, {
             transports: ['websocket'],

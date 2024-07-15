@@ -1,4 +1,4 @@
-const http = require('http');
+const https = require('http');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -8,7 +8,12 @@ const os = require('os');
 
 const app = express();
 
-const server = http.createServer(app);
+const options = {
+    key: fs.readFileSync('./pem/key.pem'),
+    cert: fs.readFileSync('./pem/cert.pem')
+};
+
+const server = https.createServer(options, app);
 
 // Initialize Socket.IO for the server
 const io = socketIO(server, {
@@ -512,8 +517,7 @@ function endScene(sessionId) {
     io.to(sessionId).emit('endScene');
 }
 
-const PORT = 3000;
-
+const PORT = 443; 
 server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
     logServerAddress(PORT);
@@ -536,8 +540,8 @@ function logServerAddress(port) {
     }
 
     if (serverIpAddress) {
-        console.log(`Server is hosted at: http://${serverIpAddress}:${port}`);
-        console.log(`WebSocket server is available at: ws://${serverIpAddress}:${port}`);
+        console.log(`Server is hosted at: https://${serverIpAddress}:${port}`);
+        console.log(`WebSocket server is available at: wss://${serverIpAddress}:${port}`);
     } else {
         console.warn('Server IP address not found.');
     }
