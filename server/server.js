@@ -163,8 +163,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createSession', ( game ) => {
-        // const sessionId = Math.random().toString(36).substring(2, 15).replace(/[0-9]/g, '');
-        // const shortSessionId = sessionId.substring(0, 4).toUpperCase();
         const sessionId = ++currentSession;
         let shortSessionId;
 
