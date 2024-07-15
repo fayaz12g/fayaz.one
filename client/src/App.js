@@ -270,6 +270,7 @@ function App() {
             fullIpAddress = 'localhost';
         } else {
             const numericIp = lettersToIp(ipAddress);
+            console.log("Attempting to connect over", numericIp)
             const octets = numericIp.split('.');
 
             if (octets.length === 1) {
@@ -282,6 +283,7 @@ function App() {
         }
 
         const url = `ws://${fullIpAddress}:3000`;
+        console.log("Sending request to", url)
         const newSocket = io(url, {
             transports: ['websocket'],
             query: {
