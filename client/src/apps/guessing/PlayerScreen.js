@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, Typography, Button } from '@/components/ui/card';
 
 const PlayerScreen = ({
   socket,
@@ -84,32 +83,6 @@ const PlayerScreen = ({
 
   return (
     <div className="player-screen">
-      <Card>
-        <CardContent>
-          <Typography variant="h5">Guessing Game</Typography>
-          {isMyTurn ? (
-            <>
-              {spinResult === null ? (
-                <Button onClick={handleSpin}>Spin</Button>
-              ) : (
-                <>
-                  <Typography variant="h6">Current Hint:</Typography>
-                  <Typography variant="body1">{currentHint}</Typography>
-                  <Button onClick={handleRequestHint}>Request Next Hint</Button>
-                  <Typography variant="h6">Choose your answer:</Typography>
-                  {answerOptions.map((option, index) => (
-                    <Button key={index} onClick={() => handleAnswer(option)} fullWidth variant="outlined" style={{ margin: '5px 0' }}>
-                      {option}
-                    </Button>
-                  ))}
-                </>
-              )}
-            </>
-          ) : (
-            <Typography variant="h6">Waiting for your turn...</Typography>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 };

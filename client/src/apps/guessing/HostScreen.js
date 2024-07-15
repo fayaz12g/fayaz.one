@@ -36,18 +36,6 @@ const HostScreen = ({
 
   useEffect(() => {
     if (gameStarted) {
-      // Load card decks from JSON files
-      const loadCardDecks = async () => {
-        const decks = {
-          red: await import('../../data/redCards.json'),
-          blue: await import('../../data/blueCards.json'),
-          green: await import('../../data/greenCards.json'),
-          yellow: await import('../../data/yellowCards.json'),
-        };
-        setCardDecks(decks);
-      };
-      loadCardDecks();
-
       // Set up socket listeners for game events
       socket.on('playerTurn', ({ player, space }) => {
         setCurrentPlayer(player);
