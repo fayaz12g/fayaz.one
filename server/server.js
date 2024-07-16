@@ -1,36 +1,16 @@
-const https = require('http');
-const fs = require('fs');
-const path = require('path');
 const express = require('express');
-const socketIO = require('socket.io');
+const http = require('http');
+const { Server } = require("socket.io");
 const serverVersion = '0.6 Sonic Alpha';
 const os = require('os');
 
 const app = express();
-
-console.log('Reading SSL certificate files...');
-const options = {
-    key: fs.readFileSync('./pem/key.pem'),
-    cert: fs.readFileSync('./pem/cert.pem')
-};
-console.log('SSL certificate files read successfully.');
-
-const server = https.createServer(options, app);
-
-console.log('Initializing Socket.IO...');
-
-const io = socketIO(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
-
-console.log('Socket.IO initialized.');
-
-// Add a basic route for testing HTTPS
-app.get('/', (req, res) => {
-    res.send('HTTPS server is running!');
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
 });
 
 app.use(express.static('build'));
@@ -516,10 +496,9 @@ function endScene(sessionId) {
     io.to(sessionId).emit('endScene');
 }
 
-const PORT = 443; // Use 443 for HTTPS/WSS
+const PORT = process.env.PORT || 443;
 server.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-    logServerAddress(PORT);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 function logServerAddress(port) {
@@ -539,7 +518,7 @@ function logServerAddress(port) {
     }
 
     if (serverIpAddress) {
-        console.log(`HTTPS server is hosted at: https://${serverIpAddress}:${port}`);
+        console.log(`HTTP server is hosted at: http://${serverIpAddress}:${port}`);
         console.log(`WebSocket server is available at: wss://${serverIpAddress}:${port}`);
     } else {
         console.warn('Server IP address not found.');

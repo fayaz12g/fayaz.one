@@ -36,6 +36,7 @@ function App() {
     const [joinedSession, setJoinedSession] = useState(false);
     const [isEndScene, setIsEndScene] = useState(false);
     const [isEndGame, setIsEndGame] = useState(false);
+    const [customServer, setCustomServer] = useState(false);
     const [gameMode, setGameMode] = useState('freeforall');
     const [isSpeaker, setIsSpeaker] = useState(false);
     const [connectionError, setConnectionError] = useState(false); 
@@ -203,17 +204,17 @@ function App() {
 
         socket.on('availableSessions', (sessions) => {
             setSessionList(sessions);
-         // Check if sessionList contains at least one session
-            if (sessions.length > 0) {
-                // Check if role in sessionStorage is not 'host'
-                const storedRole = sessionStorage.getItem('role');
-                if (storedRole !== 'host') {
-                setRole('player');
-                }
-            }
-            else {
-                setRole('host'); // might be a stupid change
-            }
+            // // Check if sessionList contains at least one session
+            // if (sessions.length > 0) {
+            //     // Check if role in sessionStorage is not 'host'
+            //     const storedRole = sessionStorage.getItem('role');
+            //     if (storedRole !== 'host') {
+            //     setRole('player');
+            //     }
+            // }
+            // else {
+            //     setRole('host'); // might be a stupid change
+            // }
         });
         
 
@@ -262,8 +263,7 @@ function App() {
         
     }
 
-    // Client-side connection logic
-    const connectToServer = () => {
+    const convertIP = () => {
         let fullIpAddress;
     
         if (ipAddress === 'localhost') {
@@ -281,73 +281,49 @@ function App() {
                 fullIpAddress = numericIp;
             }
         }
-    
-        const url = `ws://${fullIpAddress}:443`;
+    }
+
+    // Client-side connection logic
+    const connectToServer = () => {
+        const url = 'wss://fayaz.fly.dev';
         console.log("Sending WebSocket request to", url)
-    
-        // Add a ping to check if server is reachable
-        fetch(`https://${fullIpAddress}:443/ping`)
-            .then(() => console.log("Server is reachable"))
-            .catch(error => console.error("Server is not reachable:", error));
-    
+        
         const newSocket = io(url, {
             transports: ['websocket'],
-            secure: true,
-            rejectUnauthorized: false,
-            timeout: 10000, // 10 seconds timeout
-            debug: true // Enable debug mode
+            query: {
+                playerId: sessionStorage.getItem('playerId'),
+                role: sessionStorage.getItem('role')
+            }
         });
-    
+
         setConnectionError(false);
         setConnectionWaiting(true);
-    
+
+        // Handle connection error
         newSocket.on('connect_error', (error) => {
-            console.error('WebSocket connection error:', error);
-            if (error.description) {
-                console.error('Error description:', error.description);
-            }
-            if (error.stack) {
-                console.error('Error stack:', error.stack);
-            }
+            console.error('Connection error:', error);
             setConnectionError(true);
             setConnectionWaiting(false);
-            newSocket.close();
+            newSocket.close()
         });
-    
-        newSocket.on('connect_timeout', () => {
-            console.error('Connection timeout');
-            setConnectionError(true);
-            setConnectionWaiting(false);
-        });
-    
-        newSocket.on('error', (error) => {
-            console.error('Socket error:', error);
-        });
-    
-        newSocket.on('connect', () => {
-            console.log('WebSocket connection established');
+
+        newSocket.on('connect', data => {
             setSocket(newSocket);
             setConnectionWaiting(false);
-            sessionStorage.setItem('ipAddress', ipAddress);
-        });
-    
-        // Add a timeout
-        setTimeout(() => {
-            if (!newSocket.connected) {
-                console.error('Connection attempt timed out');
-                setConnectionError(true);
-                setConnectionWaiting(false);
-                newSocket.close();
+            if (ipAddress) {
+                sessionStorage.setItem('ipAddress', ipAddress);
             }
-        }, 15000); // 15 seconds timeout
-
+            else {
+                sessionStorage.setItem('ipAddress', 'localhost');
+            }
+            
+        });
         newSocket.on('serverVersion', (version) => {
-            setServerV(version);
-        });
-
-        newSocket.on('serverIpAddress', (serverIpAddress) => {
-            setServerIP(serverIpAddress);
-        });
+          setServerV(version);
+      });
+      newSocket.on('serverIpAddress', (serverIpAddress) => {
+        setServerIP(serverIpAddress);
+    });
     };
 
     const createSession = ( game ) => {
@@ -462,8 +438,8 @@ function App() {
     <div className="main-content">
         {!socket ? (
             <div className="App">
-            <div>
-                <AnimatedTitle title="fayaz.One" />
+            <AnimatedTitle title="fayaz.One" />
+           {customServer && <div>
                 {kicked && <h2 style={{ color: 'red' }}>You have been kicked by the host.</h2>}
                 {!connectionWaiting && !kicked && <input type="text" 
                 value={ipAddress} 
@@ -472,10 +448,15 @@ function App() {
                 {!connectionWaiting && !kicked && <button onClick={connectToServer}>Connect</button>}
                 {connectionWaiting && <h2>Attempting connection, please wait.</h2>}
                 {connectionError && <p style={{ color: 'red' }}>Connection failed. Please check the IP address and try again.</p>}
+            </div>}
+            <div>
+            {!customServer && <button onClick={() => {setRole('host'); connectToServer(); sessionStorage.setItem('role', 'host')}}>Host a Game</button>}
+            {!customServer && <button onClick={() => {setRole('player'); connectToServer(); sessionStorage.setItem('role', 'player')}}>Join as Player</button>}
             </div>
             </div>
         ) : !role ? (
-            <div>
+            <div className='App'>
+                <h1>Choose a Role</h1>
                 <button onClick={() => {setRole('host'); sessionStorage.setItem('role', 'host')}}>Host</button>
                 <button onClick={() => {setRole('player'); sessionStorage.setItem('role', 'player')}}>Player</button>
             </div>

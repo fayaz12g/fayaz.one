@@ -66,7 +66,6 @@ const HostScreen = ({
 
         <div>
         <AnimatedTitle />
-        <h2 className="room-code">Room Code: {serverIP}</h2>
         <div className="title-bar">
         <div className="join-message">
           <h2>Join at <span className="red-text">Fayaz.One</span> in your browser!</h2>
