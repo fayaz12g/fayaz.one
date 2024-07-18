@@ -44,7 +44,8 @@ const Game = ({
     forceRemove,
     setGame,
     theme,
-    role
+    role,
+    guessesMade
     
 }) => {
   
@@ -78,6 +79,7 @@ const Game = ({
           game={game}
           setGame={setGame}
           theme={theme}
+          guessesMade={guessesMade}
         />
       );
   

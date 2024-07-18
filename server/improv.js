@@ -201,20 +201,26 @@ function endScene(io, sessions, sessionId) {
 function guessAdlibber(io, sessions, sessionId, guesserSocketId, guess) {
     const session = sessions[sessionId];
     const roles = session.gameMode === 'freeforall' ? session.originalRoles : session.roles;
-    
+    const guesser = session.players.find(player => player.socketId === guesserSocketId);
     const adlibber = session.players.find(player => roles[player.socketId] === 'Speaker 1');
-    
-    if (adlibber.name === guess) {
-        const guesser = session.players.find(player => player.socketId === guesserSocketId);
-        guesser.points += 1;
-        io.to(sessionId).emit('updatePoints', { points: { [guesser.name]: guesser.points } });
-        console.log(`${guesser.name} has correctly guessed the Adlibber.`);
-    } else {
-        adlibber.points += 1;
-        io.to(sessionId).emit('updatePoints', { points: { [adlibber.name]: adlibber.points } });
-        console.log(`The Adlibber (${adlibber.name}) has fooled ${guesserSocketId}.`);
+
+    if (guesser.name != adlibber.name) {
+        if (adlibber.name === guess) {
+            guesser.points += 1;
+            correctGuess = true;
+            io.to(sessionId).emit('updatePoints', { points: { [guesser.name]: guesser.points } });
+            console.log(`${guesser.name} has correctly guessed the Adlibber.`);
+        } else {
+            adlibber.points += 1;
+            correctGuess = false;
+            io.to(sessionId).emit('updatePoints', { points: { [adlibber.name]: adlibber.points } });
+            console.log(`The Adlibber (${adlibber.name}) has fooled ${guesserSocketId}.`);
+        }
     }
-    
+
+    let correctGuess;
+    io.to(sessionId).emit('guessMade', { name: [guesser.name], guess, correct: correctGuess });
+
     if (session.gameMode === 'freeforall') {
         session.guesses++;
         if (session.guesses >= 3) {

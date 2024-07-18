@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ImprovGame = ({ socket, sessionId, setGameStarted, setRounds, setCurrentRound, setPlayerRole, setLeaderboard, setIsEndScene, setIsSpeaker, setCurrentLine, setSentGuess, setIsEndGame, role, players, leaderboard }) => {
+const ImprovGame = ({ socket, sessionId, setGameStarted, setRounds, setCurrentRound, setPlayerRole, setLeaderboard, setIsEndScene, setIsSpeaker, setCurrentLine, setSentGuess, setIsEndGame, role, players, leaderboard, setGuessesMade }) => {
     useEffect(() => {
         if (socket) {
             socket.on('gameStarted', ({ rounds, roles, currentround }) => {
@@ -57,7 +57,9 @@ const ImprovGame = ({ socket, sessionId, setGameStarted, setRounds, setCurrentRo
                 setGameStarted(false);
                 setIsEndGame(true);
             });
-
+            socket.on('guessMade', ({ name, guess, correct }) => {
+                setGuessesMade(prevGuesses => [...prevGuesses, { name, guess, correct }]);
+            });
             socket.on('updatePoints', ({ points }) => {
                 setLeaderboard(prevLeaderboard => ({
                     ...prevLeaderboard,
@@ -75,6 +77,7 @@ const ImprovGame = ({ socket, sessionId, setGameStarted, setRounds, setCurrentRo
                 socket.off('updateLine');
                 socket.off('endScene');
                 socket.off('endGame');
+                socket.off('guessMade');
             }
         };
     }, [socket]);

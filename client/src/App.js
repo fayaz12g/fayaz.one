@@ -25,6 +25,7 @@ function App() {
     const [ipAddress, setIpAddress] = useState(sessionStorage.getItem('ipAddress'));
     const [serverIP, setServerIP] = useState('');
     const [role, setRole] = useState(null);
+    const [guessesMade, setGuessesMade] = useState([]);
     const [socket, setSocket] = useState(null);
     const [sessionId, setSessionId] = useState('');
     const [playerName, setPlayerName] = useState('');
@@ -297,7 +298,8 @@ function App() {
         setIsEndGame,
         role,
         players,
-        leaderboard
+        leaderboard,
+        setGuessesMade
     });
 
     const removePlayer = (playerToRemove, forceRemove) => {
@@ -347,6 +349,7 @@ function App() {
         setGame={setGame}
         theme={theme}
         role={role}
+        guessesMade={guessesMade}
       />
     );
 

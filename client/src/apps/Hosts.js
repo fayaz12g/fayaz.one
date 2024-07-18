@@ -31,6 +31,7 @@ const Hosts = ({
   forceRemove,
   game,
   setGame,
+  guessesMade
 }) => {
 
   const renderImprovHost = () => (
@@ -60,6 +61,7 @@ const Hosts = ({
       scriptFile={scriptFile}
       setForceRemove={setForceRemove}
       forceRemove={forceRemove}
+      guessesMade={guessesMade}
     />
   );
 

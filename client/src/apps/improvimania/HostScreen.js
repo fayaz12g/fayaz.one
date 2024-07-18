@@ -30,6 +30,7 @@ const HostScreen = ({
   scriptFile,
   setForceRemove,
   forceRemove,
+  guessesMade
 }) => {
   const [activeScreen, setActiveScreen] = useState('lobby');
 
@@ -59,9 +60,21 @@ const HostScreen = ({
 
   const renderGuessingScreen = () => (
     <div className="App">
-      <h2>Guess the Adlibber!</h2>
+        <h2>Guess the Adlibber!</h2>
+        <div className="guesses-container">
+            {guessesMade.map((guess, index) => (
+                <div key={index} className="guess-block">
+                    <span>{guess.guess}</span>
+                    <div className="voters">
+                        <span className={guess.correct ? 'correct' : 'incorrect'}>
+                            {guess.name}
+                        </span>
+                    </div>
+                </div>
+            ))}
+        </div>
     </div>
-  );
+);
 
   return (
     <div className="host-screen">
