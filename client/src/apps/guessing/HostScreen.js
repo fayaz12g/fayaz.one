@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AnimatedTitle from '../AnimatedTitle';
 import Lobby from './HostScreen/Lobby';
-import GameBoard from './HostScreen/Gameboard';
+import GameBoard from './HostScreen/GameBoard';
 
 const HostScreen = ({
   socket,
@@ -31,7 +31,6 @@ const HostScreen = ({
   forceRemove,
 }) => {
   const [currentPlayer, setCurrentPlayer] = useState(null);
-  const [currentSpace, setCurrentSpace] = useState(null);
   const [gameBoard, setGameBoard] = useState([]);
   const [currentHint, setCurrentHint] = useState('');
   const [currentOptions, setCurrentOptions] = useState([]);
@@ -51,7 +50,6 @@ const HostScreen = ({
 
       socket.on('spinResult', ({ playerId, result }) => {
         setSpinResult(result);
-        // You might want to add some animation here
       });
 
       socket.on('questionAsked', ({ hint, options }) => {
@@ -134,7 +132,7 @@ const HostScreen = ({
   );
 
   return (
-    <div>
+    <div className="host-screen">
       <AnimatedTitle title="Guessing" />
       <h2 className="room-code">Room Code: {ipAddress}</h2>
       <div className="title-bar">
