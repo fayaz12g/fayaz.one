@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import AnimatedTitle from '../AnimatedTitle';
+import React, { useState, useEffect } from 'react';
+import { useTransition, animated, config } from 'react-spring';
 import Lobby from './HostScreen/Lobby';
 import Leaderboard from './Leaderboard';
-import finishTheme from '../../sound/improvimania/finish.m4a';
+import './HostScreen.css';
 
 const HostScreen = ({
   socket,
@@ -31,42 +31,41 @@ const HostScreen = ({
   setForceRemove,
   forceRemove,
 }) => {
+  const [activeScreen, setActiveScreen] = useState('lobby');
 
-  const renderLobby = () => (
-    <Lobby
-      socket={socket}
-      serverIP={serverIP}
-      sessionCreated={sessionCreated}
-      createSession={createSession}
-      gameStarted={gameStarted}
-      sessionId={sessionId}
-      players={players}
-      rounds={rounds}
-      setRounds={setRounds}
-      currentRound={currentRound}
-      sessionList={sessionList}
-      leaderboard={leaderboard}
-      removePlayer={removePlayer}
-      titleTheme={titleTheme}
-      AudioPlayer={AudioPlayer}
-      isEndScene={isEndScene}
-      speakingTheme={speakingTheme}
-      guessingTheme={guessingTheme}
-      gameMode={gameMode}
-      setGameMode={setGameMode}
-      currentLine={currentLine}
-      isEndGame={isEndGame}
-      scriptFile={scriptFile}
-      setForceRemove={setForceRemove}
-      forceRemove={forceRemove}
-    />
-  )
+  useEffect(() => {
+    if (!gameStarted) {
+      setActiveScreen('lobby');
+    } else if (isEndScene) {
+      setActiveScreen('guessing');
+    } else {
+      setActiveScreen('speaking');
+    }
+  }, [gameStarted, isEndScene]);
+
+  const transitions = useTransition(activeScreen, {
+    from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
+    enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
+    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
+    config: config.gentle,
+  });
+
+  const renderSpeakerScreen = () => (
+    <div className="App">
+      <h2>Current Speaker</h2>
+      <p>{currentLine?.text}</p>
+    </div>
+  );
+
+  const renderGuessingScreen = () => (
+    <div className="App">
+      <h2>Guess the Adlibber!</h2>
+    </div>
+  );
 
   return (
-
-        <div>
-        <AnimatedTitle />
-        <div className="title-bar">
+    <div className="host-screen">
+      <div className="title-bar">
         <div className="join-message">
           <h2>Join at <span className="red-text">Fayaz.One</span> in your browser!</h2>
         </div>
@@ -74,25 +73,50 @@ const HostScreen = ({
           <h2>Room Code: {serverIP}</h2>
           <h4>Session: {sessionId}</h4>
         </div>
-      </div>    
-          {!gameStarted ? (
-            <div>
-              {renderLobby()}
-            </div>
-          ) : !isEndScene ? (
-            <div>
-              <h3>Round: {currentRound}/{rounds}</h3>
-              <h3>{currentLine?.text}</h3>
-              <Leaderboard />
-            </div>
-          ) : (
-            <div>
-              <h3>Round: {currentRound}/{rounds}</h3>
-              <h3>The Guesser is Guessing</h3>
-              <Leaderboard />
-            </div>
+      </div>
+
+      {transitions((style, item) => (
+        <animated.div style={style} className="screen-container">
+          {item === 'lobby' && (
+            <Lobby
+              socket={socket}
+              ipAddress={serverIP}
+              sessionCreated={sessionCreated}
+              createSession={createSession}
+              gameStarted={gameStarted}
+              sessionId={sessionId}
+              players={players}
+              rounds={rounds}
+              setRounds={setRounds}
+              currentRound={currentRound}
+              sessionList={sessionList}
+              leaderboard={leaderboard}
+              removePlayer={removePlayer}
+              titleTheme={titleTheme}
+              AudioPlayer={AudioPlayer}
+              isEndScene={isEndScene}
+              speakingTheme={speakingTheme}
+              guessingTheme={guessingTheme}
+              gameMode={gameMode}
+              setGameMode={setGameMode}
+              currentLine={currentLine}
+              isEndGame={isEndGame}
+              scriptFile={scriptFile}
+              setForceRemove={setForceRemove}
+              forceRemove={forceRemove}
+            />
           )}
+          {item === 'speaking' && renderSpeakerScreen()}
+          {item === 'guessing' && renderGuessingScreen()}
+        </animated.div>
+      ))}
+
+      {activeScreen !== 'lobby' && (
+        <div className="leaderboard-container">
+          <Leaderboard leaderboard={leaderboard}  players={players} />
         </div>
+      )}
+    </div>
   );
 };
 

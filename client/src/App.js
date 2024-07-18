@@ -364,16 +364,16 @@ function App() {
         {!socket ? (
             <div className="App">
             <AnimatedTitle title="fayaz.One" />
-           {customServer && <div>
+           <div>
                 {kicked && <h2 style={{ color: 'red' }}>You have been kicked by the host.</h2>}
-                {!connectionWaiting && !kicked && <input type="text" 
+                {customServer && !connectionWaiting && !kicked && <input type="text" 
                 value={ipAddress} 
                 placeholder="Enter the room code"
                 onChange={(e) => setIpAddress(e.target.value)} />}
-                {!connectionWaiting && !kicked && <button onClick={connectToServer}>Connect</button>}
+                {customServer && !connectionWaiting && !kicked && <button onClick={connectToServer}>Connect</button>}
                 {connectionWaiting && <h2>Attempting connection, please wait.</h2>}
                 {connectionError && <p style={{ color: 'red' }}>Connection failed. Please check the IP address and try again.</p>}
-            </div>}
+            </div>
             <div>
             {!customServer && <button onClick={() => {setRole('host'); connectToServer(); sessionStorage.setItem('role', 'host')}}>Host a Game</button>}
             {!customServer && <button onClick={() => {setRole('player'); connectToServer(); sessionStorage.setItem('role', 'player')}}>Join as Player</button>}

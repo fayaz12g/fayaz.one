@@ -8,6 +8,8 @@ const ImprovGame = ({ socket, sessionId, setGameStarted, setRounds, setCurrentRo
                 setGameStarted(true);
                 setCurrentRound(currentround);
                 setIsSpeaker(false);
+                setIsEndGame(false);
+                setIsEndScene(false);
                 
                 if (Object.keys(leaderboard).length === 0) {
                     console.log("Creating new leaderboard");

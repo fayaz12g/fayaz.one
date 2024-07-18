@@ -57,6 +57,7 @@ function startRound(io, sessions, sessionId) {
     const session = sessions[sessionId];
     session.currentRound++;
     console.log('Beginning round', session.currentRound, '/', session.rounds);
+    session.guesses = 0;
 
     if (scripts.length === 0) {
         loadScripts();

@@ -1,77 +1,81 @@
 /* Lobby.css */
 .lobby-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .room-code {
-    margin-bottom: 20px;
-    text-align: center;
-    z-index: 100;
-  }
-  
-  .app-container {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    width: 100%;
-  }
-  
-  .players-container {
-    margin: 0 20px;
-    text-align: center;
-    flex: 1;
-    min-height: 300px; /* Adjust the height as needed */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Align content to the top */
-    align-items: center;
-    border: 0.1px solid #ccc; 
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  z-index: 100;
+}
 
-  .settings {
-    border: 0.1px solid #ccc; 
+.room-code {
+  margin-bottom: 20px;
+  text-align: center;
+  z-index: 100;
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.players-container,
+.settings {
+  flex: 1;
+  margin: 0 10px;
+  padding: 20px;
+  text-align: center;
+  min-height: 300px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0.1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+}
+
+
+.start-game {
+  padding: 10px 20px;
+  margin: 20px 0;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.9s ease, color 0.9s ease;
+  z-index: 1000;
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+.start-game:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.game-mode-button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.9s ease, color 0.9s ease;
+  background: conic-gradient(from 0deg, red, white, red, white, red);
+  background-size: 200% 200%;
+  animation: swirl 4s infinite linear;
+}
+
+@keyframes swirl {
+  0% {
+    background-position: 0% 0%;
   }
-  
-  .start-game {
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-family: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
-    cursor: pointer;
-    transition: background-color 0.9s ease, color 0.9s ease;
-    z-index: 1000;
-    background-color: #f0f0f0;
-    color: #000;
+  100% {
+    background-position: 100% 100%;
   }
-  
-  .start-game:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .game-mode-button {
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-family: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
-    cursor: pointer;
-    transition: background-color 0.9s ease, color 0.9s ease;
-    background: conic-gradient(from 0deg, red, white, red, white, red);
-    background-size: 200% 200%;
-    animation: swirl 4s infinite linear;
-  }
-  
-  @keyframes swirl {
-    0% {
-      background-position: 0% 0%;
-    }
-    100% {
-      background-position: 100% 100%;
-    }
-  }
+}
