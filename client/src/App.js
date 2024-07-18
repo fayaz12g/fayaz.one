@@ -19,7 +19,7 @@ import Game from './apps/Game';
 import AnimatedTitle from './apps/AnimatedTitle';
 
 // Import the new ImprovGame module
-import ImprovGame from './improv';
+import ImprovGame from './apps/improvimania/Improv';
 
 function App() {
     const [ipAddress, setIpAddress] = useState(sessionStorage.getItem('ipAddress'));
