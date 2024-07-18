@@ -160,7 +160,7 @@ function emitServerIpAddress(socket) {
 improv.initializeImprovGame(io, sessions);
 
 // Initialize the guessing game
-improv.initializeGuessingGame(io, sessions);
+guessing.initializeGuessingGame(io, sessions);
 
 const PORT = process.env.PORT || 443;
 server.listen(PORT, () => {
