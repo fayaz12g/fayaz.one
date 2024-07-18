@@ -1,5 +1,4 @@
 import React from 'react';
-import { Stage, Layer, Rect, Text, Circle, Line } from 'react-konva';
 
 const GameBoard = ({
   gameBoard,
@@ -32,15 +31,17 @@ const GameBoard = ({
 
     for (let i = 0; i < gameBoard.length; i++) {
       squares.push(
-        <Rect
+        <div
           key={i}
-          x={x}
-          y={y}
-          width={squareSize}
-          height={squareSize}
-          fill={colorMap[gameBoard[i]]}
-          stroke="black"
-          strokeWidth={1}
+          style={{
+            position: 'absolute',
+            left: `${x}px`,
+            top: `${y}px`,
+            width: `${squareSize}px`,
+            height: `${squareSize}px`,
+            backgroundColor: colorMap[gameBoard[i]],
+            border: '1px solid black',
+          }}
         />
       );
 
@@ -68,14 +69,19 @@ const GameBoard = ({
       const position = playerPositions[player.socketId];
       const [x, y] = getCoordinatesForPosition(position);
       return (
-        <Circle
+        <div
           key={player.socketId}
-          x={x + squareSize / 2}
-          y={y + squareSize / 2}
-          radius={15}
-          fill={player.color || `hsl(${index * 137.5}, 50%, 60%)`}
-          stroke="black"
-          strokeWidth={2}
+          style={{
+            position: 'absolute',
+            left: `${x + squareSize / 2 - 15}px`,
+            top: `${y + squareSize / 2 - 15}px`,
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%',
+            backgroundColor: player.color || `hsl(${index * 137.5}, 50%, 60%)`,
+            border: '2px solid black',
+            zIndex: 10,
+          }}
         />
       );
     });
@@ -109,28 +115,28 @@ const GameBoard = ({
 
   return (
     <div className="game-board">
-      <Stage width={boardSize} height={boardSize}>
-        <Layer>
-          {createSpiralBoard()}
-          {createPlayerTokens()}
-          <Rect
-            x={centerX - squareSize / 2}
-            y={centerY - squareSize / 2}
-            width={squareSize}
-            height={squareSize}
-            fill="gold"
-            stroke="black"
-            strokeWidth={2}
-          />
-          <Text
-            x={centerX - 25}
-            y={centerY - 10}
-            text="FINISH"
-            fontSize={12}
-            fontStyle="bold"
-          />
-        </Layer>
-      </Stage>
+      <div style={{ position: 'relative', width: `${boardSize}px`, height: `${boardSize}px` }}>
+        {createSpiralBoard()}
+        {createPlayerTokens()}
+        <div
+          style={{
+            position: 'absolute',
+            left: `${centerX - squareSize / 2}px`,
+            top: `${centerY - squareSize / 2}px`,
+            width: `${squareSize}px`,
+            height: `${squareSize}px`,
+            backgroundColor: 'gold',
+            border: '2px solid black',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontWeight: 'bold',
+            fontSize: '12px',
+          }}
+        >
+          FINISH
+        </div>
+      </div>
       <div className="game-info">
         <h3>Current Player: {currentPlayer ? currentPlayer.name : 'Waiting...'}</h3>
         <h4>Current Hint: {currentHint}</h4>
