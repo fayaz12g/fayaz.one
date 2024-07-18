@@ -61,7 +61,7 @@ socket,
       const handleStartGame = () => {
         if (socket) {
             console.log(`Starting game with script file: ${scriptFile}`);
-            socket.emit('startGame', { 
+            socket.emit('startGameImprov', { 
                 sessionId, 
                 rounds, 
                 gameMode,

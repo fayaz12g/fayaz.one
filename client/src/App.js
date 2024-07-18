@@ -46,7 +46,7 @@ function App() {
     const [forceRemove, setForceRemove] = useState(false);
     const [confirmQuit, setConfirmQuit] = useState(false);
     const [game, setGame] = useState(sessionStorage.getItem('game'));
-    const [clientVersion] = useState('0.6 Sonic Alpha');
+    const [clientVersion] = useState('0.8 Super');
     const [serverVersion, setServerV] = useState('Disconnected');
     let [sessionList, setSessionList] = useState([]);
     const [scriptFile, setScriptFile] = useState('scripts');
