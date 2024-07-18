@@ -32,21 +32,64 @@ const HostScreen = ({
 }) => {
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [currentSpace, setCurrentSpace] = useState(null);
-  const [cardDecks, setCardDecks] = useState(null);
+  const [gameBoard, setGameBoard] = useState([]);
+  const [currentHint, setCurrentHint] = useState('');
+  const [currentOptions, setCurrentOptions] = useState([]);
+  const [playerPositions, setPlayerPositions] = useState({});
+  const [spinResult, setSpinResult] = useState(null);
 
   useEffect(() => {
     if (gameStarted) {
-      // Set up socket listeners for game events
-      socket.on('playerTurn', ({ player, space }) => {
-        setCurrentPlayer(player);
-        setCurrentSpace(space);
+      socket.on('gameStarted', ({ gameBoard, players, currentPlayer }) => {
+        setGameBoard(gameBoard);
+        setCurrentPlayer(currentPlayer);
+        setPlayerPositions(players.reduce((acc, player) => {
+          acc[player.socketId] = 0;
+          return acc;
+        }, {}));
+      });
+
+      socket.on('spinResult', ({ playerId, result }) => {
+        setSpinResult(result);
+        // You might want to add some animation here
+      });
+
+      socket.on('questionAsked', ({ hint, options }) => {
+        setCurrentHint(hint);
+        setCurrentOptions(options);
+      });
+
+      socket.on('correctAnswer', ({ playerId, spacesToMove }) => {
+        setPlayerPositions(prev => ({
+          ...prev,
+          [playerId]: prev[playerId] + spacesToMove
+        }));
+      });
+
+      socket.on('newHint', ({ hint }) => {
+        setCurrentHint(hint);
+      });
+
+      socket.on('nextTurn', ({ playerId }) => {
+        setCurrentPlayer(players.find(p => p.socketId === playerId));
+      });
+
+      socket.on('gameEnded', ({ winnerId }) => {
+        const winner = players.find(p => p.socketId === winnerId);
+        // Display winner
       });
 
       return () => {
-        socket.off('playerTurn');
+        socket.off('gameStarted');
+        socket.off('spinResult');
+        socket.off('questionAsked');
+        socket.off('correctAnswer');
+        socket.off('newHint');
+        socket.off('nextTurn');
+        socket.off('gameEnded');
       };
     }
-  }, [gameStarted, socket]);
+  }, [gameStarted, socket, players]);
 
   const renderLobby = () => (
     <Lobby
@@ -78,6 +121,18 @@ const HostScreen = ({
     />
   );
 
+  const renderGameBoard = () => (
+    <GameBoard
+      gameBoard={gameBoard}
+      players={players}
+      playerPositions={playerPositions}
+      currentPlayer={currentPlayer}
+      currentHint={currentHint}
+      currentOptions={currentOptions}
+      spinResult={spinResult}
+    />
+  );
+
   return (
     <div>
       <AnimatedTitle title="Guessing" />
@@ -91,17 +146,7 @@ const HostScreen = ({
           <h4>Session: {sessionId}</h4>
         </div>
       </div>
-      {!gameStarted ? (
-        renderLobby()
-      ) : (
-        <GameBoard
-          socket={socket}
-          players={players}
-          currentPlayer={currentPlayer}
-          currentSpace={currentSpace}
-          cardDecks={cardDecks}
-        />
-      )}
+      {!gameStarted ? renderLobby() : renderGameBoard()}
     </div>
   );
 };

@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const serverVersion = '0.8 Super';
 const os = require('os');
 const improv = require('./improv');
+const guessing = require('./guessing');
 
 const app = express();
 const server = http.createServer(app);
@@ -157,6 +158,9 @@ function emitServerIpAddress(socket) {
 
 // Initialize the improv game
 improv.initializeImprovGame(io, sessions);
+
+// Initialize the guessing game
+improv.initializeGuessingGame(io, sessions);
 
 const PORT = process.env.PORT || 443;
 server.listen(PORT, () => {

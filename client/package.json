@@ -13,6 +13,7 @@
     "nodemon": "^3.1.4",
     "react": "19.0.0-rc-df783f9ea1-20240708",
     "react-dom": "19.0.0-rc-df783f9ea1-20240708",
+    "react-konva": "^18.2.10",
     "react-router-dom": "^6.24.1",
     "react-scripts": "5.0.1",
     "react-spring": "^9.7.3",

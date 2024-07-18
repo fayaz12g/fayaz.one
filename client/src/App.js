@@ -18,6 +18,9 @@ import Quit from './apps/Quit';
 import Game from './apps/Game';
 import AnimatedTitle from './apps/AnimatedTitle';
 
+// Import the new ImprovGame module
+import ImprovGame from './improv';
+
 function App() {
     const [ipAddress, setIpAddress] = useState(sessionStorage.getItem('ipAddress'));
     const [serverIP, setServerIP] = useState('');
@@ -48,32 +51,19 @@ function App() {
     const [game, setGame] = useState(sessionStorage.getItem('game'));
     const [clientVersion] = useState('0.8 Super');
     const [serverVersion, setServerV] = useState('Disconnected');
-    let [sessionList, setSessionList] = useState([]);
     const [scriptFile, setScriptFile] = useState('scripts');
+
+    let [sessionList, setSessionList] = useState([]);
+
+
     const [sessionCreated, setSessionCreated] = useState(() => {
         const storedValue = sessionStorage.getItem('sessionCreated');
         return storedValue === 'true' ? true : false;
       });
 
-    // Conversion functions
-    const numberToLetter = (num) => {
-        const parsedNum = parseInt(num);
-        if (isNaN(parsedNum) || parsedNum < 0 || parsedNum > 9) {
-            return 'X'; // Handle invalid numbers or periods
-        }
-        return String.fromCharCode(65 + parsedNum);
-    };
-
     const letterToNumber = (letter) => {
         if (letter === 'X') return '.';
         return (letter.charCodeAt(0) - 65).toString();
-    };
-
-    const ipToLetters = (ip) => {
-        if (ip === 'localhost') return 'localhost';
-        return ip.split('')
-                .map(char => char === '.' ? 'X' : numberToLetter(char))
-                .join('');
     };
 
     const lettersToIp = (letters) => {
@@ -143,85 +133,15 @@ function App() {
                     setKicked(kickPlayer);
                 }
             });
-            socket.on('gameStarted', ({ rounds, roles, currentround }) => {
-              setRounds(rounds);
-              setGameStarted(true);
-              setCurrentRound(currentround);
-              setIsSpeaker(false);
-              
-              if (Object.keys(leaderboard).length === 0) {
-                  console.log("Creating new leaderboard");
-                  const newLeaderboard = {};
-                  players.forEach(player => {
-                      newLeaderboard[player.name] = 0;
-                  });
-                  setLeaderboard(newLeaderboard);
-              }
-              
-              if (role === 'player') {
-                  const playerRole = roles[socket.id];
-                  setPlayerRole(playerRole);
-              }
-          });
 
-          socket.on('roundStarted', ({ currentRound, roles }) => {
-            setCurrentRound(currentRound);
-            
-            // Set player role
-            if (socket && socket.id && roles[socket.id]) {
-                const playerRole = roles[socket.id];
-                setPlayerRole(playerRole);
-            } else {
-                console.error('Unable to set player role:', { socketId: socket?.id, roles });
-            }
-
-            // Reset any necessary state for the new round here
-            setIsEndScene(false);
-            setIsSpeaker(false);
-            setCurrentLine(null);
-            setSentGuess(false)
-        });
-
-        socket.on('updateLine', ({ line, isAdlib, isSpeaker }) => {
-            setCurrentLine({ text: line, isAdlib });
-            setIsSpeaker(isSpeaker);
-            setIsEndScene(false);
-        });
         socket.on('setGame', ({ game }) => {
             setGame(game);
-        });
-        socket.on('updatePoints', ({ points }) => {
-            setLeaderboard(prevLeaderboard => ({
-                ...prevLeaderboard,
-                ...points
-            }));
-            console.log("Updating leaderboard");
-        });
-        socket.on('endScene', () => {
-            setIsEndScene(true);
-            setIsSpeaker(false);
         });
 
         socket.on('availableSessions', (sessions) => {
             setSessionList(sessions);
-            // // Check if sessionList contains at least one session
-            // if (sessions.length > 0) {
-            //     // Check if role in sessionStorage is not 'host'
-            //     const storedRole = sessionStorage.getItem('role');
-            //     if (storedRole !== 'host') {
-            //     setRole('player');
-            //     }
-            // }
-            // else {
-            //     setRole('host'); // might be a stupid change
-            // }
         });
         
-
-        socket.on('endGame', () => {
-            setGameStarted(false);
-            setIsEndGame(true);
-        });
         socket.on('reconnect', ({name, sessionId, players}) => {
             setRole('player');
             setPlayerName(name);
@@ -362,18 +282,23 @@ function App() {
         console.log('Join session process completed');
     };
 
-    const nextLine = () => {
-        if (socket) {
-            socket.emit('nextLine', { sessionId: sessionId.toUpperCase() });
-        }
-    };
-
-    const guessAdlibber = (guess) => {
-        setSentGuess(true)
-        if (socket) {
-            socket.emit('guessAdlibber', { sessionId: sessionId.toUpperCase(), guess });
-        }
-    };
+    const { nextLine, guessAdlibber } = ImprovGame({
+        socket,
+        sessionId,
+        setGameStarted,
+        setRounds,
+        setCurrentRound,
+        setPlayerRole,
+        setLeaderboard,
+        setIsEndScene,
+        setIsSpeaker,
+        setCurrentLine,
+        setSentGuess,
+        setIsEndGame,
+        role,
+        players,
+        leaderboard
+    });
 
     const removePlayer = (playerToRemove, forceRemove) => {
         console.log(`Asked the server to remove ${playerToRemove}`)
