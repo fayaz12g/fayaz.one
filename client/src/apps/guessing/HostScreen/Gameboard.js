@@ -1,4 +1,5 @@
 import React from 'react';
+import './Gameboard.css';
 
 const GameBoard = ({
   gameBoard,
@@ -33,14 +34,11 @@ const GameBoard = ({
       squares.push(
         <div
           key={i}
+          className="board-square"
           style={{
-            position: 'absolute',
             left: `${x}px`,
             top: `${y}px`,
-            width: `${squareSize}px`,
-            height: `${squareSize}px`,
             backgroundColor: colorMap[gameBoard[i]],
-            border: '1px solid black',
           }}
         />
       );
@@ -51,6 +49,7 @@ const GameBoard = ({
         case 1: y -= squareSize; break; // Up
         case 2: x -= squareSize; break; // Left
         case 3: y += squareSize; break; // Down
+        default: break; // Add default case to satisfy the linter
       }
 
       stepsTaken++;
@@ -71,16 +70,11 @@ const GameBoard = ({
       return (
         <div
           key={player.socketId}
+          className="player-token"
           style={{
-            position: 'absolute',
             left: `${x + squareSize / 2 - 15}px`,
             top: `${y + squareSize / 2 - 15}px`,
-            width: '30px',
-            height: '30px',
-            borderRadius: '50%',
             backgroundColor: player.color || `hsl(${index * 137.5}, 50%, 60%)`,
-            border: '2px solid black',
-            zIndex: 10,
           }}
         />
       );
@@ -100,6 +94,7 @@ const GameBoard = ({
         case 1: y -= squareSize; break; // Up
         case 2: x -= squareSize; break; // Left
         case 3: y += squareSize; break; // Down
+        default: break; // Add default case to satisfy the linter
       }
 
       stepsTaken++;
@@ -115,23 +110,14 @@ const GameBoard = ({
 
   return (
     <div className="game-board">
-      <div style={{ position: 'relative', width: `${boardSize}px`, height: `${boardSize}px` }}>
+      <div className="board-container" style={{ width: `${boardSize}px`, height: `${boardSize}px` }}>
         {createSpiralBoard()}
         {createPlayerTokens()}
         <div
+          className="finish-square"
           style={{
-            position: 'absolute',
             left: `${centerX - squareSize / 2}px`,
             top: `${centerY - squareSize / 2}px`,
-            width: `${squareSize}px`,
-            height: `${squareSize}px`,
-            backgroundColor: 'gold',
-            border: '2px solid black',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontWeight: 'bold',
-            fontSize: '12px',
           }}
         >
           FINISH
