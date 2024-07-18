@@ -7,7 +7,7 @@ function loadCardDecks() {
     const deckTypes = ['red', 'blue', 'green', 'yellow'];
     deckTypes.forEach(type => {
         try {
-            const filePath = path.join(__dirname, `${type}Cards.json`);
+            const filePath = path.join(__dirname, 'deck',`${type}.json`);
             const data = fs.readFileSync(filePath, 'utf8');
             cardDecks[type] = JSON.parse(data);
             console.log(`${type} card deck loaded successfully`);

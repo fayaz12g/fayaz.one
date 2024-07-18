@@ -1,0 +1,42 @@
+[
+    {
+      "hints": [
+        "The famous line 'you like jazz?' is from this movie",
+        "This animated film features a bee who sues the human race",
+        "Jerry Seinfeld voices the main character in this 2007 movie"
+      ],
+      "answer": "The Bee Movie"
+    },
+    {
+      "hints": [
+        "This sci-fi film features a blue-skinned alien race called the Na'vi",
+        "Directed by James Cameron, it was the highest-grossing film of all time",
+        "The story is set on the fictional moon of Pandora"
+      ],
+      "answer": "Avatar"
+    },
+    {
+      "hints": [
+        "This superhero film features a billionaire genius who builds a powered suit of armor",
+        "Robert Downey Jr. stars as the titular character",
+        "This movie kicked off the Marvel Cinematic Universe in 2008"
+      ],
+      "answer": "Iron Man"
+    },
+    {
+      "hints": [
+        "This animated Disney film tells the story of a young lion who becomes king",
+        "It features songs like 'Circle of Life' and 'Hakuna Matata'",
+        "The main character is named Simba"
+      ],
+      "answer": "The Lion King"
+    },
+    {
+      "hints": [
+        "This Christopher Nolan film is known for its mind-bending plot about dream infiltration",
+        "Leonardo DiCaprio stars as a professional thief who steals information by entering people's dreams",
+        "The movie is famous for its ambiguous ending involving a spinning top"
+      ],
+      "answer": "Inception"
+    }
+  ]

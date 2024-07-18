@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AnimatedTitle from '../AnimatedTitle';
 import Lobby from './HostScreen/Lobby';
-import GameBoard from './HostScreen/GameBoard';
+import GameBoard from './HostScreen/Gameboard';
 
 const HostScreen = ({
   socket,
