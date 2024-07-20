@@ -37,74 +37,139 @@ function initializeGuessingGame(io, sessions) {
         socket.on('requestHint', ({ sessionId }) => {
             provideHint(io, sessions, sessionId, socket.id);
         });
+        socket.on('playerSpun', ({ sessionId, result }) => {
+            handlePlayerSpin(io, sessions, sessionId, socket.id, result);
+        });
+        
+        socket.on('submitAnswer', ({ sessionId, answer }) => {
+            handleAnswer(io, sessions, sessionId, socket.id, answer);
+  });
     });
 }
 
 function startGameGuessing(io, sessions, sessionId) {
     const session = sessions[sessionId];
     if (!session || session.players.length < 2) {
-        return console.error('Cannot start game: not enough players or session not found');
+      return console.error('Cannot start game: not enough players or session not found');
     }
-
+  
     session.gameBoard = generateGameBoard();
+    session.gamePhase = 'determining-order';
     session.currentPlayerIndex = 0;
-    session.playerPositions = session.players.reduce((acc, player) => {
-        acc[player.socketId] = 0;
-        return acc;
-    }, {});
-
+    session.playerOrder = [];
+  
     io.to(sessionId).emit('gameStarted', {
-        gameBoard: session.gameBoard,
-        players: session.players,
-        currentPlayer: session.players[session.currentPlayerIndex]
+      gameBoard: session.gameBoard,
+      players: session.players,
     });
+  
+    askPlayerToSpin(io, session);
+  }
+  
+  function askPlayerToSpin(io, session) {
+    const currentPlayer = session.players[session.currentPlayerIndex];
+    io.to(currentPlayer.socketId).emit('yourTurn', { action: 'spin' });
+  }
 
-    nextTurn(io, sessions, sessionId);
-}
-
-function generateGameBoard() {
-    const colors = ['red', 'blue', 'green', 'yellow'];
-    const board = [];
-    for (let i = 0; i < 40; i++) {
-        board.push(colors[i % 4]);
-    }
-    return board;
-}
-
-function handleSpin(io, sessions, sessionId, playerId) {
+  function handlePlayerSpin(io, sessions, sessionId, playerId, spinResult) {
     const session = sessions[sessionId];
-    const spinResult = Math.floor(Math.random() * 6) + 1;
-    
-    io.to(sessionId).emit('spinResult', { playerId, result: spinResult });
-    
-    session.playerPositions[playerId] += spinResult;
-    if (session.playerPositions[playerId] >= session.gameBoard.length - 1) {
-        endGame(io, sessions, sessionId, playerId);
+    session.playerOrder.push({ playerId, spinResult });
+  
+    io.to(sessionId).emit('playerSpun', { playerId, spinResult });
+  
+    if (session.playerOrder.length === session.players.length) {
+      determinePlayerOrder(io, session);
     } else {
-        askQuestion(io, sessions, sessionId, playerId);
+      session.currentPlayerIndex = (session.currentPlayerIndex + 1) % session.players.length;
+      askPlayerToSpin(io, session);
     }
-}
+  }
 
-function askQuestion(io, sessions, sessionId, playerId) {
+  function askQuestion(io, session) {
+    const currentPlayer = session.players[session.currentPlayerIndex];
+    const currentPosition = currentPlayer.position;
+    const cardColor = session.gameBoard[currentPosition];
+    const card = drawCard(cardColor);
+  
+    io.to(session.id).emit('questionAsked', {
+      question: card.hints[0],
+      options: generateOptions(card.answer, cardColor),
+    });
+  
+    io.to(currentPlayer.socketId).emit('yourTurn', { action: 'answer' });
+  }
+
+  function determinePlayerOrder(io, session) {
+    session.playerOrder.sort((a, b) => b.spinResult - a.spinResult);
+    session.players = session.playerOrder.map(p => 
+      session.players.find(player => player.socketId === p.playerId)
+    );
+    session.gamePhase = 'playing';
+    session.currentPlayerIndex = 0;
+  
+    io.to(session.id).emit('orderDetermined', { players: session.players });
+  
+    askQuestion(io, session);
+  }
+
+  function handleSpin(io, sessions, sessionId, playerId, spinResult) {
     const session = sessions[sessionId];
-    const position = session.playerPositions[playerId];
-    const color = session.gameBoard[position];
-    const card = drawCard(color);
+    const playerIndex = session.players.findIndex(p => p.socketId === playerId);
+  
+    if (session.gamePhase === 'determining-order') {
+      session.playerOrder.push({ playerId, spinResult });
+  
+      if (session.playerOrder.length === session.players.length) {
+        // All players have spun, determine the final order
+        session.playerOrder.sort((a, b) => b.spinResult - a.spinResult);
+        session.players = session.playerOrder.map(p => 
+          session.players.find(player => player.socketId === p.playerId)
+        );
+        session.gamePhase = 'playing';
+        session.currentPlayerIndex = 0;
+  
+        // Move all players to the first space
+        session.players.forEach(player => player.position = 0);
+  
+        io.to(sessionId).emit('gamePhaseChanged', { 
+          phase: 'playing', 
+          players: session.players,
+          currentPlayer: session.players[session.currentPlayerIndex]
+        });
+      } else {
+        // Move to the next player for spinning
+        session.currentPlayerIndex = (session.currentPlayerIndex + 1) % session.players.length;
+        io.to(sessionId).emit('nextPlayerSpin', { 
+          currentPlayer: session.players[session.currentPlayerIndex] 
+        });
+      }
+    } else if (session.gamePhase === 'playing') {
+      // Handle normal gameplay spinning
+      const newPosition = Math.min(session.players[playerIndex].position + spinResult, 39); // 39 is the last space
+      session.players[playerIndex].position = newPosition;
+  
+      io.to(sessionId).emit('playerMoved', { 
+        playerId, 
+        newPosition,
+        nextPlayer: session.players[(playerIndex + 1) % session.players.length]
+      });
+  
+      // Check if the game has ended
+      if (newPosition === 39) {
+        session.gamePhase = 'finished';
+        io.to(sessionId).emit('gameEnded', { winner: session.players[playerIndex] });
+      } else {
+        // Move to the next player
+        session.currentPlayerIndex = (playerIndex + 1) % session.players.length;
+      }
+    }
+  }
+  
+  // Add this to your socket.on setup in initializeGuessingGame
+  socket.on('playerSpun', ({ sessionId, playerId, result }) => {
+    handleSpin(io, sessions, sessionId, playerId, result);
+  });
 
-    session.currentCard = card;
-    session.currentHintIndex = 0;
-
-    const options = generateOptions(card.answer, color);
-
-    io.to(sessionId).emit('questionAsked', {
-        hint: card.hints[0],
-        options: options
-    });
-    io.to(playerId).emit('yourTurn', {
-        hint: card.hints[0],
-        options: options
-    });
-}
 
 function drawCard(color) {
     const deck = cardDecks[color];
@@ -123,28 +188,28 @@ function generateOptions(correctAnswer, color) {
     return shuffle(options);
 }
 
+
 function handleAnswer(io, sessions, sessionId, playerId, answer) {
-    const session = sessions[sessionId];
-    const card = session.currentCard;
+  const session = sessions[sessionId];
+  const currentPlayer = session.players[session.currentPlayerIndex];
+  const currentPosition = currentPlayer.position;
+  const cardColor = session.gameBoard[currentPosition];
+  const card = drawCard(cardColor);
 
-    if (answer === card.answer) {
-        const spacesToMove = 3 - session.currentHintIndex;
-        session.playerPositions[playerId] += spacesToMove;
+  if (answer === card.answer) {
+    const newPosition = Math.min(currentPosition + 1, session.gameBoard.length - 1);
+    currentPlayer.position = newPosition;
 
-        if (session.playerPositions[playerId] >= session.gameBoard.length - 1) {
-            endGame(io, sessions, sessionId, playerId);
-        } else {
-            io.to(sessionId).emit('correctAnswer', { playerId, spacesToMove });
-            nextTurn(io, sessions, sessionId);
-        }
+    io.to(sessionId).emit('playerMoved', { playerId, newPosition });
+
+    if (newPosition === session.gameBoard.length - 1) {
+      endGame(io, session, playerId);
     } else {
-        io.to(sessionId).emit('incorrectAnswer', { playerId });
-        if (session.currentHintIndex < 2) {
-            provideHint(io, sessions, sessionId, playerId);
-        } else {
-            nextTurn(io, sessions, sessionId);
-        }
+      nextTurn(io, session);
     }
+  } else {
+    nextTurn(io, session);
+  }
 }
 
 function provideHint(io, sessions, sessionId, playerId) {
@@ -160,18 +225,15 @@ function provideHint(io, sessions, sessionId, playerId) {
     }
 }
 
-function nextTurn(io, sessions, sessionId) {
-    const session = sessions[sessionId];
+function nextTurn(io, session) {
     session.currentPlayerIndex = (session.currentPlayerIndex + 1) % session.players.length;
-    const nextPlayer = session.players[session.currentPlayerIndex];
-
-    io.to(sessionId).emit('nextTurn', { playerId: nextPlayer.socketId });
-    io.to(nextPlayer.socketId).emit('spinRequest');
-}
-
-function endGame(io, sessions, sessionId, winnerId) {
-    io.to(sessionId).emit('gameEnded', { winnerId });
-}
+    askQuestion(io, session);
+  }
+  
+  function endGame(io, session, winnerId) {
+    session.gamePhase = 'ended';
+    io.to(session.id).emit('gameEnded', { winnerId });
+  }
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {

@@ -1,0 +1,192 @@
+{
+  "decks": [
+    {
+      "id": "hollywood",
+      "name": "Hollywood Adventures",
+      "color": "yellow",
+      "cards": [
+        {
+          "hints": [
+            "The famous line 'you like jazz?' is from this movie",
+            "This animated film features a bee who sues the human race",
+            "Jerry Seinfeld voices the main character in this 2007 movie"
+          ],
+          "answer": "The Bee Movie"
+        },
+        {
+          "hints": [
+            "This sci-fi film features a blue-skinned alien race called the Na'vi",
+            "Directed by James Cameron, it was the highest-grossing film of all time",
+            "The story is set on the fictional moon of Pandora"
+          ],
+          "answer": "Avatar"
+        },
+        {
+          "hints": [
+            "This superhero film features a billionaire genius who builds a powered suit of armor",
+            "Robert Downey Jr. stars as the titular character",
+            "This movie kicked off the Marvel Cinematic Universe in 2008"
+          ],
+          "answer": "Iron Man"
+        },
+        {
+          "hints": [
+            "This animated Disney film tells the story of a young lion who becomes king",
+            "It features songs like 'Circle of Life' and 'Hakuna Matata'",
+            "The main character is named Simba"
+          ],
+          "answer": "The Lion King"
+        },
+        {
+          "hints": [
+            "This Christopher Nolan film is known for its mind-bending plot about dream infiltration",
+            "Leonardo DiCaprio stars as a professional thief who steals information by entering people's dreams",
+            "The movie is famous for its ambiguous ending involving a spinning top"
+          ],
+          "answer": "Inception"
+        }
+      ]
+    },
+    {
+      "id": "world",
+      "name": "Around the World",
+      "color": "green",
+      "cards": [
+        {
+          "hints": [
+            "This city is located on the River Thames",
+            "It's home to Big Ben and the Houses of Parliament",
+            "This city hosted the Olympic Games in 2012"
+          ],
+          "answer": "London"
+        },
+        {
+          "hints": [
+            "This city is known as the 'City of Light'",
+            "It's home to the Eiffel Tower",
+            "This city is the capital of France"
+          ],
+          "answer": "Paris"
+        },
+        {
+          "hints": [
+            "This city is the most populous in Canada",
+            "It's home to the CN Tower",
+            "This city is the capital of Ontario province"
+          ],
+          "answer": "Toronto"
+        },
+        {
+          "hints": [
+            "This city is known for its opera house with a distinctive sail-like design",
+            "It's the most populous city in Australia",
+            "This city hosted the Olympic Games in 2000"
+          ],
+          "answer": "Sydney"
+        },
+        {
+          "hints": [
+            "This city is home to the Forbidden City",
+            "It hosted the Summer Olympics in 2008",
+            "This city is the capital of the People's Republic of China"
+          ],
+          "answer": "Beijing"
+        }
+      ]
+    },
+    {
+      "id": "qcc",
+      "name": "Quick Court Cases",
+      "color": "red",
+      "cards": [
+        {
+          "hints": [
+            "This 1954 case overturned the 'separate but equal' doctrine",
+            "It dealt with racial segregation in public schools",
+            "The plaintiff was Oliver Brown"
+          ],
+          "answer": "Brown v. Board of Education"
+        },
+        {
+          "hints": [
+            "This 1973 case established a woman's right to have an abortion",
+            "It was overturned in 2022 by Dobbs v. Jackson Women's Health Organization",
+            "The plaintiff used the pseudonym 'Jane Roe'"
+          ],
+          "answer": "Roe v. Wade"
+        },
+        {
+          "hints": [
+            "This 1966 case established the Miranda rights",
+            "It requires police to inform suspects of their rights before questioning",
+            "The phrase 'You have the right to remain silent' stems from this case"
+          ],
+          "answer": "Miranda v. Arizona"
+        },
+        {
+          "hints": [
+            "This 1803 case established the principle of judicial review",
+            "It was decided under Chief Justice John Marshall",
+            "It involved a dispute over undelivered judicial commissions"
+          ],
+          "answer": "Marbury v. Madison"
+        },
+        {
+          "hints": [
+            "This 2015 case legalized same-sex marriage nationwide",
+            "It was a consolidation of six lower-court cases",
+            "The lead plaintiff was James Obergefell"
+          ],
+          "answer": "Obergefell v. Hodges"
+        }
+      ]
+    },
+    {
+      "id": "presidents",
+      "name": "Into the Oval Office",
+      "color": "blue",
+      "cards": [
+        {
+          "hints": [
+            "He was the first President of the United States",
+            "He commanded the Continental Army during the Revolutionary War",
+            "His face appears on the one-dollar bill"
+          ],
+          "answer": "George Washington"
+        },
+        {
+          "hints": [
+            "He was the principal author of the Declaration of Independence",
+            "He served as the third President of the United States",
+            "He founded the University of Virginia"
+          ],
+          "answer": "Thomas Jefferson"
+        },
+        {
+          "hints": [
+            "He led the United States through the American Civil War",
+            "He issued the Emancipation Proclamation",
+            "He was assassinated by John Wilkes Booth"
+          ],
+          "answer": "Abraham Lincoln"
+        },
+        {
+          "hints": [
+            "He was the only President to serve more than two terms",
+            "He led the U.S. through the Great Depression and World War II",
+            "He implemented the New Deal"
+          ],
+          "answer": "Franklin D. Roosevelt"
+        },
+        {
+          "hints": [
+            "He was the first African American President",
+            "He was awarded the Nobel Peace Prize in 2009",
+            "He signed the Affordable Care Act into law"
+          ],
+          "answer": "Barack Obama"
+        }
+      ]
+    }
+  ]
+}
