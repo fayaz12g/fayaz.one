@@ -34,7 +34,7 @@ function handleInitialSpin(io, sessions, sessionId, playerId, spinResult) {
   io.to(sessionId).emit('playerSpun', { playerId, spinResult });
   
   if (session.initialSpins.length === session.players.length) {
-    determinePlayerOrder(io, session);
+    determinePlayerOrder(io, sessions, sessionId);
   }
 }
 
@@ -110,13 +110,17 @@ function startGameGuessing(io, sessions, sessionId) {
   }
 
   function handlePlayerSpin(io, sessions, sessionId, playerId, spinResult) {
+
     const session = sessions[sessionId];
     session.playerSpinResults.push({ playerId, spinResult });
   
+    console.log(`${playerId} has spun.`)
+
     io.to(sessionId).emit('playerSpun', { playerId, spinResult });
   
     if (session.playerSpinResults.length === session.players.length) {
-      determinePlayerOrder(io, session);
+      console.log(`All players have spun.`)
+      determinePlayerOrder(io, sessions, sessionId);
     } else {
       session.currentPlayerIndex = (session.currentPlayerIndex + 1) % session.players.length;
       askPlayerToSpin(io, session);
@@ -155,7 +159,9 @@ function startGameGuessing(io, sessions, sessionId) {
     });
   }
 
-  function determinePlayerOrder(io, session) {
+  function determinePlayerOrder(io, sessions, sessionId) {
+
+    const session = sessions[sessionId];
     // Sort the initial spins
     session.initialSpins.sort((a, b) => b.spinResult - a.spinResult);
   
