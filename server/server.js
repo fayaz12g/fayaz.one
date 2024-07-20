@@ -61,6 +61,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createSession', (game) => {
+        if (Object.keys(sessions).length === 0) {
+            currentSession = 0; 
+        }
         const sessionId = ++currentSession;
         let shortSessionId = String.fromCharCode(64 + (sessionId <= 26 ? sessionId : sessionId % 26));
         sessions[shortSessionId] = { 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Lobby.css';
+import AnimatedTitle from '../../AnimatedTitle';
 
 const Lobby = ({
 socket,
@@ -69,6 +70,7 @@ socket,
 
       return (
         <div className="lobby-container">
+          <AnimatedTitle title="Guessing" />
           <div className="app-container">
             <div className="App players-container">
               <h4>Players:</h4>

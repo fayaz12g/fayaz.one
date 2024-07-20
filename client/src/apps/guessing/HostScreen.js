@@ -31,6 +31,9 @@ const HostScreen = ({
   setForceRemove,
   forceRemove,
 }) => {
+
+const [spinResults, setSpinResults] = useState([]);
+
 const [gameState, setGameState] = useState({
     phase: 'lobby', // 'lobby', 'determining-order', 'playing'
     currentPlayerIndex: 0,
@@ -50,14 +53,9 @@ const [gameState, setGameState] = useState({
         }));
       });
 
-      socket.on('playerSpun', ({ playerId, result }) => {
-        setGameState(prev => ({
-          ...prev,
-          players: prev.players.map(p => 
-            p.id === playerId ? { ...p, spinResult: result } : p
-          ),
-        }));
-      });
+      socket.on('playerSpun', ({ playerId, spinResult }) => {
+              setSpinResults(prev => [...prev, { playerId, spinResult }]);
+            });
 
       socket.on('orderDetermined', ({ players }) => {
         setGameState(prev => ({
@@ -104,18 +102,24 @@ const [gameState, setGameState] = useState({
     }
   }, [gameStarted, socket]);
 
+  const renderSpinningPhase = () => (
+    <div className="App">
+      <h2>Determining Player Order</h2>
+      <p>Current Player: {gameState.players[gameState.currentPlayerIndex].name}</p>
+      <div className="spin-results">
+        {spinResults.map(({ playerId, spinResult }, index) => (
+          <p key={index}>{gameState.players.find(p => p.id === playerId).name} spun: {spinResult}</p>
+        ))}
+      </div>
+    </div>
+  );
+
   const renderGameContent = () => {
     switch (gameState.phase) {
       case 'lobby':
         return renderLobby();
       case 'determining-order':
-        return (
-          <div>
-            <h2>Determining Player Order</h2>
-            <p>Current Player: {gameState.players[gameState.currentPlayerIndex].name}</p>
-            <Spinner />
-          </div>
-        );
+        return renderSpinningPhase();
       case 'playing':
         return (
           <div>
@@ -176,8 +180,6 @@ const [gameState, setGameState] = useState({
 
   return (
     <div className="host-screen">
-      <AnimatedTitle title="Guessing" />
-      <h2 className="room-code">Room Code: {ipAddress}</h2>
       <div className="title-bar">
         <div className="join-message">
           <h2>Join at <span className="red-text">Fayaz.One</span> in your browser!</h2>

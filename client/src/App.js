@@ -378,8 +378,8 @@ function App() {
                 {connectionError && <p style={{ color: 'red' }}>Connection failed. Please check the IP address and try again.</p>}
             </div>
             <div>
-            {!customServer && <button onClick={() => {setRole('host'); connectToServer(); sessionStorage.setItem('role', 'host')}}>Host a Game</button>}
-            {!customServer && <button onClick={() => {setRole('player'); connectToServer(); sessionStorage.setItem('role', 'player')}}>Join as Player</button>}
+            {!customServer && !connectionWaiting && <button onClick={() => {setRole('host'); connectToServer(); sessionStorage.setItem('role', 'host')}}>Host a Game</button>}
+            {!customServer && !connectionWaiting && <button onClick={() => {setRole('player'); connectToServer(); sessionStorage.setItem('role', 'player')}}>Join as Player</button>}
             </div>
             </div>
         ) : !role ? (

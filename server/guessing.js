@@ -4,18 +4,22 @@ const path = require('path');
 let cardDecks = {};
 
 function loadCardDecks() {
-    const deckTypes = ['red', 'blue', 'green', 'yellow'];
-    deckTypes.forEach(type => {
-        try {
-            const filePath = path.join(__dirname, 'deck',`${type}.json`);
-            const data = fs.readFileSync(filePath, 'utf8');
-            cardDecks[type] = JSON.parse(data);
-            console.log(`${type} card deck loaded successfully`);
-        } catch (err) {
-            console.error(`Error loading ${type} card deck:`, err);
-            cardDecks[type] = [];
-        }
-    });
+    try {
+        const filePath = path.join(__dirname, 'deck', 'starterDeck.json');
+        const data = fs.readFileSync(filePath, 'utf8');
+        const decks = JSON.parse(data).decks;
+        decks.forEach(deck => {
+            cardDecks[deck.color] = {
+                id: deck.id,
+                name: deck.name,
+                cards: deck.cards
+            };
+        });
+        console.log('Card decks loaded successfully');
+    } catch (err) {
+        console.error('Error loading card decks:', err);
+        cardDecks = {};
+    }
 }
 
 function initializeGuessingGame(io, sessions) {
@@ -47,20 +51,30 @@ function initializeGuessingGame(io, sessions) {
     });
 }
 
+function generateGameBoard() {
+    const colors = ['red', 'blue', 'green', 'yellow'];
+    const board = [];
+    for (let i = 0; i < 40; i++) {
+        board.push(colors[i % 4]);
+    }
+    return board;
+}
+
 function startGameGuessing(io, sessions, sessionId) {
     const session = sessions[sessionId];
-    if (!session || session.players.length < 2) {
-      return console.error('Cannot start game: not enough players or session not found');
+    if (session.players.length < 2) {
+      return console.error('Cannot start game: not enough players!');
     }
-  
+    
     session.gameBoard = generateGameBoard();
     session.gamePhase = 'determining-order';
     session.currentPlayerIndex = 0;
-    session.playerOrder = [];
+    session.playerSpinResults = [];
   
     io.to(sessionId).emit('gameStarted', {
       gameBoard: session.gameBoard,
       players: session.players,
+      gamePhase: session.gamePhase,
     });
   
     askPlayerToSpin(io, session);
@@ -73,11 +87,11 @@ function startGameGuessing(io, sessions, sessionId) {
 
   function handlePlayerSpin(io, sessions, sessionId, playerId, spinResult) {
     const session = sessions[sessionId];
-    session.playerOrder.push({ playerId, spinResult });
+    session.playerSpinResults.push({ playerId, spinResult });
   
     io.to(sessionId).emit('playerSpun', { playerId, spinResult });
   
-    if (session.playerOrder.length === session.players.length) {
+    if (session.playerSpinResults.length === session.players.length) {
       determinePlayerOrder(io, session);
     } else {
       session.currentPlayerIndex = (session.currentPlayerIndex + 1) % session.players.length;
@@ -90,24 +104,43 @@ function startGameGuessing(io, sessions, sessionId) {
     const currentPosition = currentPlayer.position;
     const cardColor = session.gameBoard[currentPosition];
     const card = drawCard(cardColor);
-  
+
+    if (!card) {
+        console.error(`Failed to draw card for color: ${cardColor}`);
+        nextTurn(io, session);
+        return;
+    }
+
+    session.currentCard = card;
+    session.currentHintIndex = 0;
+
     io.to(session.id).emit('questionAsked', {
-      question: card.hints[0],
-      options: generateOptions(card.answer, cardColor),
+        question: card.hints[0],
+        options: generateOptions(card.answer, cardColor),
+        deckId: card.deckId,
+        deckName: card.deckName
     });
-  
+
     io.to(currentPlayer.socketId).emit('yourTurn', { action: 'answer' });
-  }
+}
 
   function determinePlayerOrder(io, session) {
-    session.playerOrder.sort((a, b) => b.spinResult - a.spinResult);
-    session.players = session.playerOrder.map(p => 
-      session.players.find(player => player.socketId === p.playerId)
+    session.playerSpinResults.sort((a, b) => a.spinResult - b.spinResult);
+    session.players = session.playerSpinResults.map(result => 
+      session.players.find(player => player.id === result.playerId)
     );
     session.gamePhase = 'playing';
     session.currentPlayerIndex = 0;
   
-    io.to(session.id).emit('orderDetermined', { players: session.players });
+    // Move all players to their initial positions
+    session.players.forEach((player, index) => {
+      player.position = session.playerSpinResults[index].spinResult;
+    });
+  
+    io.to(session.id).emit('orderDetermined', { 
+      players: session.players,
+      gamePhase: session.gamePhase,
+    });
   
     askQuestion(io, session);
   }
@@ -164,23 +197,30 @@ function startGameGuessing(io, sessions, sessionId) {
       }
     }
   }
-  
-  // Add this to your socket.on setup in initializeGuessingGame
-  socket.on('playerSpun', ({ sessionId, playerId, result }) => {
-    handleSpin(io, sessions, sessionId, playerId, result);
-  });
 
-
-function drawCard(color) {
+  function drawCard(color) {
     const deck = cardDecks[color];
-    const index = Math.floor(Math.random() * deck.length);
-    return deck[index];
+    if (!deck || deck.cards.length === 0) {
+        console.error(`No cards available for color: ${color}`);
+        return null;
+    }
+    const index = Math.floor(Math.random() * deck.cards.length);
+    return {
+        ...deck.cards[index],
+        deckId: deck.id,
+        deckName: deck.name
+    };
 }
 
 function generateOptions(correctAnswer, color) {
     const options = [correctAnswer];
+    const deck = cardDecks[color];
+    if (!deck || deck.cards.length < 4) {
+        console.error(`Not enough cards in ${color} deck to generate options`);
+        return options;
+    }
     while (options.length < 4) {
-        const randomCard = drawCard(color);
+        const randomCard = deck.cards[Math.floor(Math.random() * deck.cards.length)];
         if (!options.includes(randomCard.answer)) {
             options.push(randomCard.answer);
         }
@@ -189,27 +229,46 @@ function generateOptions(correctAnswer, color) {
 }
 
 
+
 function handleAnswer(io, sessions, sessionId, playerId, answer) {
-  const session = sessions[sessionId];
-  const currentPlayer = session.players[session.currentPlayerIndex];
-  const currentPosition = currentPlayer.position;
-  const cardColor = session.gameBoard[currentPosition];
-  const card = drawCard(cardColor);
+    const session = sessions[sessionId];
+    const currentPlayer = session.players[session.currentPlayerIndex];
+    const currentPosition = currentPlayer.position;
+    const card = session.currentCard;
 
-  if (answer === card.answer) {
-    const newPosition = Math.min(currentPosition + 1, session.gameBoard.length - 1);
-    currentPlayer.position = newPosition;
+    if (answer === card.answer) {
+        let spacesToMove;
+        switch (session.currentHintIndex) {
+            case 0:
+                spacesToMove = 3;
+                break;
+            case 1:
+                spacesToMove = 2;
+                break;
+            case 2:
+                spacesToMove = 1;
+                break;
+            default:
+                spacesToMove = 0;
+        }
 
-    io.to(sessionId).emit('playerMoved', { playerId, newPosition });
+        const newPosition = Math.min(currentPosition + spacesToMove, session.gameBoard.length - 1);
+        currentPlayer.position = newPosition;
 
-    if (newPosition === session.gameBoard.length - 1) {
-      endGame(io, session, playerId);
+        io.to(sessionId).emit('playerMoved', { playerId, newPosition, spacesToMove });
+
+        if (newPosition === session.gameBoard.length - 1) {
+            endGame(io, session, playerId);
+        } else {
+            nextTurn(io, session);
+        }
     } else {
-      nextTurn(io, session);
+        if (session.currentHintIndex < 2) {
+            provideHint(io, sessions, sessionId, playerId);
+        } else {
+            nextTurn(io, session);
+        }
     }
-  } else {
-    nextTurn(io, session);
-  }
 }
 
 function provideHint(io, sessions, sessionId, playerId) {
@@ -219,9 +278,9 @@ function provideHint(io, sessions, sessionId, playerId) {
     if (session.currentHintIndex < 3) {
         const hint = session.currentCard.hints[session.currentHintIndex];
         io.to(sessionId).emit('newHint', { hint });
-        io.to(playerId).emit('yourTurn', { hint });
+        io.to(playerId).emit('yourTurn', { action: 'answer' });
     } else {
-        nextTurn(io, sessions, sessionId);
+        nextTurn(io, session);
     }
 }
 

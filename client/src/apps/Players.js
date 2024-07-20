@@ -30,6 +30,18 @@ const Players = ({
 }) => {
   const [noName, setNoName] = useState(false);
 
+  const [inputSessionId, setInputSessionId] = useState('');
+
+  const handleInputChange = (e) => {
+    setInputSessionId(e.target.value);
+  };
+
+  const handleJoinById = () => {
+    if (inputSessionId) {
+      handleJoinClick(inputSessionId);
+    }
+  };
+  
   const handleJoinClick = (sessionIds) => {
     if (!playerName) {
       setNoName(true);
@@ -114,22 +126,39 @@ const Players = ({
             )}
             <div>
               {Array.isArray(sessionList) && sessionList.length > 0 ? (
-                sessionList.map((sessionIds) => (
-                  <button
-                    style={{ fontWeight: 'bold' }}
-                    key={sessionIds}
-                    onClick={() => handleJoinClick(sessionIds)}
-                  >
-                    {sessionList.length === 1 ? (
-                      "Join Session"
-                    ) : (
-                      <>
-                        Join Session <br />
-                        {sessionIds}
-                      </>
-                    )}
-                  </button>
-                ))
+                sessionList.length <= 4 ? (
+                  sessionList.map((sessionIds) => (
+                    <button
+                      style={{ fontWeight: 'bold' }}
+                      key={sessionIds}
+                      onClick={() => handleJoinClick(sessionIds)}
+                    >
+                      {sessionList.length === 1 ? (
+                        "Join Session"
+                      ) : (
+                        <>
+                          Join Session <br />
+                          {sessionIds}
+                        </>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <div>
+                    <input
+                      type="text"
+                      value={inputSessionId}
+                      onChange={handleInputChange}
+                      placeholder="Enter session ID"
+                    />
+                    <button
+                      style={{ fontWeight: 'bold' }}
+                      onClick={handleJoinById}
+                    >
+                      Join Session
+                    </button>
+                  </div>
+                )
               ) : (
                 <p>No active sessions available.</p>
               )}

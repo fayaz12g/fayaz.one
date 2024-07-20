@@ -1,5 +1,5 @@
 import React from 'react';
-import './GameBoard.css'; // We'll create this file for styling
+import './Gameboard.css'; // We'll create this file for styling
 
 const GameBoard = ({ players, currentPlayer }) => {
   // Define the board layout
