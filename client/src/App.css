@@ -155,16 +155,23 @@ body.dark .App {
 }
 
 /* Headers */
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5 {
   font-family: 'Alloy Ink';
   margin: 20px 0;
   transition: color 0.9s ease, text-shadow 0.9s ease;
+  font-size: 5rem;
+}
+
+h5 {
+  font-size: 2rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 body.light h4 {
   color: gold;
   outline-width: 3px;
   outline-color: #000000;
+  font-size: 2rem;
   text-shadow: 
     -1px -1px 0 #000,  
      1px -1px 0 #000,
@@ -174,6 +181,7 @@ body.light h4 {
 
 body.dark h4 {
   color: gold;
+  font-size: 2rem;
   outline-width: 3px;
   outline-color: #000000;
   text-shadow: 
@@ -212,7 +220,7 @@ input[type="text"], input[type="number"] {
   border: 1px solid #ccc;
   border-radius: 8px;
   width: 200px;
-  font-size: 16px;
+  font-size: 32px;
   font-family: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
 }
 
@@ -220,6 +228,7 @@ input[type="text"], input[type="number"] {
 ul {
   list-style: none;
   padding: 0;
+  font-size: 2rem;
 }
 
 li {
@@ -308,9 +317,9 @@ body.dark .smalltext {
 
 .exit {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
-  width: 40px;
+  top: 4px;
+  left: 5px;
+  width: 105px;
   height: 40px;
   border-radius: 20%;
   border: none;
@@ -323,7 +332,7 @@ body.dark .smalltext {
   color: var(--toggle-color);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: background-color 0.9s ease, color 0.9s ease;
-  z-index: 15;
+  z-index: 10000;
 
 }
 
@@ -339,11 +348,11 @@ body.dark {
 
 .version-text {
   position: fixed;
-  top: 5px;
-  left: 15px;
+  bottom: 10px;
+  left: 10px;
   color: var(--toggle-color);
   transition: color 0.9s ease;
-  text-align: left;
+  text-align: center;
 }
 
 .scale-200 {
@@ -436,7 +445,7 @@ button {
   margin: 10px;
   border: none;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 2rem;
   font-family: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
   cursor: pointer;
   transition: background-color 0.9s ease, color 0.9s ease;

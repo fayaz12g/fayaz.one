@@ -22,14 +22,33 @@ function loadCardDecks() {
     }
 }
 
+function handleInitialSpin(io, sessions, sessionId, playerId, spinResult) {
+  const session = sessions[sessionId];
+  if (!session) {
+    console.error(`Session with ID ${sessionId} not found`);
+    return;
+  }
+
+  session.initialSpins.push({ playerId, spinResult });
+  
+  io.to(sessionId).emit('playerSpun', { playerId, spinResult });
+  
+  if (session.initialSpins.length === session.players.length) {
+    determinePlayerOrder(io, session);
+  }
+}
+
+
 function initializeGuessingGame(io, sessions) {
     loadCardDecks();
 
     io.on('connection', (socket) => {
-        socket.on('startGameGuessing', ({ sessionId }) => {
+      socket.on('startGameGuessing', ({ sessionId }) => {
             startGameGuessing(io, sessions, sessionId);
         });
-
+        socket.on('initialSpin', ({ sessionId, spinResult }) => {
+            handleInitialSpin(io, sessions, sessionId, socket.id, spinResult);
+        });
         socket.on('spin', ({ sessionId }) => {
             handleSpin(io, sessions, sessionId, socket.id);
         });
@@ -48,6 +67,7 @@ function initializeGuessingGame(io, sessions) {
         socket.on('submitAnswer', ({ sessionId, answer }) => {
             handleAnswer(io, sessions, sessionId, socket.id, answer);
   });
+  
     });
 }
 
@@ -59,26 +79,30 @@ function generateGameBoard() {
     }
     return board;
 }
-
 function startGameGuessing(io, sessions, sessionId) {
-    const session = sessions[sessionId];
-    if (session.players.length < 2) {
-      return console.error('Cannot start game: not enough players!');
-    }
-    
-    session.gameBoard = generateGameBoard();
-    session.gamePhase = 'determining-order';
-    session.currentPlayerIndex = 0;
-    session.playerSpinResults = [];
-  
-    io.to(sessionId).emit('gameStarted', {
-      gameBoard: session.gameBoard,
-      players: session.players,
-      gamePhase: session.gamePhase,
-    });
-  
-    askPlayerToSpin(io, session);
+  const session = sessions[sessionId];
+  if (session.players.length < 2) {
+    return console.error('Cannot start game: not enough players!');
   }
+  
+  session.gameBoard = generateGameBoard();
+  session.gamePhase = 'initial-spin';
+  session.initialSpins = [];
+  
+  // Ensure each player has a valid object structure
+  session.players = session.players.map(player => ({
+    id: player.id,
+    name: player.name,
+    socketId: player.socketId,
+    position: 0
+  }));
+  
+  io.to(sessionId).emit('gameStarted', {
+    gameBoard: session.gameBoard,
+    players: session.players,
+    gamePhase: session.gamePhase,
+  });
+}
   
   function askPlayerToSpin(io, session) {
     const currentPlayer = session.players[session.currentPlayerIndex];
@@ -98,50 +122,71 @@ function startGameGuessing(io, sessions, sessionId) {
       askPlayerToSpin(io, session);
     }
   }
-
   function askQuestion(io, session) {
     const currentPlayer = session.players[session.currentPlayerIndex];
     const currentPosition = currentPlayer.position;
     const cardColor = session.gameBoard[currentPosition];
     const card = drawCard(cardColor);
-
+  
     if (!card) {
         console.error(`Failed to draw card for color: ${cardColor}`);
         nextTurn(io, session);
         return;
     }
-
+  
     session.currentCard = card;
     session.currentHintIndex = 0;
-
-    io.to(session.id).emit('questionAsked', {
+  
+    const questionData = {
         question: card.hints[0],
         options: generateOptions(card.answer, cardColor),
         deckId: card.deckId,
         deckName: card.deckName
+    };
+  
+    io.to(session.id).emit('questionAsked', {
+        ...questionData,
+        currentPlayer: currentPlayer.id
     });
-
-    io.to(currentPlayer.socketId).emit('yourTurn', { action: 'answer' });
-}
+  
+    io.to(currentPlayer.id).emit('yourTurn', { 
+      action: 'answer',
+      ...questionData
+    });
+  }
 
   function determinePlayerOrder(io, session) {
-    session.playerSpinResults.sort((a, b) => a.spinResult - b.spinResult);
-    session.players = session.playerSpinResults.map(result => 
-      session.players.find(player => player.id === result.playerId)
-    );
+    // Sort the initial spins
+    session.initialSpins.sort((a, b) => b.spinResult - a.spinResult);
+  
+    // Create new player objects with initial positions
+    session.players = session.initialSpins.map((spin, index) => {
+      const player = session.players.find(p => p.id === spin.playerId);
+      if (!player) {
+        console.error(`Player with ID ${spin.playerId} not found`);
+        return null;
+      }
+      return {
+        ...player,
+        position: 0, // Start all players at position 0
+        order: index // Set the player's turn order
+      };
+    }).filter(player => player !== null); // Remove any null entries
+  
+    if (session.players.length === 0) {
+      console.error('No valid players found after determining order');
+      return;
+    }
+  
     session.gamePhase = 'playing';
     session.currentPlayerIndex = 0;
-  
-    // Move all players to their initial positions
-    session.players.forEach((player, index) => {
-      player.position = session.playerSpinResults[index].spinResult;
-    });
-  
-    io.to(session.id).emit('orderDetermined', { 
+    
+    io.to(session.id).emit('gamePhaseChanged', { 
+      phase: 'playing', 
       players: session.players,
-      gamePhase: session.gamePhase,
+      currentPlayer: session.players[session.currentPlayerIndex]
     });
-  
+    
     askQuestion(io, session);
   }
 

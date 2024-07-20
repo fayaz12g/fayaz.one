@@ -34,19 +34,19 @@ const TitleChar = styled(animated.span)`
   z-index: 1; 
 
   @media (min-width: 320px) and (max-width: 480px) {
-    font-size: ${props => props.char === 'i' ? '3rem' : '2rem'};
+    font-size: ${props => props.char === 'i' ? '2rem' : '3rem'};
   }
   
   @media (min-width: 481px) and (max-width: 768px) {
-    font-size: ${props => props.char === 'i' ? '4rem' : '3rem'};
+    font-size: ${props => props.char === 'i' ? '6rem' : '5rem'};
   }
   
   @media (min-width: 769px) and (max-width: 1024px) {
-    font-size: ${props => props.char === 'i' ? '3rem' : '4rem'};
+    font-size: ${props => props.char === 'i' ? '4rem' : '6rem'};
   }
   
   @media (min-width: 1025px) {
-    font-size: ${props => props.char === 'i' ? '3rem' : '5rem'};
+    font-size: ${props => props.char === 'i' ? '6rem' : '8rem'};
   }
 
   /* 3D Gradient effect */
@@ -79,11 +79,11 @@ const lightenColor = (color, percent, lighten = true) => {
 };
 
 const EyeImage = styled.img`
-  width: 40px;
+  width: 65px;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -80%);
+  transform: translate(-50%, -86%);
   z-index: 2;
   opacity: ${props => props.show ? 1 : 0};
   transition: opacity 0.3s ease-in-out;

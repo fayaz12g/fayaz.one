@@ -13,6 +13,7 @@ const Game = ({
     setPlayerName,
     joinSession,
     gameStarted,
+    setGameStarted,
     players,
     playerRole,
     isEndScene,
@@ -85,6 +86,7 @@ const Game = ({
   
       const renderPlayerScreen = () => (
         <Players
+          socket={socket}
           isEndGame={isEndGame}
           joinedSession={joinedSession}
           sessionId={sessionId}
@@ -93,6 +95,7 @@ const Game = ({
           setPlayerName={setPlayerName}
           joinSession={joinSession}
           gameStarted={gameStarted}
+          setGameStarted={setGameStarted}
           players={players}
           playerRole={playerRole}
           isEndScene={isEndScene}

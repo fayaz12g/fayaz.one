@@ -4,12 +4,12 @@
     flex-direction: column;
     align-items: center;
     margin-top: -50px;
+    width: 100%;
   }
   
   .room-code {
     margin-bottom: 20px;
     text-align: center;
-    z-index: 100;
   }
   
   .app-container {
@@ -40,6 +40,7 @@
 
   .settings {
     border: 0.1px solid #ccc; 
+    font-size: 2rem;
   }
   
   .start-game {
@@ -54,6 +55,7 @@
     z-index: 1000;
     background-color: #f0f0f0;
     color: #000;
+    font-size: 2rem;
   }
   
   .start-game:disabled {

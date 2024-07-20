@@ -3,6 +3,7 @@ import ImprovPlayer from './improvimania/PlayerScreen';
 import GuessingPlayer from './guessing/PlayerScreen';
 
 const Players = ({
+  socket,
   isEndGame,
   joinedSession,
   sessionId,
@@ -11,6 +12,7 @@ const Players = ({
   setPlayerName,
   joinSession,
   gameStarted,
+  setGameStarted,
   players,
   playerRole,
   isEndScene,
@@ -52,6 +54,7 @@ const Players = ({
 
   const renderImprovPlayerScreen = () => (
     <ImprovPlayer
+      socket={socket}
       isEndGame={isEndGame}
       joinedSession={joinedSession}
       sessionId={sessionId}
@@ -81,6 +84,7 @@ const Players = ({
 
   const renderGuessingPlayerScreen = () => (
     <GuessingPlayer
+      socket={socket}
       isEndGame={isEndGame}
       joinedSession={joinedSession}
       sessionId={sessionId}
@@ -89,6 +93,7 @@ const Players = ({
       setPlayerName={setPlayerName}
       joinSession={joinSession}
       gameStarted={gameStarted}
+      setGameStarted={setGameStarted}
       players={players}
       playerRole={playerRole}
       isEndScene={isEndScene}

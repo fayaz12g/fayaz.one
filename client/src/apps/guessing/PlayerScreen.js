@@ -11,6 +11,7 @@ const PlayerScreen = ({
   setPlayerName,
   joinSession,
   gameStarted,
+  setGameStarted,
   players,
   kicked,
   titleTheme,
@@ -18,40 +19,51 @@ const PlayerScreen = ({
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'waiting',
-    currentQuestion: null,
     canSpin: false,
     spinResult: null,
   });
 
   useEffect(() => {
-    if (gameStarted) {
+      socket.on('gameStarted', () => {
+        setGameState(prev => ({ ...prev, phase: 'initial-spin', canSpin: true }));
+        setGameStarted(true);
+      });
+
+      socket.on('gamePhaseChanged', ({ phase, players, currentPlayer }) => {
+        setGameState(prev => ({
+          ...prev,
+          phase,
+          players,
+          currentPlayerIndex: players.findIndex(p => p.id === currentPlayer.id),
+        }));
+      });
+
       socket.on('yourTurn', ({ action }) => {
-        if (action === 'spin') {
-          setGameState(prev => ({ ...prev, phase: 'spinning', canSpin: true }));
-        } else if (action === 'answer') {
+        if (action === 'answer') {
           setGameState(prev => ({ ...prev, phase: 'answering' }));
         }
       });
 
-      socket.on('questionAsked', ({ question, options }) => {
+      socket.on('questionAsked', ({ question, options, deckId, deckName, currentPlayer }) => {
         setGameState(prev => ({
           ...prev,
-          phase: 'answering',
-          currentQuestion: { question, options },
+          phase: prev.playerName === currentPlayer ? 'answering' : 'waiting',
+          currentQuestion: { question, options, deckId, deckName },
         }));
       });
 
-      socket.on('gamePhaseChanged', ({ phase }) => {
-        setGameState(prev => ({ ...prev, phase }));
-      });
-
       return () => {
+        socket.off('gameStarted');
+        socket.off('gamePhaseChanged');
         socket.off('yourTurn');
         socket.off('questionAsked');
-        socket.off('gamePhaseChanged');
       };
-    }
   }, [gameStarted, socket]);
+
+  const handleInitialSpin = (result) => {
+    setGameState(prev => ({ ...prev, spinResult: result, canSpin: false }));
+    socket.emit('initialSpin', { sessionId, spinResult: result });
+  };
 
   const handleSpin = (result) => {
     setGameState(prev => ({ ...prev, spinResult: result, canSpin: false }));
@@ -63,32 +75,48 @@ const PlayerScreen = ({
     setGameState(prev => ({ ...prev, phase: 'waiting' }));
   };
 
+  const requestHint = () => {
+    socket.emit('requestHint', { sessionId });
+  };
+
   const renderGameContent = () => {
     switch (gameState.phase) {
-      case 'waiting':
-        return <h2>Waiting for your turn...</h2>;
+      case 'initial-spin':
+        return (
+          <div className="App">
+          <div className="initial-spin-container">
+            <h3>Spin the wheel to determine your starting position!</h3>
+            <Spinner onSpinComplete={handleInitialSpin} disabled={!gameState.canSpin} />
+            {gameState.spinResult && <h5>You spun: {gameState.spinResult}</h5>}
+          </div>
+          </div>
+        );
+        case 'playing':
+        case 'waiting':
+          return <h2>Waiting for your turn...</h2>;
       case 'spinning':
         return (
           <div className="spin-container">
             <h3>It's your turn to spin!</h3>
             <Spinner onSpinComplete={handleSpin} disabled={!gameState.canSpin} />
-            {gameState.spinResult && <p>You spun: {gameState.spinResult}</p>}
+            {gameState.spinResult && <h5>You spun: {gameState.spinResult}</h5>}
           </div>
         );
-      case 'answering':
-        return (
-          <div className="question-container">
-            <h3>Answer the question:</h3>
-            <p>{gameState.currentQuestion.question}</p>
-            <div className="answer-options">
-              {gameState.currentQuestion.options.map((option, index) => (
-                <button key={index} onClick={() => handleAnswer(option)}>
-                  {option}
-                </button>
-              ))}
+        case 'answering':
+          return (
+            <div className="question-container">
+              <h3>Answer the question:</h3>
+              <h5>{gameState.currentQuestion?.question}</h5>
+              <div className="answer-options">
+                {gameState.currentQuestion?.options.map((option, index) => (
+                  <button key={index} onClick={() => handleAnswer(option)}>
+                    {option}
+                  </button>
+                ))}
+              </div>
+              <button onClick={requestHint}>Request Hint</button>
             </div>
-          </div>
-        );
+          );
       default:
         return null;
     }
@@ -96,19 +124,27 @@ const PlayerScreen = ({
 
   if (!gameStarted) {
     return (
-      <div className='App'>
-      <div className="player-screen waiting">
-        <h2>Welcome, {playerName}.</h2>
-        <p>Session ID: {sessionId}</p>
-        <p>Waiting for game to start...</p>
-      </div>
+      <div>
+        <div className="title-bar">
+        <div className="join-message">
+          <h2>Join at <span className="red-text">Fayaz.One</span> in your browser!</h2>
+        </div>
+        <div className="room-info">
+          <h4>Session: {sessionId}</h4>
+        </div>
+        </div>
+        <div className='App'>
+          <div className="player-screen waiting">
+            <h2>Welcome, {playerName}.</h2>
+            <h5>Waiting for game to start...</h5>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="player-screen game">
-      <h2>{playerName}'s Screen</h2>
       {renderGameContent()}
     </div>
   );

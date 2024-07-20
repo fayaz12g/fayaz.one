@@ -317,6 +317,7 @@ function App() {
         setPlayerName={setPlayerName}
         joinSession={joinSession}
         gameStarted={gameStarted}
+        setGameStarted={setGameStarted}
         players={players}
         playerRole={playerRole}
         isEndScene={isEndScene}
@@ -402,7 +403,7 @@ function App() {
                 className="exit" 
                 onClick={() => setConfirmQuit(true)}
             >
-                {theme === 'light' ? '🏃‍♂️' : '🏃🏿'}
+                {theme === 'light' ? '🏃‍♂️ Quit' : '🏃🏿 Quit'}
             </button>
             )}
 

@@ -31,15 +31,13 @@ const HostScreen = ({
   setForceRemove,
   forceRemove,
 }) => {
-
-const [spinResults, setSpinResults] = useState([]);
-
-const [gameState, setGameState] = useState({
-    phase: 'lobby', // 'lobby', 'determining-order', 'playing'
+  const [gameState, setGameState] = useState({
+    phase: 'lobby',
     currentPlayerIndex: 0,
     players: [],
     gameBoard: [],
     currentQuestion: null,
+    initialSpins: [],
   });
 
   useEffect(() => {
@@ -47,29 +45,34 @@ const [gameState, setGameState] = useState({
       socket.on('gameStarted', ({ gameBoard, players }) => {
         setGameState(prev => ({
           ...prev,
-          phase: 'determining-order',
+          phase: 'initial-spin',
           gameBoard,
           players: players.map(p => ({ ...p, position: 0 })),
+          initialSpins: [],
         }));
       });
 
       socket.on('playerSpun', ({ playerId, spinResult }) => {
-              setSpinResults(prev => [...prev, { playerId, spinResult }]);
-            });
-
-      socket.on('orderDetermined', ({ players }) => {
         setGameState(prev => ({
           ...prev,
-          phase: 'playing',
-          players,
-          currentPlayerIndex: 0,
+          initialSpins: [...prev.initialSpins, { playerId, spinResult }],
         }));
       });
 
-      socket.on('questionAsked', ({ question, options }) => {
+      socket.on('gamePhaseChanged', ({ phase, players, currentPlayer }) => {
         setGameState(prev => ({
           ...prev,
-          currentQuestion: { question, options },
+          phase,
+          players,
+          currentPlayerIndex: players.findIndex(p => p.id === currentPlayer.id),
+        }));
+      });
+  
+      socket.on('questionAsked', ({ question, options, deckId, deckName, currentPlayer }) => {
+        setGameState(prev => ({
+          ...prev,
+          currentQuestion: { question, options, deckId, deckName },
+          currentPlayerIndex: prev.players.findIndex(p => p.id === currentPlayer),
         }));
       });
 
@@ -94,7 +97,7 @@ const [gameState, setGameState] = useState({
       return () => {
         socket.off('gameStarted');
         socket.off('playerSpun');
-        socket.off('orderDetermined');
+        socket.off('gamePhaseChanged');
         socket.off('questionAsked');
         socket.off('playerMoved');
         socket.off('gameEnded');
@@ -102,13 +105,19 @@ const [gameState, setGameState] = useState({
     }
   }, [gameStarted, socket]);
 
-  const renderSpinningPhase = () => (
-    <div className="App">
-      <h2>Determining Player Order</h2>
-      <p>Current Player: {gameState.players[gameState.currentPlayerIndex].name}</p>
-      <div className="spin-results">
-        {spinResults.map(({ playerId, spinResult }, index) => (
-          <p key={index}>{gameState.players.find(p => p.id === playerId).name} spun: {spinResult}</p>
+  const renderInitialSpinPhase = () => (
+    <div className="initial-spin-phase">
+      <h2>Spin Your Wheel To Determine Player Order!</h2>
+      <div className="spinners-container">
+        {gameState.players.map(player => (
+          <div key={player.id} className="player-spinner">
+            <h5>{player.name}</h5>
+            <Spinner
+              onSpinComplete={() => {}} // Host doesn't trigger spins
+              disabled={true}
+              result={gameState.initialSpins.find(s => s.playerId === player.id)?.spinResult}
+            />
+          </div>
         ))}
       </div>
     </div>
@@ -118,29 +127,33 @@ const [gameState, setGameState] = useState({
     switch (gameState.phase) {
       case 'lobby':
         return renderLobby();
-      case 'determining-order':
-        return renderSpinningPhase();
-      case 'playing':
+      case 'initial-spin':
         return (
-          <div>
-            <GameBoard
-              gameBoard={gameState.gameBoard}
-              players={gameState.players}
-              currentPlayer={gameState.players[gameState.currentPlayerIndex]}
-            />
-            {gameState.currentQuestion && (
-              <div className="question-container">
-                <h3>Current Question:</h3>
-                <p>{gameState.currentQuestion.question}</p>
-                <ul>
-                  {gameState.currentQuestion.options.map((option, index) => (
-                    <li key={index}>{option}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+        <div className="App">
+          {renderInitialSpinPhase()}
           </div>
-        );
+          );
+        case 'playing':
+          return (
+            <div className="game-board">
+              <GameBoard
+                gameBoard={gameState.gameBoard}
+                players={gameState.players}
+                currentPlayer={gameState.players[gameState.currentPlayerIndex]}
+              />
+              {gameState.currentQuestion && (
+                <div className="question-container">
+                  <h3>Current Question:</h3>
+                  <h5>{gameState.currentQuestion.question}</h5>
+                  <ul>
+                    {gameState.currentQuestion.options.map((option, index) => (
+                      <li key={index}>{option}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          );
       case 'ended':
         return <h2>Game Ended! Winner: {gameState.winner.name}</h2>;
       default:
@@ -189,7 +202,7 @@ const [gameState, setGameState] = useState({
           <h4>Session: {sessionId}</h4>
         </div>
       </div>
-      {renderGameContent()}
+        {renderGameContent()}
     </div>
   );
 };

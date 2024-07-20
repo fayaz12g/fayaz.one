@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './Spinner.css'; 
+import './Spinner.css';
 
-const Spinner = ({ onSpinComplete, disabled }) => {
+const Spinner = ({ onSpinComplete, disabled, result }) => {
   const [spinning, setSpinning] = useState(false);
-  const [result, setResult] = useState(null);
   const [rotation, setRotation] = useState(0);
 
   const spin = () => {
@@ -13,12 +12,19 @@ const Spinner = ({ onSpinComplete, disabled }) => {
     setRotation(newRotation);
     
     setTimeout(() => {
-      const spinResult = Math.floor(Math.random() * 6) + 1;
-      setResult(spinResult);
+      const spinResult = result || Math.floor(Math.random() * 6) + 1;
       setSpinning(false);
       onSpinComplete(spinResult);
-    }, 3000); 
+    }, 3000);
   };
+
+  useEffect(() => {
+    if (result) {
+      // If a result is provided, set the spinner to that position
+      const newRotation = (result - 1) * 60 + 30; // 60 degrees per section, 30 degrees offset
+      setRotation(newRotation);
+    }
+  }, [result]);
 
   return (
     <div className="spinner-container">
@@ -33,9 +39,9 @@ const Spinner = ({ onSpinComplete, disabled }) => {
         ))}
         <div className="spinner-arrow"></div>
       </div>
-      <button onClick={spin} disabled={spinning || disabled} className="spin-button">
+      {!spinning && !disabled && <button onClick={spin} className="spin-button">
         {spinning ? 'Spinning...' : 'Spin'}
-      </button>
+      </button>}
       {result && <p className="spin-result">You spun: {result}</p>}
     </div>
   );

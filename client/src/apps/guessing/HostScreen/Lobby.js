@@ -86,7 +86,6 @@ socket,
                   Game Settings:
                 </p>
                 <label>
-                  <br />
                   Game Mode:
                   <div className="button-wrapper">
                   <button onClick={toggleGameMode} className="game-mode-button">
@@ -98,8 +97,8 @@ socket,
               </div>
             </div>
           </div>
-          <button onClick={handleStartGame} disabled={players.length !== 4} className="start-game">
-            {players.length === 4 ? "Start Game" : "Waiting for 4 players..."}
+          <button onClick={handleStartGame} disabled={players.length < 2 } className="start-game">
+            {players.length > 1 ? "Start Game" : "Waiting for more players..."}
           </button>
         </div>
       );
