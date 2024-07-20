@@ -60,6 +60,7 @@ const HostScreen = ({
       });
 
       socket.on('gamePhaseChanged', ({ phase, players, currentPlayer }) => {
+        console.log('Received gamePhaseChanged:', { phase, players, currentPlayer });
         setGameState(prev => ({
           ...prev,
           phase,

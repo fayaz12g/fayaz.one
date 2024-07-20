@@ -30,6 +30,7 @@ const PlayerScreen = ({
       });
 
       socket.on('gamePhaseChanged', ({ phase, players, currentPlayer }) => {
+        console.log('Received gamePhaseChanged:', { phase, players, currentPlayer });
         setGameState(prev => ({
           ...prev,
           phase,
@@ -85,7 +86,7 @@ const PlayerScreen = ({
         return (
           <div className="App">
           <div className="initial-spin-container">
-            <h3>Spin the wheel to determine your starting position!</h3>
+            <h2>Spin the wheel to determine your starting position!</h2>
             <Spinner onSpinComplete={handleInitialSpin} disabled={!gameState.canSpin} />
             {gameState.spinResult && <h5>You spun: {gameState.spinResult}</h5>}
           </div>

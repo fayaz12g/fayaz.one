@@ -160,24 +160,29 @@ function startGameGuessing(io, sessions, sessionId) {
   }
 
   function determinePlayerOrder(io, sessions, sessionId) {
-
     const session = sessions[sessionId];
+    
+    console.log('Initial state:', JSON.stringify(session.initialSpins), JSON.stringify(session.players));
+  
     // Sort the initial spins
     session.initialSpins.sort((a, b) => b.spinResult - a.spinResult);
   
     // Create new player objects with initial positions
     session.players = session.initialSpins.map((spin, index) => {
-      const player = session.players.find(p => p.id === spin.playerId);
+      const player = session.players.find(p => p.socketId === spin.playerId);
       if (!player) {
-        console.error(`Player with ID ${spin.playerId} not found`);
+        console.error(`Player with socket ID ${spin.playerId} not found`);
         return null;
       }
       return {
         ...player,
+        id: player.socketId, // Add an id field that matches the socketId
         position: 0, // Start all players at position 0
         order: index // Set the player's turn order
       };
     }).filter(player => player !== null); // Remove any null entries
+  
+    console.log('After mapping:', JSON.stringify(session.players));
   
     if (session.players.length === 0) {
       console.error('No valid players found after determining order');
