@@ -137,7 +137,7 @@ const PlayerScreen = ({
                 </div>
               )}
               <div className="answer-options">
-                {gameState.currentQuestion?.options.map((option, index) => (
+                {gameState.currentQuestion?.options && gameState.currentQuestion.options.map((option, index) => (
                   <button key={index} onClick={() => handleAnswer(option)}>
                     {option}
                   </button>
