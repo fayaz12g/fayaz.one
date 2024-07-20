@@ -331,11 +331,15 @@ function provideHint(io, sessions, sessionId, playerId) {
     const session = sessions[sessionId];
     session.currentHintIndex++;
 
+    console.log(`${playerId} is requesting a hint!`)
+
     if (session.currentHintIndex < 3) {
         const hint = session.currentCard.hints[session.currentHintIndex];
         io.to(sessionId).emit('newHint', { hint });
         io.to(playerId).emit('yourTurn', { action: 'answer' });
+        console.log(`I told him ${ hint }`)
     } else {
+        console.log(`But he doesn't deserve one.`)
         nextTurn(io, session);
     }
 }

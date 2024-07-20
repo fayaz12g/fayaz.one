@@ -105,8 +105,9 @@ const PlayerScreen = ({
         );
         case 'answering':
           return (
+            <div className='App'>
             <div className="question-container">
-              <h3>Answer the question:</h3>
+              <h1>Answer the question:</h1>
               <h5>{gameState.currentQuestion?.question}</h5>
               <div className="answer-options">
                 {gameState.currentQuestion?.options.map((option, index) => (
@@ -116,6 +117,7 @@ const PlayerScreen = ({
                 ))}
               </div>
               <button onClick={requestHint}>Request Hint</button>
+            </div>
             </div>
           );
       default:
