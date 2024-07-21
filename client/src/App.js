@@ -319,6 +319,7 @@ function App() {
         gameStarted={gameStarted}
         setGameStarted={setGameStarted}
         players={players}
+        setPlayers={setPlayers}
         playerRole={playerRole}
         isEndScene={isEndScene}
         currentLine={currentLine}

@@ -35,8 +35,8 @@ const PlayerScreen = ({
           {!gameStarted ? (
           <div>
             <div className="App">
-            <h2>Welcome, {playerName}</h2>
-            <h3>Joined Session: {sessionId}</h3>
+            <h3>Welcome, {playerName}</h3>
+            <h2>Joined Session: {sessionId}</h2>
             <h4>Players:</h4>
             <ul>
               {players.map((player, index) => (

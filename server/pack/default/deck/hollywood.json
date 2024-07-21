@@ -42,6 +42,86 @@
           "The movie is famous for its ambiguous ending involving a spinning top"
         ],
         "answer": "Inception"
+      },
+      {
+        "hints": [
+          "This 1939 classic features a young girl from Kansas transported to a magical land",
+          "The main character famously says, 'Toto, I've a feeling we're not in Kansas anymore'",
+          "It includes iconic characters like the Scarecrow, Tin Man, and Cowardly Lion"
+        ],
+        "answer": "The Wizard of Oz"
+      },
+      {
+        "hints": [
+          "This 1993 Steven Spielberg film brought dinosaurs back to life through groundbreaking CGI",
+          "It's based on a Michael Crichton novel about a wildlife park of cloned dinosaurs",
+          "The T-Rex attack scene is one of the most famous sequences in the movie"
+        ],
+        "answer": "Jurassic Park"
+      },
+      {
+        "hints": [
+          "This 1994 crime film by Quentin Tarantino features interconnected stories of Los Angeles criminals",
+          "It stars John Travolta, Samuel L. Jackson, and Uma Thurman",
+          "The movie is famous for its non-linear storytelling and iconic dance scene"
+        ],
+        "answer": "Pulp Fiction"
+      },
+      {
+        "hints": [
+          "This 1980s classic features a teenager who accidentally time travels in a DeLorean",
+          "Michael J. Fox stars as Marty McFly",
+          "The movie coined the phrase '1.21 gigawatts!'"
+        ],
+        "answer": "Back to the Future"
+      },
+      {
+        "hints": [
+          "This iconic horror film is about a boy who can communicate with spirits",
+          "It features the famous line 'I see dead people'",
+          "M. Night Shyamalan directed this 1999 supernatural thriller"
+        ],
+        "answer": "The Sixth Sense"
+      },
+      {
+        "hints": [
+          "This animated Pixar film is about a rat who dreams of becoming a chef in Paris",
+          "The main character, Remy, controls a human by pulling his hair",
+          "It features the catchphrase 'Anyone can cook'"
+        ],
+        "answer": "Ratatouille"
+      },
+      {
+        "hints": [
+          "This sci-fi action film starring Keanu Reeves questions the nature of reality",
+          "The main character is offered a choice between a red pill and a blue pill",
+          "It features the famous 'bullet time' special effect"
+        ],
+        "answer": "The Matrix"
+      },
+      {
+        "hints": [
+          "This 1975 Steven Spielberg thriller is about a giant man-eating shark",
+          "It's famous for its suspenseful music composed by John Williams",
+          "The police chief says, 'You're gonna need a bigger boat'"
+        ],
+        "answer": "Jaws"
+      },
+      {
+        "hints": [
+          "This 1964 musical stars Julie Andrews as a magical nanny",
+          "It features the song 'Supercalifragilisticexpialidocious'",
+          "The main character uses her umbrella to fly"
+        ],
+        "answer": "Mary Poppins"
+      },
+      {
+        "hints": [
+          "This 2008 Pixar film is about the last robot on Earth cleaning up garbage",
+          "The main character collects interesting items he finds while working",
+          "It features minimal dialogue, with the robot mainly saying his own name"
+        ],
+        "answer": "WALL-E"
       }
     ]
   }

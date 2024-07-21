@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ImprovPlayer from './improvimania/PlayerScreen';
 import GuessingPlayer from './guessing/PlayerScreen';
+import TriviaPlayer from './trivia/PlayerScreen';
 
 const Players = ({
   socket,
@@ -113,6 +114,37 @@ const Players = ({
     />
   );
 
+  const renderTriviaPlayerScreen = () => (
+    <TriviaPlayer
+      socket={socket}
+      isEndGame={isEndGame}
+      joinedSession={joinedSession}
+      sessionId={sessionId}
+      setSessionId={setSessionId}
+      playerName={playerName}
+      setPlayerName={setPlayerName}
+      joinSession={joinSession}
+      gameStarted={gameStarted}
+      setGameStarted={setGameStarted}
+      players={players}
+      playerRole={playerRole}
+      isEndScene={isEndScene}
+      currentLine={currentLine}
+      isSpeaker={isSpeaker}
+      nextLine={nextLine}
+      guessAdlibber={guessAdlibber}
+      sessionList={sessionList}
+      leaderboard={leaderboard}
+      kicked={kicked}
+      titleTheme={titleTheme}
+      Audio={Audio}
+      speakingTheme={speakingTheme}
+      guessingTheme={guessingTheme}
+      sentGuess={sentGuess}
+      game={game}
+    />
+  );
+
   return (
     <div>
       {!game ? (
@@ -179,8 +211,8 @@ const Players = ({
         renderImprovPlayerScreen()
       ) : game === 'guessing' ? (
         renderGuessingPlayerScreen()
-    ) : game === 'soon' ? (
-        <div>Coming Soon</div>
+    ) : game === 'trivia' ? (
+        renderTriviaPlayerScreen()
       ) :null}
     </div>
   );

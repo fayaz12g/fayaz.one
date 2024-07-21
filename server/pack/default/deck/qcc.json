@@ -42,6 +42,166 @@
           "The lead plaintiff was James Obergefell"
         ],
         "answer": "Obergefell v. Hodges"
+      },
+      {
+        "hints": [
+          "This 1896 case upheld the constitutionality of racial segregation under the 'separate but equal' doctrine",
+          "It involved a Louisiana law mandating separate railway cars for blacks and whites",
+          "This decision was later overturned by Brown v. Board of Education"
+        ],
+        "answer": "Plessy v. Ferguson"
+      },
+      {
+        "hints": [
+          "This 1963 case established the right of criminal defendants to have an attorney",
+          "It ruled that states must provide lawyers for defendants who cannot afford them",
+          "The case's name is now synonymous with free legal representation for the poor"
+        ],
+        "answer": "Gideon v. Wainwright"
+      },
+      {
+        "hints": [
+          "This 1819 case expanded the power of the federal government over states",
+          "It involved the creation of a national bank",
+          "Chief Justice John Marshall famously said, 'The power to tax involves the power to destroy'"
+        ],
+        "answer": "McCulloch v. Maryland"
+      },
+      {
+        "hints": [
+          "This 1964 case set the standard for libel and defamation of public figures",
+          "It involved a full-page ad in The New York Times criticizing Alabama officials",
+          "It established the 'actual malice' standard for proving defamation of public officials"
+        ],
+        "answer": "New York Times v. Sullivan"
+      },
+      {
+        "hints": [
+          "This 1919 case established the 'clear and present danger' test for limits on free speech",
+          "It involved the distribution of leaflets opposing the draft during World War I",
+          "Justice Oliver Wendell Holmes Jr. wrote the majority opinion"
+        ],
+        "answer": "Schenck v. United States"
+      },
+      {
+        "hints": [
+          "This 1967 case struck down laws banning interracial marriage",
+          "It involved a Virginia law prohibiting marriages between whites and non-whites",
+          "The plaintiffs were Richard and Mildred Loving"
+        ],
+        "answer": "Loving v. Virginia"
+      },
+      {
+        "hints": [
+          "This 1974 case ordered President Nixon to release tape recordings related to Watergate",
+          "It established that executive privilege is not absolute",
+          "The decision led to Nixon's resignation"
+        ],
+        "answer": "United States v. Nixon"
+      },
+      {
+        "hints": [
+          "This 1962 case banned official school prayer in public schools",
+          "It ruled that school-sponsored prayer in public schools violated the Establishment Clause",
+          "The case originated from New York's use of the Regents' prayer"
+        ],
+        "answer": "Engel v. Vitale"
+      },
+      {
+        "hints": [
+          "This 1978 case upheld the use of affirmative action in college admissions",
+          "It allowed race to be one of several factors in admission decisions",
+          "The case involved the University of California Davis Medical School"
+        ],
+        "answer": "Regents of the University of California v. Bakke"
+      },
+      {
+        "hints": [
+          "This 1971 case allowed for the publication of the Pentagon Papers",
+          "It was a landmark decision on freedom of the press",
+          "The case pitted the New York Times and Washington Post against the U.S. government"
+        ],
+        "answer": "New York Times Co. v. United States"
+      },
+      {
+        "hints": [
+          "This 1925 case applied the First Amendment to the states via the Fourteenth Amendment",
+          "It involved a teacher convicted under a Tennessee law that banned teaching evolution",
+          "The case is often referred to as the 'Scopes Monkey Trial'"
+        ],
+        "answer": "Scopes v. State"
+      },
+      {
+        "hints": [
+          "This 1958 case ruled that states cannot require the NAACP to disclose its membership lists",
+          "It protected freedom of association under the First Amendment",
+          "The case originated from Alabama's attempts to oust the NAACP from the state"
+        ],
+        "answer": "NAACP v. Alabama"
+      },
+      {
+        "hints": [
+          "This 1986 case upheld the constitutionality of sodomy laws",
+          "It was later overturned by Lawrence v. Texas in 2003",
+          "The case originated from a Georgia statute criminalizing sodomy"
+        ],
+        "answer": "Bowers v. Hardwick"
+      },
+      {
+        "hints": [
+          "This 1971 case established the Lemon test for evaluating Establishment Clause violations",
+          "It involved a Pennsylvania law providing financial support to nonpublic schools",
+          "The three-part test examines purpose, effect, and entanglement with religion"
+        ],
+        "answer": "Lemon v. Kurtzman"
+      },
+      {
+        "hints": [
+          "This 1989 case upheld the right to burn the American flag as a form of symbolic speech",
+          "It invalidated laws in 48 states prohibiting flag desecration",
+          "The case originated from a protest at the 1984 Republican National Convention"
+        ],
+        "answer": "Texas v. Johnson"
+      },
+      {
+        "hints": [
+          "This 1932 case established the right to counsel in capital cases in state courts",
+          "It involved nine young African American men accused of rape in Alabama",
+          "The case led to two landmark Supreme Court decisions on the right to counsel"
+        ],
+        "answer": "Powell v. Alabama"
+      },
+      {
+        "hints": [
+          "This 1961 case applied the exclusionary rule to state courts",
+          "It held that evidence obtained in violation of the Fourth Amendment is inadmissible in state courts",
+          "The case overruled Wolf v. Colorado"
+        ],
+        "answer": "Mapp v. Ohio"
+      },
+      {
+        "hints": [
+          "This 1965 case established a constitutional right to privacy",
+          "It struck down a Connecticut law banning contraceptives",
+          "The majority opinion discussed 'penumbras' and 'emanations' from the Bill of Rights"
+        ],
+        "answer": "Griswold v. Connecticut"
+      },
+      {
+        "hints": [
+          "This 1964 case established the 'one person, one vote' principle",
+          "It required state legislative districts to be roughly equal in population",
+          "The case originated from a challenge to Alabama's legislative apportionment scheme"
+        ],
+        "answer": "Reynolds v. Sims"
+      },
+      {
+        "hints": [
+          "This 1938 case established the doctrine of constitutional avoidance",
+          "It involved a challenge to a federal statute prohibiting the shipment of filled milk",
+          "The case is known for Justice Brandeis's concurring opinion on judicial restraint"
+        ],
+        "answer": "United States v. Carolene Products Co."
       }
     ]
   }

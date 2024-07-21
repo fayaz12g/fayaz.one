@@ -15,6 +15,7 @@ const Game = ({
     gameStarted,
     setGameStarted,
     players,
+    setPlayers,
     playerRole,
     isEndScene,
     currentLine,
@@ -59,6 +60,7 @@ const Game = ({
           gameStarted={gameStarted}
           sessionId={sessionId}
           players={players}
+          setPlayers={setPlayers}
           rounds={rounds}
           setRounds={setRounds}
           currentRound={currentRound}

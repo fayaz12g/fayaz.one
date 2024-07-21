@@ -2,39 +2,37 @@ const fs = require('fs');
 const path = require('path');
 
 let cardDecks = {};
+let packName = "default";
 
 function loadCardDecks() {
-    try {
-        const filePath = path.join(__dirname, 'deck', 'starterDeck.json');
-        const data = fs.readFileSync(filePath, 'utf8');
-        const decks = JSON.parse(data).decks;
-        decks.forEach(deck => {
-            cardDecks[deck.color] = {
-                id: deck.id,
-                name: deck.name,
-                cards: deck.cards
-            };
-        });
-        console.log('Card decks loaded successfully');
-    } catch (err) {
-        console.error('Error loading card decks:', err);
-        cardDecks = {};
-    }
-}
+  try {
+      const packPath = path.join(__dirname, 'pack', packName);
+      const infoPath = path.join(packPath, 'info.json');
+      const infoData = fs.readFileSync(infoPath, 'utf8');
+      const info = JSON.parse(infoData);
 
-function handleInitialSpin(io, sessions, sessionId, playerId, spinResult) {
-  const session = sessions[sessionId];
-  if (!session) {
-    console.error(`Session with ID ${sessionId} not found`);
-    return;
-  }
+      info.cards.forEach(colorInfo => {
+          const color = Object.keys(colorInfo)[0];
+          const deckInfo = colorInfo[color];
 
-  session.initialSpins.push({ playerId, spinResult });
-  
-  io.to(sessionId).emit('playerSpun', { playerId, spinResult });
-  
-  if (session.initialSpins.length === session.players.length) {
-    determinePlayerOrder(io, sessions, sessionId);
+          const cardsPath = path.join(packPath, 'deck', `${deckInfo.id}.json`);
+          const cardsData = fs.readFileSync(cardsPath, 'utf8');
+          const cardsJson = JSON.parse(cardsData);
+
+          const imagePath = path.join(packPath, 'image', `${deckInfo.id}.png`);
+
+          cardDecks[color] = {
+              id: deckInfo.id,
+              name: deckInfo.name,
+              cards: cardsJson.cards,
+              imagePath: imagePath
+          };
+      });
+
+      console.log('Card decks loaded successfully');
+  } catch (err) {
+      console.error('Error loading card decks:', err);
+      cardDecks = {};
   }
 }
 

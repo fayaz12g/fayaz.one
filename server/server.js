@@ -5,6 +5,7 @@ const serverVersion = '0.8 Super';
 const os = require('os');
 const improv = require('./improv');
 const guessing = require('./guessing');
+const trivia = require('./trivia');
 
 const app = express();
 const server = http.createServer(app);
@@ -164,6 +165,9 @@ improv.initializeImprovGame(io, sessions);
 
 // Initialize the guessing game
 guessing.initializeGuessingGame(io, sessions);
+
+// Initialize the trivia game
+trivia.initializeTriviaGame(io, sessions);
 
 const PORT = process.env.PORT || 443;
 server.listen(PORT, () => {
