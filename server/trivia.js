@@ -8,6 +8,7 @@ let players = [];
 let usedCards = new Set();
 let currentCard = null;
 let currentHintIndex = 0;
+let packName = "default";
 
 function loadCardDecks() {
     try {
@@ -95,10 +96,11 @@ function initializeTriviaGame(io, sessions) {
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
         });
 
-        socket.on('startGameTrivia', () => {
+        socket.on('startGameTrivia', (sessionId, gameMode) => {
             currentPlayerIndex = 0;
-            io.emit('gameStartedTrivia', getAvailableCategories());
-            io.to(players[currentPlayerIndex].id).emit('yourTurnTrivia', getAvailableCategories());
+            io.to(sessionId).emit('gameStartedTrivia', getAvailableCategories());
+            io.to(players[currentPlayerIndex].socketId).emit('yourTurnTrivia', getAvailableCategories());
+            console.log(`It is ${(players[currentPlayerIndex].socketId)}'s turn.`)
         });
 
         socket.on('selectCategoryTrivia', (category) => {
