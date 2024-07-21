@@ -99,8 +99,8 @@ function initializeTriviaGame(io, sessions) {
         socket.on('startGameTrivia', (sessionId, gameMode) => {
             currentPlayerIndex = 0;
             io.to(sessionId).emit('gameStartedTrivia', getAvailableCategories());
-            io.to(players[currentPlayerIndex].socketId).emit('yourTurnTrivia', getAvailableCategories());
-            console.log(`It is ${(players[currentPlayerIndex].socketId)}'s turn.`)
+            io.to(sessions[sessionId].players[currentPlayerIndex].socketId).emit('yourTurnTrivia', getAvailableCategories());
+            console.log(`It is ${(sessions[sessionId].players[currentPlayerIndex].socketId)}'s turn.`)
         });
 
         socket.on('selectCategoryTrivia', (category) => {
