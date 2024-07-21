@@ -1,0 +1,47 @@
+{
+    "id": "qcc",
+    "name": "Quick Court Cases",
+    "color": "red",
+    "cards": [
+      {
+        "hints": [
+          "This 1954 case overturned the 'separate but equal' doctrine",
+          "It dealt with racial segregation in public schools",
+          "The plaintiff was Oliver Brown"
+        ],
+        "answer": "Brown v. Board of Education"
+      },
+      {
+        "hints": [
+          "This 1973 case established a woman's right to have an abortion",
+          "It was overturned in 2022 by Dobbs v. Jackson Women's Health Organization",
+          "The plaintiff used the pseudonym 'Jane Roe'"
+        ],
+        "answer": "Roe v. Wade"
+      },
+      {
+        "hints": [
+          "This 1966 case established the Miranda rights",
+          "It requires police to inform suspects of their rights before questioning",
+          "The phrase 'You have the right to remain silent' stems from this case"
+        ],
+        "answer": "Miranda v. Arizona"
+      },
+      {
+        "hints": [
+          "This 1803 case established the principle of judicial review",
+          "It was decided under Chief Justice John Marshall",
+          "It involved a dispute over undelivered judicial commissions"
+        ],
+        "answer": "Marbury v. Madison"
+      },
+      {
+        "hints": [
+          "This 2015 case legalized same-sex marriage nationwide",
+          "It was a consolidation of six lower-court cases",
+          "The lead plaintiff was James Obergefell"
+        ],
+        "answer": "Obergefell v. Hodges"
+      }
+    ]
+  }

@@ -1,0 +1,47 @@
+{
+    "id": "world",
+    "name": "Around the World",
+    "color": "green",
+    "cards": [
+      {
+        "hints": [
+          "This city is located on the River Thames",
+          "It's home to Big Ben and the Houses of Parliament",
+          "This city hosted the Olympic Games in 2012"
+        ],
+        "answer": "London"
+      },
+      {
+        "hints": [
+          "This city is known as the 'City of Light'",
+          "It's home to the Eiffel Tower",
+          "This city is the capital of France"
+        ],
+        "answer": "Paris"
+      },
+      {
+        "hints": [
+          "This city is the most populous in Canada",
+          "It's home to the CN Tower",
+          "This city is the capital of Ontario province"
+        ],
+        "answer": "Toronto"
+      },
+      {
+        "hints": [
+          "This city is known for its opera house with a distinctive sail-like design",
+          "It's the most populous city in Australia",
+          "This city hosted the Olympic Games in 2000"
+        ],
+        "answer": "Sydney"
+      },
+      {
+        "hints": [
+          "This city is home to the Forbidden City",
+          "It hosted the Summer Olympics in 2008",
+          "This city is the capital of the People's Republic of China"
+        ],
+        "answer": "Beijing"
+      }
+    ]
+  }

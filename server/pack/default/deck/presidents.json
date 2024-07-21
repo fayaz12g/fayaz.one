@@ -1,0 +1,47 @@
+{
+    "id": "presidents",
+    "name": "Into the Oval Office",
+    "color": "blue",
+    "cards": [
+      {
+        "hints": [
+          "He was the first President of the United States",
+          "He commanded the Continental Army during the Revolutionary War",
+          "His face appears on the one-dollar bill"
+        ],
+        "answer": "George Washington"
+      },
+      {
+        "hints": [
+          "He was the principal author of the Declaration of Independence",
+          "He served as the third President of the United States",
+          "He founded the University of Virginia"
+        ],
+        "answer": "Thomas Jefferson"
+      },
+      {
+        "hints": [
+          "He led the United States through the American Civil War",
+          "He issued the Emancipation Proclamation",
+          "He was assassinated by John Wilkes Booth"
+        ],
+        "answer": "Abraham Lincoln"
+      },
+      {
+        "hints": [
+          "He was the only President to serve more than two terms",
+          "He led the U.S. through the Great Depression and World War II",
+          "He implemented the New Deal"
+        ],
+        "answer": "Franklin D. Roosevelt"
+      },
+      {
+        "hints": [
+          "He was the first African American President",
+          "He was awarded the Nobel Peace Prize in 2009",
+          "He signed the Affordable Care Act into law"
+        ],
+        "answer": "Barack Obama"
+      }
+    ]
+  }
