@@ -44,29 +44,26 @@ const HostScreen = ({
       console.log("someone joined")
     });
 
-    socket.on('gameStarted', (categories) => {
+    socket.on('gameStartedTrivia', (categories) => {
       setGameState(prevState => ({ ...prevState, phase: 'category-selection', categories }));
     });
 
-    socket.on('newQuestion', (questionData) => {
+    socket.on('newQuestionTrivia', (questionData) => {
       setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData }));
     });
 
-    socket.on('updateLeaderboard', (leaderboard) => {
+    socket.on('updateLeaderboardTrivia', (leaderboard) => {
       setGameState(prevState => ({ ...prevState, leaderboard }));
     });
 
     return () => {
       socket.off('updatePlayers');
-      socket.off('gameStarted');
-      socket.off('newQuestion');
-      socket.off('updateLeaderboard');
+      socket.off('gameStartedTrivia');
+      socket.off('newQuestionTrivia');
+      socket.off('updateLeaderboardTrivia');
     };
   }, [socket]);
 
-  const startGame = () => {
-    socket.emit('startGame');
-  };
 
   const renderLobby = () => (
     <Lobby
@@ -136,7 +133,7 @@ const HostScreen = ({
   return (
     <div className="host-screen">
       {renderGameContent()}
-      <Leaderboard leaderboard={gameState.leaderboard} players={gameState.players} />
+      <Leaderboard leaderboard={leaderboard} players={players} />
     </div>
   );
 };

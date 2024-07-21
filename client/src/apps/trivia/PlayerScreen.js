@@ -26,36 +26,36 @@ const PlayerScreen = ({
   useEffect(() => {
     socket.emit('joinGame', playerName, sessionId);
 
-    socket.on('gameStarted', (categories) => {
+    socket.on('gameStartedTrivia', (categories) => {
       setGameState(prevState => ({ ...prevState, phase: 'game', categories }));
     });
 
-    socket.on('yourTurn', (categories) => {
+    socket.on('yourTurnTrivia', (categories) => {
       setGameState(prevState => ({ ...prevState, phase: 'category-selection', categories, isMyTurn: true }));
     });
 
-    socket.on('newQuestion', (questionData) => {
+    socket.on('newQuestionTrivia', (questionData) => {
       setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData }));
     });
 
     return () => {
-      socket.off('gameStarted');
-      socket.off('yourTurn');
-      socket.off('newQuestion');
+      socket.off('gameStartedTrivia');
+      socket.off('yourTurnTrivia');
+      socket.off('newQuestionTrivia');
     };
   }, [socket, playerName]);
 
   const selectCategory = (category) => {
-    socket.emit('selectCategory', category);
+    socket.emit('selectCategoryTrivia', category);
     setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
   };
 
   const requestHint = () => {
-    socket.emit('requestHint', gameState.currentQuestion.hints.length + 1);
+    socket.emit('requestHintTrivia', gameState.currentQuestion.hints.length + 1);
   };
 
   const submitAnswer = (answer) => {
-    socket.emit('submitAnswer', answer);
+    socket.emit('submitAnswerTrivia', answer);
     setGameState(prevState => ({ ...prevState, phase: 'waiting' }));
   };
 

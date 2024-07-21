@@ -85,23 +85,28 @@ function initializeTriviaGame(io, sessions) {
     loadCardDecks();
 
     io.on('connection', (socket) => {
-        socket.on('joinGame', (playerName, sessionId ) => {
-            players.push({ id: socket.id, name: playerName, score: 0 });
-            io.to(sessionId).emit('updatePlayers', players);
+        socket.on('joinGame', (playerName, sessionId) => {
+            // Ensure players array is initialized for the session
+            if (!sessions[sessionId]) {
+                sessions[sessionId] = { players: [] };
+            }
+            sessions[sessionId].players.push({ id: socket.id, name: playerName, score: 0 });
+            console.log(`Someone joined. Updated list is: `, sessions[sessionId].players)
+            io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
         });
 
-        socket.on('startGame', () => {
+        socket.on('startGameTrivia', () => {
             currentPlayerIndex = 0;
-            io.emit('gameStarted', getAvailableCategories());
-            io.to(players[currentPlayerIndex].id).emit('yourTurn', getAvailableCategories());
+            io.emit('gameStartedTrivia', getAvailableCategories());
+            io.to(players[currentPlayerIndex].id).emit('yourTurnTrivia', getAvailableCategories());
         });
 
-        socket.on('selectCategory', (category) => {
+        socket.on('selectCategoryTrivia', (category) => {
             currentCard = drawCard(category);
             if (currentCard) {
                 currentHintIndex = 0;
                 const options = generateOptions(currentCard.answer, category);
-                io.emit('newQuestion', {
+                io.emit('newQuestionTrivia', {
                     hints: [currentCard.hints[0]],
                     options: options,
                     deckName: currentCard.deckName
@@ -109,7 +114,7 @@ function initializeTriviaGame(io, sessions) {
             }
         });
 
-        socket.on('requestHint', () => {
+        socket.on('requestHintTrivia', () => {
             if (currentCard && currentHintIndex < 2) {
                 currentHintIndex++;
                 io.emit('newHint', {
@@ -123,7 +128,7 @@ function initializeTriviaGame(io, sessions) {
             }
         });
 
-        socket.on('submitAnswer', (answer) => {
+        socket.on('submitAnswerTrivia', (answer) => {
             const player = players.find(p => p.id === socket.id);
             if (player && currentCard) {
                 let pointsEarned = 0;
@@ -140,19 +145,19 @@ function initializeTriviaGame(io, sessions) {
                             break;
                     }
                     player.score += pointsEarned;
-                    io.emit('correctAnswer', { playerName: player.name, pointsEarned, answer: currentCard.answer });
+                    io.emit('correctAnswerTrivia', { playerName: player.name, pointsEarned, answer: currentCard.answer });
                     moveToNextPlayer(io);
                 } else {
-                    io.emit('incorrectAnswer', { playerName: player.name, answer });
+                    io.emit('incorrectAnswerTrivia', { playerName: player.name, answer });
                     if (currentHintIndex === 2) {
                         moveToNextPlayer(io);
                     }
                 }
-                io.emit('updateLeaderboard', players);
+                io.emit('updateLeaderboardTrivia', players);
             }
         });
 
-        socket.on('disconnect', () => {
+        socket.on('disconnectTrivia', () => {
             players = players.filter(player => player.id !== socket.id);
             io.emit('updatePlayers', players);
         });
@@ -163,8 +168,8 @@ function moveToNextPlayer(io) {
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     currentCard = null;
     currentHintIndex = 0;
-    io.emit('nextPlayer', players[currentPlayerIndex].name);
-    io.to(players[currentPlayerIndex].id).emit('yourTurn', getAvailableCategories());
+    io.emit('nextPlayerTrivia', players[currentPlayerIndex].name);
+    io.to(players[currentPlayerIndex].id).emit('yourTurnTrivia', getAvailableCategories());
 }
 
 function getAvailableCategories() {
