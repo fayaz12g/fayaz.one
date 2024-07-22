@@ -4,46 +4,22 @@ import Lobby from './HostScreen/Lobby';
 
 const HostScreen = ({
   socket,
-  ipAddress,
-  sessionCreated,
-  createSession,
-  gameStarted,
   sessionId,
   players,
-  setPlayers,
-  rounds,
-  setRounds,
-  currentRound,
-  sessionList,
-  leaderboard,
   removePlayer,
-  titleTheme,
-  AudioPlayer,
-  isEndScene,
-  speakingTheme,
-  guessingTheme,
   gameMode,
   setGameMode,
-  currentLine,
-  isEndGame,
-  scriptFile,
   setForceRemove,
-  forceRemove,
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'lobby',
     players: [],
     currentQuestion: null,
-    leaderboard: {}
+    leaderboard: {},
+    currentPlayer: null
   });
 
   useEffect(() => {
-    socket.on('updatePlayers', (players) => {
-      setGameState(prevState => ({ ...prevState, players }));
-      setPlayers(players);
-      console.log("someone joined")
-    });
-
     socket.on('gameStartedTrivia', (categories) => {
       setGameState(prevState => ({ ...prevState, phase: 'category-selection', categories }));
     });
@@ -56,45 +32,30 @@ const HostScreen = ({
       setGameState(prevState => ({ ...prevState, leaderboard }));
     });
 
+    socket.on('nextPlayerTrivia', (playerName) => {
+      setGameState(prevState => ({ ...prevState, currentPlayer: playerName, phase: 'category-selection' }));
+    });
+
     return () => {
-      socket.off('updatePlayers');
-      socket.off('gameStartedTrivia');
-      socket.off('newQuestionTrivia');
-      socket.off('updateLeaderboardTrivia');
     };
   }, [socket]);
 
+  const startGame = () => {
+    socket.emit('startGameTrivia', sessionId);
+  };
 
   const renderLobby = () => (
     <Lobby
       socket={socket}
-      ipAddress={ipAddress}
-      sessionCreated={sessionCreated}
-      createSession={createSession}
-      gameStarted={gameStarted}
       sessionId={sessionId}
       players={players}
-      rounds={rounds}
-      setRounds={setRounds}
-      currentRound={currentRound}
-      sessionList={sessionList}
-      leaderboard={leaderboard}
       removePlayer={removePlayer}
-      titleTheme={titleTheme}
-      AudioPlayer={AudioPlayer}
-      isEndScene={isEndScene}
-      speakingTheme={speakingTheme}
-      guessingTheme={guessingTheme}
       gameMode={gameMode}
       setGameMode={setGameMode}
-      currentLine={currentLine}
-      isEndGame={isEndGame}
-      scriptFile={scriptFile}
       setForceRemove={setForceRemove}
-      forceRemove={forceRemove}
+      startGame={startGame}
     />
   );
-
 
   const renderGameContent = () => {
     switch (gameState.phase) {
@@ -103,7 +64,7 @@ const HostScreen = ({
       case 'category-selection':
         return (
           <div>
-            <h2>Waiting for player to select a category...</h2>
+            <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
           </div>
         );
       case 'question':
@@ -133,7 +94,7 @@ const HostScreen = ({
   return (
     <div className="host-screen">
       {renderGameContent()}
-      <Leaderboard leaderboard={leaderboard} players={players} />
+      <Leaderboard leaderboard={gameState.leaderboard} players={players} />
     </div>
   );
 };

@@ -1,13 +1,7 @@
-
 const fs = require('fs');
 const path = require('path');
 
 let cardDecks = {};
-let currentPlayerIndex = 0;
-let players = [];
-let usedCards = new Set();
-let currentCard = null;
-let currentHintIndex = 0;
 let packName = "default";
 
 function loadCardDecks() {
@@ -16,17 +10,17 @@ function loadCardDecks() {
         const infoPath = path.join(packPath, 'info.json');
         const infoData = fs.readFileSync(infoPath, 'utf8');
         const info = JSON.parse(infoData);
-  
+
         info.cards.forEach(colorInfo => {
             const color = Object.keys(colorInfo)[0];
             const deckInfo = colorInfo[color];
-  
+
             const cardsPath = path.join(packPath, 'deck', `${deckInfo.id}.json`);
             const cardsData = fs.readFileSync(cardsPath, 'utf8');
             const cardsJson = JSON.parse(cardsData);
-  
+
             const imagePath = path.join(packPath, 'image', `${deckInfo.id}.png`);
-  
+
             cardDecks[color] = {
                 id: deckInfo.id,
                 name: deckInfo.name,
@@ -34,15 +28,15 @@ function loadCardDecks() {
                 imagePath: imagePath
             };
         });
-  
+
         console.log('Card decks loaded successfully');
     } catch (err) {
         console.error('Error loading card decks:', err);
         cardDecks = {};
     }
-  }
+}
 
-  function generateOptions(correctAnswer, color) {
+function generateOptions(correctAnswer, color) {
     const options = [correctAnswer];
     const deck = cardDecks[color];
     if (!deck || deck.cards.length < 4) {
@@ -58,6 +52,14 @@ function loadCardDecks() {
     return shuffle(options);
 }
 
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 function drawCard(color) {
     const deck = cardDecks[color];
     if (!deck || deck.cards.length === 0) {
@@ -65,15 +67,8 @@ function drawCard(color) {
         return null;
     }
 
-    let availableCards = deck.cards.filter(card => !usedCards.has(card.answer));
-    if (availableCards.length === 0) {
-        console.error(`All cards have been used for color: ${color}`);
-        return null;
-    }
-
-    const index = Math.floor(Math.random() * availableCards.length);
-    const selectedCard = availableCards[index];
-    usedCards.add(selectedCard.answer);
+    const index = Math.floor(Math.random() * deck.cards.length);
+    const selectedCard = deck.cards[index];
 
     return {
         ...selectedCard,
@@ -87,28 +82,42 @@ function initializeTriviaGame(io, sessions) {
 
     io.on('connection', (socket) => {
         socket.on('joinGame', (playerName, sessionId) => {
-            // Ensure players array is initialized for the session
             if (!sessions[sessionId]) {
-                sessions[sessionId] = { players: [] };
+                sessions[sessionId] = { players: [], currentPlayerIndex: 0, currentCard: null, currentHintIndex: 0 };
             }
             sessions[sessionId].players.push({ id: socket.id, name: playerName, score: 0 });
-            console.log(`Someone joined. Updated list is: `, sessions[sessionId].players)
+            console.log(`Player joined. Updated list is: `, sessions[sessionId].players);
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
         });
 
-        socket.on('startGameTrivia', (sessionId, gameMode) => {
-            currentPlayerIndex = 0;
+        socket.on('startGameTrivia', ({sessionId, gameMode}) => {
+            if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
+                console.error(`Invalid session or no players for session ${sessionId}`);
+                return;
+            }
+
+            sessions[sessionId].currentPlayerIndex = 0;
+            sessions[sessionId].gameMode = gameMode;
+            const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
+            
             io.to(sessionId).emit('gameStartedTrivia', getAvailableCategories());
-            io.to(sessions[sessionId].players[currentPlayerIndex].socketId).emit('yourTurnTrivia', getAvailableCategories());
-            console.log(`It is ${(sessions[sessionId].players[currentPlayerIndex].socketId)}'s turn.`)
+            io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
+            io.to(currentPlayer.id).emit('yourTurnTrivia', getAvailableCategories());
+            console.log(`It is ${currentPlayer.name}'s turn.`);
         });
 
-        socket.on('selectCategoryTrivia', (category) => {
-            currentCard = drawCard(category);
+        socket.on('selectCategoryTrivia', (category, sessionId) => {
+            if (!sessions[sessionId]) {
+                console.error(`Invalid session ${sessionId}`);
+                return;
+            }
+
+            const currentCard = drawCard(category);
             if (currentCard) {
-                currentHintIndex = 0;
+                sessions[sessionId].currentCard = currentCard;
+                sessions[sessionId].currentHintIndex = 0;
                 const options = generateOptions(currentCard.answer, category);
-                io.emit('newQuestionTrivia', {
+                io.to(sessionId).emit('newQuestionTrivia', {
                     hints: [currentCard.hints[0]],
                     options: options,
                     deckName: currentCard.deckName
@@ -116,23 +125,36 @@ function initializeTriviaGame(io, sessions) {
             }
         });
 
-        socket.on('requestHintTrivia', () => {
-            if (currentCard && currentHintIndex < 2) {
-                currentHintIndex++;
-                io.emit('newHint', {
-                    hints: currentCard.hints.slice(0, currentHintIndex + 1),
-                    hintNumber: currentHintIndex + 1
+        socket.on('requestHintTrivia', (sessionId) => {
+            if (!sessions[sessionId] || !sessions[sessionId].currentCard) {
+                console.error(`Invalid session or no current card for session ${sessionId}`);
+                return;
+            }
+
+            const { currentCard, currentHintIndex } = sessions[sessionId];
+            if (currentHintIndex < 2) {
+                sessions[sessionId].currentHintIndex++;
+                io.to(sessionId).emit('newHint', {
+                    hints: currentCard.hints.slice(0, sessions[sessionId].currentHintIndex + 1),
+                    hintNumber: sessions[sessionId].currentHintIndex + 1
                 });
                 
-                if (currentHintIndex === 2) {
-                    io.emit('allPlayersCanAnswer');
+                if (sessions[sessionId].currentHintIndex === 2) {
+                    io.to(sessionId).emit('allPlayersCanAnswer');
                 }
             }
         });
 
-        socket.on('submitAnswerTrivia', (answer) => {
+        socket.on('submitAnswerTrivia', (answer, sessionId) => {
+            if (!sessions[sessionId] || !sessions[sessionId].currentCard) {
+                console.error(`Invalid session or no current card for session ${sessionId}`);
+                return;
+            }
+
+            const { players, currentPlayerIndex, currentCard, currentHintIndex } = sessions[sessionId];
             const player = players.find(p => p.id === socket.id);
-            if (player && currentCard) {
+            
+            if (player) {
                 let pointsEarned = 0;
                 if (answer === currentCard.answer) {
                     switch (currentHintIndex) {
@@ -147,31 +169,41 @@ function initializeTriviaGame(io, sessions) {
                             break;
                     }
                     player.score += pointsEarned;
-                    io.emit('correctAnswerTrivia', { playerName: player.name, pointsEarned, answer: currentCard.answer });
-                    moveToNextPlayer(io);
+                    io.to(sessionId).emit('correctAnswerTrivia', { playerName: player.name, pointsEarned, answer: currentCard.answer });
+                    moveToNextPlayer(io, sessionId, sessions);
                 } else {
-                    io.emit('incorrectAnswerTrivia', { playerName: player.name, answer });
+                    io.to(sessionId).emit('incorrectAnswerTrivia', { playerName: player.name, answer });
                     if (currentHintIndex === 2) {
-                        moveToNextPlayer(io);
+                        moveToNextPlayer(io, sessionId, sessions);
                     }
                 }
-                io.emit('updateLeaderboardTrivia', players);
+                io.to(sessionId).emit('updateLeaderboardTrivia', players);
             }
         });
 
-        socket.on('disconnectTrivia', () => {
-            players = players.filter(player => player.id !== socket.id);
-            io.emit('updatePlayers', players);
+        socket.on('disconnectTrivia', (sessionId) => {
+            if (sessions[sessionId]) {
+                sessions[sessionId].players = sessions[sessionId].players.filter(player => player.id !== socket.id);
+                io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
+            }
         });
     });
 }
 
-function moveToNextPlayer(io) {
-    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-    currentCard = null;
-    currentHintIndex = 0;
-    io.emit('nextPlayerTrivia', players[currentPlayerIndex].name);
-    io.to(players[currentPlayerIndex].id).emit('yourTurnTrivia', getAvailableCategories());
+function moveToNextPlayer(io, sessionId, sessions) {
+    if (!sessions[sessionId]) {
+        console.error(`Invalid session ${sessionId}`);
+        return;
+    }
+
+    sessions[sessionId].currentPlayerIndex = (sessions[sessionId].currentPlayerIndex + 1) % sessions[sessionId].players.length;
+    sessions[sessionId].currentCard = null;
+    sessions[sessionId].currentHintIndex = 0;
+    
+    const nextPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
+    io.to(sessionId).emit('nextPlayerTrivia', nextPlayer.name);
+    io.to(nextPlayer.id).emit('yourTurnTrivia', getAvailableCategories());
+    console.log(`It is ${nextPlayer.name}'s turn.`);
 }
 
 function getAvailableCategories() {

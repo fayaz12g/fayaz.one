@@ -1,20 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-const PlayerScreen = ({   
+const PlayerScreen = ({
   socket,
-  isEndGame,
-  joinedSession,
   sessionId,
-  setSessionId,
   playerName,
-  setPlayerName,
-  joinSession,
-  gameStarted,
-  setGameStarted,
-  players,
-  kicked,
-  titleTheme,
-  BackgroundMusic,
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'waiting',
@@ -24,8 +13,6 @@ const PlayerScreen = ({
   });
 
   useEffect(() => {
-    socket.emit('joinGame', playerName, sessionId);
-
     socket.on('gameStartedTrivia', (categories) => {
       setGameState(prevState => ({ ...prevState, phase: 'game', categories }));
     });
@@ -35,28 +22,48 @@ const PlayerScreen = ({
     });
 
     socket.on('newQuestionTrivia', (questionData) => {
-      setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData }));
+      setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData, isMyTurn: true }));
+    });
+
+    socket.on('correctAnswerTrivia', ({ playerName, pointsEarned, answer }) => {
+      alert(`${playerName} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
+      setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
+    });
+
+    socket.on('incorrectAnswerTrivia', ({ playerName, answer }) => {
+      alert(`${playerName} answered incorrectly with: ${answer}`);
+      if (playerName === playerName) {
+        setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
+      }
+    });
+
+    socket.on('newHint', ({ hints }) => {
+      setGameState(prevState => ({
+        ...prevState,
+        currentQuestion: { ...prevState.currentQuestion, hints }
+      }));
+    });
+
+    socket.on('allPlayersCanAnswer', () => {
+      setGameState(prevState => ({ ...prevState, isMyTurn: true }));
     });
 
     return () => {
-      socket.off('gameStartedTrivia');
-      socket.off('yourTurnTrivia');
-      socket.off('newQuestionTrivia');
     };
   }, [socket, playerName]);
 
   const selectCategory = (category) => {
-    socket.emit('selectCategoryTrivia', category);
+    socket.emit('selectCategoryTrivia', category, sessionId);
     setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
   };
 
   const requestHint = () => {
-    socket.emit('requestHintTrivia', gameState.currentQuestion.hints.length + 1);
+    socket.emit('requestHintTrivia', sessionId);
   };
 
   const submitAnswer = (answer) => {
-    socket.emit('submitAnswerTrivia', answer);
-    setGameState(prevState => ({ ...prevState, phase: 'waiting' }));
+    socket.emit('submitAnswerTrivia', answer, sessionId);
+    setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
   };
 
   const renderGameContent = () => {
@@ -66,7 +73,7 @@ const PlayerScreen = ({
       case 'category-selection':
         return (
           <div>
-            <h2>Select a category:</h2>
+            <h2>It's your turn! Select a category:</h2>
             {gameState.categories.map(category => (
               <button key={category.id} onClick={() => selectCategory(category.color)}>
                 {category.name}
@@ -90,7 +97,7 @@ const PlayerScreen = ({
             )}
             <h4>Options:</h4>
             {gameState.currentQuestion.options.map((option, index) => (
-              <button key={index} onClick={() => submitAnswer(option)}>
+              <button key={index} onClick={() => submitAnswer(option)} disabled={!gameState.isMyTurn}>
                 {option}
               </button>
             ))}
@@ -102,7 +109,7 @@ const PlayerScreen = ({
   };
 
   return (
-    <div className="player-screen">
+    <div className="App">
       <h1>Welcome, {playerName}!</h1>
       {renderGameContent()}
     </div>

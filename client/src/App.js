@@ -127,6 +127,7 @@ function App() {
             });
             socket.on('updatePlayers', ({ players }) => {
                 setPlayers(players);
+                console.log(`Players updated!`)
             });
             socket.on('playerRemoved', ({ removedPlayer, kickPlayer }) => {
                 console.log(`Player ${removedPlayer} was removed. Kicked: ${kickPlayer}`);
