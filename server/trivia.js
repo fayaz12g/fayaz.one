@@ -181,6 +181,7 @@ function initializeTriviaGame(io, sessions) {
                     }
                     player.score += pointsEarned;
                     io.to(sessionId).emit('correctAnswerTrivia', { playerName: player.name, pointsEarned, answer: currentCard.answer });
+                    io.to(sessionId).emit('updatePointsTrivia', { points: { [player.name]: player.score } });
                     moveToNextPlayer(io, sessionId, sessions);
                 } else {
                     io.to(sessionId).emit('incorrectAnswerTrivia', { playerName: player.name, answer });

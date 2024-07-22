@@ -31,14 +31,12 @@ const PlayerScreen = ({
     });
 
     socket.on('correctAnswerTrivia', ({ playerName: answeringPlayer, pointsEarned, answer }) => {
-      console.log('Correct answer event received', { answeringPlayer, pointsEarned, answer });
-      alert(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
+      console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
     });
 
     socket.on('incorrectAnswerTrivia', ({ playerName: answeringPlayer, answer }) => {
-      console.log('Incorrect answer event received', { answeringPlayer, answer });
-      alert(`${answeringPlayer} answered incorrectly with: ${answer}`);
+      console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
       if (answeringPlayer === playerName) {
         setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
       }

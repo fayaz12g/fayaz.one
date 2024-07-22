@@ -354,6 +354,7 @@ function App() {
         theme={theme}
         role={role}
         guessesMade={guessesMade}
+        setLeaderboard={setLeaderboard}
       />
     );
 

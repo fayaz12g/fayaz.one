@@ -10,6 +10,7 @@ const HostScreen = ({
   gameMode,
   setGameMode,
   setForceRemove,
+  setLeaderboard,
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'lobby',
@@ -34,6 +35,19 @@ const HostScreen = ({
 
     socket.on('nextPlayerTrivia', (playerName) => {
       setGameState(prevState => ({ ...prevState, currentPlayer: playerName, phase: 'category-selection' }));
+    });
+    socket.on('correctAnswerTrivia', ({ playerName: answeringPlayer, pointsEarned, answer }) => {
+      console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
+    });
+    socket.on('updatePointsTrivia', ({ points }) => {
+      setLeaderboard(prevLeaderboard => ({
+          ...prevLeaderboard,
+          ...points
+      }));
+      console.log("Updating leaderboard");
+  });
+    socket.on('incorrectAnswerTrivia', ({ playerName: answeringPlayer, answer }) => {
+      console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
     });
 
     return () => {
