@@ -44,10 +44,12 @@ const PlayerScreen = ({
     socket.on('correctAnswerTrivia', ({ playerName: answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
+      setShowOptions(false);
     });
 
     socket.on('incorrectAnswerTrivia', ({ playerName: answeringPlayer, answer }) => {
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
+      setShowOptions(false);
       if (answeringPlayer === playerName) {
         setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
       }
@@ -109,7 +111,7 @@ const PlayerScreen = ({
       case 'question':
         return (
           <div>
-          <h2>Category:</h2>
+          {/* <h2>Category:</h2> */}
           <h3>{gameState.currentQuestion.deckName}</h3>
           <h4>Hints:</h4>
           <ul>

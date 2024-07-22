@@ -11,12 +11,12 @@ const HostScreen = ({
   setGameMode,
   setForceRemove,
   setLeaderboard,
+  leaderboard,
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'lobby',
     players: [],
     currentQuestion: null,
-    leaderboard: {},
     currentPlayer: null,
     color: null  
   });
@@ -114,7 +114,7 @@ const HostScreen = ({
   return (
 <div className="host-screen" style={{ backgroundColor: gameState.color }}>  
       {renderGameContent()}
-      {(gameState.phase !== 'lobby') && <Leaderboard leaderboard={gameState.leaderboard} players={players} />}
+      {(gameState.phase !== 'lobby') && <Leaderboard leaderboard={leaderboard} players={players} />}
     </div>
   );
 };
