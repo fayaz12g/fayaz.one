@@ -13,7 +13,7 @@ const AudioPlayer = ({ audioSrc, loopStart = 0, loopEnd, isPlaying = true, loop 
     bufferRef.current = audioBuffer;
   };
 
-  const playAudio = () => {
+  const playAudio = (start, end) => {
     const audioContext = audioContextRef.current;
     const buffer = bufferRef.current;
     if (audioContext && buffer) {
@@ -21,18 +21,26 @@ const AudioPlayer = ({ audioSrc, loopStart = 0, loopEnd, isPlaying = true, loop 
       sourceRef.current.buffer = buffer;
       sourceRef.current.connect(audioContext.destination);
 
-      const startLoop = () => {
-        sourceRef.current = audioContext.createBufferSource();
-        sourceRef.current.buffer = buffer;
-        sourceRef.current.loop = loop;
-        sourceRef.current.loopStart = loopStart;
-        sourceRef.current.loopEnd = loopEnd;
-        sourceRef.current.connect(audioContext.destination);
-        sourceRef.current.start(0, loopStart);
-      };
+      sourceRef.current.loop = loop;
+      sourceRef.current.loopStart = loopStart;
+      sourceRef.current.loopEnd = loopEnd;
 
-      sourceRef.current.onended = startLoop;
-      sourceRef.current.start(0);
+      const duration = end ? end - start : undefined;
+      sourceRef.current.start(0, start, duration);
+
+      sourceRef.current.onended = () => {
+        if (isPlaying && loop) {
+          playAudio(loopStart, loopEnd);
+        }
+      };
+    }
+  };
+
+  const stopAudio = () => {
+    if (sourceRef.current) {
+      sourceRef.current.stop(0);
+      sourceRef.current.disconnect();
+      sourceRef.current = null;
     }
   };
 
@@ -41,21 +49,21 @@ const AudioPlayer = ({ audioSrc, loopStart = 0, loopEnd, isPlaying = true, loop 
     fetchAudioBuffer();
 
     return () => {
-      if (sourceRef.current) {
-        sourceRef.current.stop();
-        sourceRef.current.disconnect();
+      stopAudio();
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
       }
-      audioContextRef.current.close();
     };
   }, [audioSrc]);
 
   useEffect(() => {
     if (isPlaying && userInteracted) {
-      playAudio();
-    } else if (sourceRef.current) {
-      sourceRef.current.stop();
+      stopAudio(); // Stop any currently playing audio
+      playAudio(loopStart, loopEnd);
+    } else {
+      stopAudio();
     }
-  }, [isPlaying, userInteracted]);
+  }, [isPlaying, userInteracted, loopStart, loopEnd, audioSrc]);
 
   useEffect(() => {
     const handleInteraction = () => {

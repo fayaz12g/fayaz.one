@@ -359,10 +359,10 @@ function App() {
   return (
     <div>
     {/* Audio components */}
-    <AudioPlayer audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
-    <AudioPlayer audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
-    <AudioPlayer audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
-    {/* <AudioPlayer audioSrc={guessingTitle} loopStart={13} loopEnd={48} isPlaying={!gameStarted} /> */}
+    <AudioPlayer audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={ game === 'improv' && isEndScene}/>
+    <AudioPlayer audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={ game === 'improv' && gameStarted && !isEndScene}/>
+    <AudioPlayer audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={(game === 'improv' || game === null) && !gameStarted} />
+    <AudioPlayer audioSrc={guessingTitle} loopStart={13} loopEnd={48} isPlaying={(game === 'guessing' || game === 'trivia') && !gameStarted}  />
     <AudioPlayer audioSrc={finishTheme} loop={false} isPlaying={isEndGame} />
     
 
@@ -417,6 +417,7 @@ function App() {
                     removePlayer={removePlayer} 
                     resetEverything={resetEverything}
                     setConfirmQuit={setConfirmQuit}
+                    setGame={setGame}
                 />
             )}
           <div className="version-text smalltext">
