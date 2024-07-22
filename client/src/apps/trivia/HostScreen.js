@@ -17,7 +17,8 @@ const HostScreen = ({
     players: [],
     currentQuestion: null,
     leaderboard: {},
-    currentPlayer: null
+    currentPlayer: null,
+    color: null  
   });
 
   useEffect(() => {
@@ -26,7 +27,12 @@ const HostScreen = ({
     });
 
     socket.on('newQuestionTrivia', (questionData) => {
-      setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData }));
+      setGameState(prevState => ({ 
+        ...prevState, 
+        phase: 'question', 
+        currentQuestion: questionData,
+        color: questionData.color  
+      }));
     });
 
     socket.on('updateLeaderboardTrivia', (leaderboard) => {
@@ -44,7 +50,7 @@ const HostScreen = ({
           ...prevLeaderboard,
           ...points
       }));
-      console.log("Updating leaderboard");
+      console.log("Updating leaderboard to be", points);
   });
     socket.on('incorrectAnswerTrivia', ({ playerName: answeringPlayer, answer }) => {
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
@@ -83,7 +89,7 @@ const HostScreen = ({
         );
       case 'question':
         return (
-          <div>
+          <div> 
             <h2>Current Question</h2>
             <h3>Category: {gameState.currentQuestion.deckName}</h3>
             <h4>Hints:</h4>
@@ -106,7 +112,7 @@ const HostScreen = ({
   };
 
   return (
-    <div className="host-screen">
+<div className="host-screen" style={{ backgroundColor: gameState.color }}>  
       {renderGameContent()}
       {(gameState.phase !== 'lobby') && <Leaderboard leaderboard={gameState.leaderboard} players={players} />}
     </div>

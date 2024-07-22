@@ -91,7 +91,6 @@ function initializeTriviaGame(io, sessions) {
             if (!sessions[sessionId]) {
                 sessions[sessionId] = { players: [], currentPlayerIndex: 0, currentCard: null, currentHintIndex: 0 };
             }
-            sessions[sessionId].players.push({ id: socket.id, name: playerName, score: 0 });
             console.log(`Updated player list:`, sessions[sessionId].players);
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
         });
@@ -134,7 +133,8 @@ function initializeTriviaGame(io, sessions) {
                 io.to(sessionId).emit('newQuestionTrivia', {
                     hints: [currentCard.hints[0]],
                     options: options,
-                    deckName: currentCard.deckName
+                    deckName: currentCard.deckName,
+                    color: category
                 });
             }
         });
@@ -182,9 +182,8 @@ function initializeTriviaGame(io, sessions) {
                             pointsEarned = 1;
                             break;
                     }
-                    player.score += pointsEarned;
+                    player.score = (player.score || 0) + pointsEarned; 
                     io.to(sessionId).emit('correctAnswerTrivia', { playerName: player.name, pointsEarned, answer: currentCard.answer });
-                    io.to(sessionId).emit('updatePointsTrivia', { points: { [player.name]: player.score } });
                     moveToNextPlayer(io, sessionId, sessions);
                 } else {
                     io.to(sessionId).emit('incorrectAnswerTrivia', { playerName: player.name, answer });
@@ -193,6 +192,10 @@ function initializeTriviaGame(io, sessions) {
                     }
                 }
                 io.to(sessionId).emit('updateLeaderboardTrivia', players);
+                io.to(sessionId).emit('updatePointsTrivia', { points: { [player.name]: player.score } });
+                console.log(`Emitted that ${player.name} now has a score of ${player.score}!`)
+            } else {
+                console.error(`Player not found for socket ID: ${socket.id}`);
             }
         });
 

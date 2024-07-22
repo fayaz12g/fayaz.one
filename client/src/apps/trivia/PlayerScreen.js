@@ -6,11 +6,17 @@ const PlayerScreen = ({
   playerName,
 }) => {
   const [gameState, setGameState] = useState({
-    phase: 'waiting',
+    phase: 'lobby',
     categories: [],
     currentQuestion: null,
-    isMyTurn: false
+    isMyTurn: false,
+    color: null 
   });
+  const [showOptions, setShowOptions] = useState(false);
+
+  const handleMakeGuessClick = () => {
+    setShowOptions(true);
+  };
 
   useEffect(() => {
     console.log('PlayerScreen mounted');
@@ -27,7 +33,12 @@ const PlayerScreen = ({
 
     socket.on('newQuestionTrivia', (questionData) => {
       console.log('New question event received', questionData);
-      setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData, isMyTurn: true }));
+      setGameState(prevState => ({ 
+        ...prevState, 
+        phase: 'question', 
+        currentQuestion: questionData, 
+        color: questionData.color
+      }));
     });
 
     socket.on('correctAnswerTrivia', ({ playerName: answeringPlayer, pointsEarned, answer }) => {
@@ -63,7 +74,7 @@ const PlayerScreen = ({
   const selectCategory = (category) => {
     console.log('Selecting category', category);
     socket.emit('selectCategoryTrivia', category, sessionId);
-    setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
+    setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: true }));
   };
 
   const requestHint = () => {
@@ -98,33 +109,44 @@ const PlayerScreen = ({
       case 'question':
         return (
           <div>
-            <h2>Question:</h2>
-            <h3>Category: {gameState.currentQuestion.deckName}</h3>
-            <h4>Hints:</h4>
-            <ul>
-              {gameState.currentQuestion.hints.map((hint, index) => (
-                <li key={index}>{hint}</li>
-              ))}
-            </ul>
-            {gameState.isMyTurn && gameState.currentQuestion.hints.length < 3 && (
-              <button onClick={requestHint}>Request Next Hint</button>
-            )}
-            <h4>Options:</h4>
-            {gameState.currentQuestion.options.map((option, index) => (
-              <button key={index} onClick={() => submitAnswer(option)} disabled={!gameState.isMyTurn}>
-                {option}
-              </button>
+          <h2>Category:</h2>
+          <h3>{gameState.currentQuestion.deckName}</h3>
+          <h4>Hints:</h4>
+          <ul>
+            {gameState.currentQuestion.hints.map((hint, index) => (
+              <li key={index}>{hint}</li>
             ))}
-          </div>
+          </ul>
+          {!showOptions && gameState.isMyTurn && gameState.currentQuestion.hints.length < 3 && (
+            <button onClick={requestHint}>Request Next Hint</button>
+          )}
+          {!showOptions && gameState.currentQuestion.hints.length < 3 && gameState.isMyTurn && (
+            <button onClick={handleMakeGuessClick}>Make a Guess</button>
+          )}
+          {showOptions && (
+            <div>
+              <h4>Guess an Answer:</h4>
+              {gameState.currentQuestion.options.map((option, index) => (
+                <button key={index} onClick={() => submitAnswer(option)} disabled={!gameState.isMyTurn}>
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         );
       default:
-        return <h2>Waiting for game to start...</h2>;
-    }
+        return (
+        <div>
+        <h1>Welcome, {playerName}!</h1>
+        <h2>Waiting for the host to start the game...</h2>;
+        </div>
+      );
+    };
   };
 
   return (
-    <div className="App">
-      <h1>Welcome, {playerName}!</h1>
+    <div className="App" style={{ backgroundColor: gameState.color }}> 
       {renderGameContent()}
     </div>
   );
