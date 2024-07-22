@@ -70,6 +70,9 @@ function drawCard(color) {
     const index = Math.floor(Math.random() * deck.cards.length);
     const selectedCard = deck.cards[index];
 
+    // Remove the selected card from the deck
+    deck.cards.splice(index, 1);
+
     return {
         ...selectedCard,
         deckId: deck.id,
@@ -221,12 +224,15 @@ function moveToNextPlayer(io, sessionId, sessions) {
 }
 
 function getAvailableCategories() {
-    return Object.keys(cardDecks).map(color => ({
-        id: cardDecks[color].id,
-        name: cardDecks[color].name,
-        color: color
-    }));
+    return Object.keys(cardDecks)
+        .filter(color => cardDecks[color].cards.length > 0)
+        .map(color => ({
+            id: cardDecks[color].id,
+            name: cardDecks[color].name,
+            color: color
+        }));
 }
+
 
 module.exports = {
     initializeTriviaGame
