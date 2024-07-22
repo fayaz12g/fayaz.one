@@ -81,16 +81,20 @@ function initializeTriviaGame(io, sessions) {
     loadCardDecks();
 
     io.on('connection', (socket) => {
+        console.log('New client connected');
+
         socket.on('joinGame', (playerName, sessionId) => {
+            console.log(`Player ${playerName} joining session ${sessionId}`);
             if (!sessions[sessionId]) {
                 sessions[sessionId] = { players: [], currentPlayerIndex: 0, currentCard: null, currentHintIndex: 0 };
             }
             sessions[sessionId].players.push({ id: socket.id, name: playerName, score: 0 });
-            console.log(`Player joined. Updated list is: `, sessions[sessionId].players);
+            console.log(`Updated player list:`, sessions[sessionId].players);
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
         });
 
         socket.on('startGameTrivia', ({sessionId, gameMode}) => {
+            console.log(`Starting game for session ${sessionId}`);
             if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
                 console.error(`Invalid session or no players for session ${sessionId}`);
                 return;
@@ -99,10 +103,17 @@ function initializeTriviaGame(io, sessions) {
             sessions[sessionId].currentPlayerIndex = 0;
             sessions[sessionId].gameMode = gameMode;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
+            const categories = getAvailableCategories();
             
-            io.to(sessionId).emit('gameStartedTrivia', getAvailableCategories());
+            console.log(`Emitting gameStartedTrivia to all players in session ${sessionId}`);
+            io.to(sessionId).emit('gameStartedTrivia', categories);
+            
+            console.log(`Emitting nextPlayerTrivia to all players in session ${sessionId}`);
             io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
-            io.to(currentPlayer.id).emit('yourTurnTrivia', getAvailableCategories());
+            
+            console.log(`Emitting yourTurnTrivia to player ${currentPlayer.name}`);
+            io.to(currentPlayer.socketId).emit('yourTurnTrivia', categories);
+            
             console.log(`It is ${currentPlayer.name}'s turn.`);
         });
 
@@ -152,7 +163,7 @@ function initializeTriviaGame(io, sessions) {
             }
 
             const { players, currentPlayerIndex, currentCard, currentHintIndex } = sessions[sessionId];
-            const player = players.find(p => p.id === socket.id);
+            const player = players.find(p => p.socketId === socket.id);
             
             if (player) {
                 let pointsEarned = 0;
@@ -182,8 +193,10 @@ function initializeTriviaGame(io, sessions) {
         });
 
         socket.on('disconnectTrivia', (sessionId) => {
+            console.log(`Player disconnected from session ${sessionId}`);
             if (sessions[sessionId]) {
-                sessions[sessionId].players = sessions[sessionId].players.filter(player => player.id !== socket.id);
+                sessions[sessionId].players = sessions[sessionId].players.filter(player => player.socketId !== socket.id);
+                console.log(`Updated player list:`, sessions[sessionId].players);
                 io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
             }
         });
@@ -202,7 +215,7 @@ function moveToNextPlayer(io, sessionId, sessions) {
     
     const nextPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
     io.to(sessionId).emit('nextPlayerTrivia', nextPlayer.name);
-    io.to(nextPlayer.id).emit('yourTurnTrivia', getAvailableCategories());
+    io.to(nextPlayer.socketId).emit('yourTurnTrivia', getAvailableCategories());
     console.log(`It is ${nextPlayer.name}'s turn.`);
 }
 

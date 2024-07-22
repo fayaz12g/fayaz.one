@@ -13,31 +13,39 @@ const PlayerScreen = ({
   });
 
   useEffect(() => {
+    console.log('PlayerScreen mounted');
+
     socket.on('gameStartedTrivia', (categories) => {
+      console.log('Game started event received', categories);
       setGameState(prevState => ({ ...prevState, phase: 'game', categories }));
     });
 
     socket.on('yourTurnTrivia', (categories) => {
+      console.log('Your turn event received', categories);
       setGameState(prevState => ({ ...prevState, phase: 'category-selection', categories, isMyTurn: true }));
     });
 
     socket.on('newQuestionTrivia', (questionData) => {
+      console.log('New question event received', questionData);
       setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData, isMyTurn: true }));
     });
 
-    socket.on('correctAnswerTrivia', ({ playerName, pointsEarned, answer }) => {
-      alert(`${playerName} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
+    socket.on('correctAnswerTrivia', ({ playerName: answeringPlayer, pointsEarned, answer }) => {
+      console.log('Correct answer event received', { answeringPlayer, pointsEarned, answer });
+      alert(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
     });
 
-    socket.on('incorrectAnswerTrivia', ({ playerName, answer }) => {
-      alert(`${playerName} answered incorrectly with: ${answer}`);
-      if (playerName === playerName) {
+    socket.on('incorrectAnswerTrivia', ({ playerName: answeringPlayer, answer }) => {
+      console.log('Incorrect answer event received', { answeringPlayer, answer });
+      alert(`${answeringPlayer} answered incorrectly with: ${answer}`);
+      if (answeringPlayer === playerName) {
         setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
       }
     });
 
     socket.on('newHint', ({ hints }) => {
+      console.log('New hint event received', hints);
       setGameState(prevState => ({
         ...prevState,
         currentQuestion: { ...prevState.currentQuestion, hints }
@@ -45,31 +53,39 @@ const PlayerScreen = ({
     });
 
     socket.on('allPlayersCanAnswer', () => {
+      console.log('All players can answer event received');
       setGameState(prevState => ({ ...prevState, isMyTurn: true }));
     });
 
     return () => {
+      console.log('PlayerScreen unmounting');
     };
   }, [socket, playerName]);
 
   const selectCategory = (category) => {
+    console.log('Selecting category', category);
     socket.emit('selectCategoryTrivia', category, sessionId);
     setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
   };
 
   const requestHint = () => {
+    console.log('Requesting hint');
     socket.emit('requestHintTrivia', sessionId);
   };
 
   const submitAnswer = (answer) => {
+    console.log('Submitting answer', answer);
     socket.emit('submitAnswerTrivia', answer, sessionId);
     setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
   };
 
   const renderGameContent = () => {
+    console.log('Rendering game content, current state:', gameState);
     switch (gameState.phase) {
       case 'waiting':
         return <h2>Waiting for your turn...</h2>;
+      case 'game':
+        return <h2>Game has started. Waiting for your turn...</h2>;
       case 'category-selection':
         return (
           <div>

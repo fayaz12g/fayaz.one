@@ -63,7 +63,7 @@ const HostScreen = ({
         return renderLobby();
       case 'category-selection':
         return (
-          <div>
+          <div className='App'>
             <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
           </div>
         );
@@ -94,7 +94,7 @@ const HostScreen = ({
   return (
     <div className="host-screen">
       {renderGameContent()}
-      <Leaderboard leaderboard={gameState.leaderboard} players={players} />
+      {(gameState.phase !== 'lobby') && <Leaderboard leaderboard={gameState.leaderboard} players={players} />}
     </div>
   );
 };
