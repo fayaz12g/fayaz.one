@@ -11,6 +11,7 @@ import titleTheme from './sound/improvimania/theme.m4a';
 import speakingTheme from './sound/improvimania/speaking.m4a';
 import guessingTheme from './sound/improvimania/guessing.m4a';
 import finishTheme from './sound/improvimania/finish.m4a';
+import guessingTitle from './sound/guessing/guesstitle.m4a';
 
 // Menu Imports
 import AudioPlayer from './apps/AudioPlayer';
@@ -361,6 +362,7 @@ function App() {
     <AudioPlayer audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
     <AudioPlayer audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
     <AudioPlayer audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
+    {/* <AudioPlayer audioSrc={guessingTitle} loopStart={13} loopEnd={48} isPlaying={!gameStarted} /> */}
     <AudioPlayer audioSrc={finishTheme} loop={false} isPlaying={isEndGame} />
     
 

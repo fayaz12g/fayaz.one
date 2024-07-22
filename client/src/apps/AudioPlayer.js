@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = true }) => {
+const AudioPlayer = ({ audioSrc, loopStart = 0, loopEnd, isPlaying = true, loop = true }) => {
   const audioContextRef = useRef(null);
   const bufferRef = useRef(null);
   const sourceRef = useRef(null);
@@ -19,11 +19,20 @@ const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = tr
     if (audioContext && buffer) {
       sourceRef.current = audioContext.createBufferSource();
       sourceRef.current.buffer = buffer;
-      sourceRef.current.loop = loop;
-      sourceRef.current.loopStart = loopStart;
-      sourceRef.current.loopEnd = loopEnd;
       sourceRef.current.connect(audioContext.destination);
-      sourceRef.current.start(0, loopStart);
+
+      const startLoop = () => {
+        sourceRef.current = audioContext.createBufferSource();
+        sourceRef.current.buffer = buffer;
+        sourceRef.current.loop = loop;
+        sourceRef.current.loopStart = loopStart;
+        sourceRef.current.loopEnd = loopEnd;
+        sourceRef.current.connect(audioContext.destination);
+        sourceRef.current.start(0, loopStart);
+      };
+
+      sourceRef.current.onended = startLoop;
+      sourceRef.current.start(0);
     }
   };
 
@@ -64,7 +73,7 @@ const AudioPlayer = ({ audioSrc, loopStart, loopEnd, isPlaying = true, loop = tr
     };
   }, []);
 
-  return null; 
+  return null; // This component doesn't render anything
 };
 
 export default AudioPlayer;
