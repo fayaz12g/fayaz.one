@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import LeaderboardOverlay from './LeaderboarOverlay';
+import LeaderboardOverlay from './HostScreen/LeaderboardOverlay';
 
 const PlayerScreen = ({
   socket,
