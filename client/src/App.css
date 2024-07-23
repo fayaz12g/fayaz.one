@@ -380,14 +380,23 @@ body.dark {
 
 .host-screen {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
+  align-items: center;
+  height: 100vh;
+}
+
+.content-container {
+  display: flex;
+  width: 100%; 
+}
+
+.game-content {
+  flex: 1;
+  margin-right: 20px; 
+}
+
+.leaderboard-content {
+  flex: 1;
 }
 
 .animated-title-container {

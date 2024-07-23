@@ -124,8 +124,16 @@ function initializeTriviaGame(io, sessions) {
         });
 
         socket.on('passTrivia', (sessionId) => {
-            io.to(sessionId).emit('broPassedTrivia');
-            moveToNextPlayer(io, sessionId, sessions);
+            if (!sessions[sessionId].hasOwnProperty('passers')) {
+                sessions[sessionId].passers = 0;
+            }
+            sessions[sessionId].passers++;
+    
+            if (sessions[sessionId].passers === sessions[sessionId].players.length - 1) {
+                io.to(sessionId).emit('broPassedTrivia');
+                moveToNextPlayer(io, sessionId, sessions);
+                sessions[sessionId].passers = 0;
+            }
         });
 
         socket.on('selectCategoryTrivia', (category, sessionId) => {
@@ -203,7 +211,7 @@ function initializeTriviaGame(io, sessions) {
                     moveToNextPlayer(io, sessionId, sessions);
                 } else {
                     io.to(sessionId).emit('incorrectAnswerTrivia', { answeringPlayer: player.name, answer });
-                    if (currentHintIndex === 2) {
+                    if ((currentHintIndex === 2) || steal) {
                         moveToNextPlayer(io, sessionId, sessions);
                     }
                     if (steal) {

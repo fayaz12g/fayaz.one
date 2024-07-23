@@ -48,6 +48,9 @@ const PlayerScreen = ({
     socket.on('yourTurnTrivia', (categories) => {
       console.log('Your turn event received', categories);
       setGameState(prevState => ({ ...prevState, phase: 'category-selection', categories, isMyTurn: true }));
+      setShowOptions(false);
+      setSteal(false);
+      setCanSteal(false);
     });
 
     socket.on('newQuestionTrivia', (questionData) => {
@@ -160,10 +163,10 @@ const PlayerScreen = ({
             <button onClick={handleMakeGuessClick}>Make a Guess</button>
           )}
           {canSteal && <h4>This is your chance to steal!</h4>}
-          {canSteal && gameState.isMyTurn && (
+          {canSteal && !steal && gameState.isMyTurn && (
             <button onClick={handleStealClick}>STEAL</button>
           )}
-          {canSteal && gameState.isMyTurn && (
+          {canSteal && !steal && gameState.isMyTurn && (
             <button onClick={handlePassClick}>PASS</button>
           )}
           {showOptions && (

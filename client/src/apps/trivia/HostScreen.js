@@ -18,7 +18,8 @@ const HostScreen = ({
     players: [],
     currentQuestion: null,
     currentPlayer: null,
-    color: null  
+    color: null,
+    answer: null
   });
   const [showOptions, setShowOptions] = useState(false);
 
@@ -48,6 +49,7 @@ const HostScreen = ({
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setShowOptions(false);
+      setGameState(prevState => ({ ...prevState, answer: answer }));
     });
     socket.on('updatePointsTrivia', ({ points }) => {
       setLeaderboard(prevLeaderboard => ({
@@ -59,6 +61,7 @@ const HostScreen = ({
     socket.on('incorrectAnswerTrivia', ({ answeringPlayer, answer }) => {
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
       setShowOptions(false);
+      setGameState(prevState => ({ ...prevState, answer: answer }));
     });
 
     return () => {
@@ -89,6 +92,7 @@ const HostScreen = ({
       case 'category-selection':
         return (
           <div className='App'>
+            {gameState.answer && <b>The answer was {gameState.answer}</b>}
             <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
           </div>
         );
@@ -121,10 +125,18 @@ const HostScreen = ({
   };
 
   return (
-<div className="host-screen">  
+<div className="host-screen">
+  <div className="content-container">
+    <div className="game-content">
       {renderGameContent()}
-      {(gameState.phase !== 'lobby') && <Leaderboard leaderboard={leaderboard} players={players} />}
     </div>
+    {(gameState.phase !== 'lobby') && (
+      <div className="leaderboard-content">
+        <Leaderboard leaderboard={leaderboard} players={players} />
+      </div>
+    )}
+  </div>
+</div>
   );
 };
 
