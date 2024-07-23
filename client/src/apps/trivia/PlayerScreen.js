@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import LeaderboardOverlay from './LeaderboarOverlay';
 
 const PlayerScreen = ({
   socket,
   sessionId,
   playerName,
+  setLeaderboard,
+  leaderboard,
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'lobby',
@@ -150,6 +153,11 @@ const PlayerScreen = ({
   return (
     <div className="App" style={{ backgroundColor: gameState.color }}> 
       {renderGameContent()}
+      <LeaderboardOverlay 
+      gameState={gameState}
+      leaderboard={leaderboard}
+      setLeaderboard={setLeaderboard}
+    />
     </div>
   );
 };

@@ -116,6 +116,7 @@ const Game = ({
           guessingTheme={guessingTheme}
           sentGuess={sentGuess}
           game={game}
+          setLeaderboard={setLeaderboard}
         />
       );
 
