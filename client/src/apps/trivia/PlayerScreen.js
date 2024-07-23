@@ -7,6 +7,7 @@ const PlayerScreen = ({
   playerName,
   setLeaderboard,
   leaderboard,
+  players,
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'lobby',
@@ -16,9 +17,24 @@ const PlayerScreen = ({
     color: null 
   });
   const [showOptions, setShowOptions] = useState(false);
+  const [steal, setSteal] = useState(false);
+  const [canSteal, setCanSteal] = useState(false);
 
   const handleMakeGuessClick = () => {
     setShowOptions(true);
+    socket.emit('guessingTrivia', sessionId);
+  };
+
+  const handleStealClick = () => {
+    setSteal(true);
+  };
+
+  const handlePassClick = () => {
+    socket.emit('passTrivia', sessionId);
+    setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
+    setShowOptions(false);
+    setSteal(false);
+    setCanSteal(false);
   };
 
   useEffect(() => {
@@ -43,20 +59,35 @@ const PlayerScreen = ({
         color: questionData.color
       }));
     });
-
-    socket.on('correctAnswerTrivia', ({ playerName: answeringPlayer, pointsEarned, answer }) => {
+    socket.on('updatePointsTrivia', ({ points }) => {
+      setLeaderboard(prevLeaderboard => ({
+          ...prevLeaderboard,
+          ...points
+      }));
+      console.log("Updating leaderboard to be", points);
+  });
+    socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
       setShowOptions(false);
+      setSteal(false);
+      setCanSteal(false);
     });
 
-    socket.on('incorrectAnswerTrivia', ({ playerName: answeringPlayer, answer }) => {
+    socket.on('incorrectAnswerTrivia', ({ answeringPlayer, answer }) => {
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
-      setShowOptions(false);
-      if (answeringPlayer === playerName) {
+      if (playerName !== answeringPlayer) {
+        console.log(`${playerName} can steal from ${answeringPlayer}!`);
+        setGameState(prevState => ({ ...prevState, phase: 'question', isMyTurn: true }));
+        setShowOptions(true);
+        setCanSteal(true);
+      } else {
+        setShowOptions(false);
+        setSteal(false);
+        setCanSteal(false);
         setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
       }
-    });
+    })
 
     socket.on('newHint', ({ hints }) => {
       console.log('New hint event received', hints);
@@ -88,8 +119,8 @@ const PlayerScreen = ({
   };
 
   const submitAnswer = (answer) => {
-    console.log('Submitting answer', answer);
-    socket.emit('submitAnswerTrivia', answer, sessionId);
+    console.log('Submitting answer', answer, 'stolen?', canSteal);
+    socket.emit('submitAnswerTrivia', answer, sessionId, canSteal);
     setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
   };
 
@@ -125,17 +156,26 @@ const PlayerScreen = ({
           {!showOptions && gameState.isMyTurn && gameState.currentQuestion.hints.length < 3 && (
             <button onClick={requestHint}>Request Next Hint</button>
           )}
-          {!showOptions && gameState.currentQuestion.hints.length < 3 && gameState.isMyTurn && (
+          {!showOptions && gameState.isMyTurn && (
             <button onClick={handleMakeGuessClick}>Make a Guess</button>
+          )}
+          {canSteal && <h4>This is your chance to steal!</h4>}
+          {canSteal && gameState.isMyTurn && (
+            <button onClick={handleStealClick}>STEAL</button>
+          )}
+          {canSteal && gameState.isMyTurn && (
+            <button onClick={handlePassClick}>PASS</button>
           )}
           {showOptions && (
             <div>
-              <h4>Guess an Answer:</h4>
-              {gameState.currentQuestion.options.map((option, index) => (
-                <button key={index} onClick={() => submitAnswer(option)} disabled={!gameState.isMyTurn}>
-                  {option}
-                </button>
-              ))}
+              {!canSteal && <h4>Guess an Answer:</h4>}
+              {(steal || !canSteal) && (
+                gameState.currentQuestion.options.map((option, index) => (
+                  <button key={index} onClick={() => submitAnswer(option)} disabled={!gameState.isMyTurn}>
+                    {option}
+                  </button>
+                ))
+              )}
             </div>
           )}
         </div>
@@ -156,7 +196,7 @@ const PlayerScreen = ({
       <LeaderboardOverlay 
       gameState={gameState}
       leaderboard={leaderboard}
-      setLeaderboard={setLeaderboard}
+      players={players}
     />
     </div>
   );

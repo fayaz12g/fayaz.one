@@ -380,8 +380,10 @@ body.dark {
 
 .host-screen {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
   min-height: 100vh;
   padding: 20px;

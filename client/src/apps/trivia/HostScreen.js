@@ -20,6 +20,7 @@ const HostScreen = ({
     currentPlayer: null,
     color: null  
   });
+  const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
     socket.on('gameStartedTrivia', (categories) => {
@@ -34,16 +35,19 @@ const HostScreen = ({
         color: questionData.color  
       }));
     });
-
     socket.on('updateLeaderboardTrivia', (leaderboard) => {
       setGameState(prevState => ({ ...prevState, leaderboard }));
+    });
+    socket.on('makingGuessTrivia', (leaderboard) => {
+      setShowOptions(true);
     });
 
     socket.on('nextPlayerTrivia', (playerName) => {
       setGameState(prevState => ({ ...prevState, currentPlayer: playerName, phase: 'category-selection' }));
     });
-    socket.on('correctAnswerTrivia', ({ playerName: answeringPlayer, pointsEarned, answer }) => {
+    socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
+      setShowOptions(false);
     });
     socket.on('updatePointsTrivia', ({ points }) => {
       setLeaderboard(prevLeaderboard => ({
@@ -52,8 +56,9 @@ const HostScreen = ({
       }));
       console.log("Updating leaderboard to be", points);
   });
-    socket.on('incorrectAnswerTrivia', ({ playerName: answeringPlayer, answer }) => {
+    socket.on('incorrectAnswerTrivia', ({ answeringPlayer, answer }) => {
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
+      setShowOptions(false);
     });
 
     return () => {
@@ -89,21 +94,25 @@ const HostScreen = ({
         );
       case 'question':
         return (
-          <div> 
-            <h2>Current Question</h2>
-            <h3>Category: {gameState.currentQuestion.deckName}</h3>
+          <div className='App' style={{ backgroundColor: gameState.color }}> 
+            <h2>Category: </h2>
+            <h3>{gameState.currentQuestion.deckName}</h3>
             <h4>Hints:</h4>
             <ul>
               {gameState.currentQuestion.hints.map((hint, index) => (
                 <li key={index}>{hint}</li>
               ))}
             </ul>
-            <h4>Options:</h4>
+            {showOptions && (
+              <div>
+              <h4>Options:</h4>
             <ul>
               {gameState.currentQuestion.options.map((option, index) => (
                 <li key={index}>{option}</li>
               ))}
             </ul>
+            </div>
+            )}
           </div>
         );
       default:
@@ -112,7 +121,7 @@ const HostScreen = ({
   };
 
   return (
-<div className="host-screen" style={{ backgroundColor: gameState.color }}>  
+<div className="host-screen">  
       {renderGameContent()}
       {(gameState.phase !== 'lobby') && <Leaderboard leaderboard={leaderboard} players={players} />}
     </div>

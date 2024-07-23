@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import Leaderboard from './Leaderboard';
 
-const LeaderboardOverlay = ({ gameState, leaderboard, setLeaderboard }) => {
+const LeaderboardOverlay = ({ gameState, leaderboard, players }) => {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   const buttonStyle = `
@@ -18,24 +18,18 @@ const LeaderboardOverlay = ({ gameState, leaderboard, setLeaderboard }) => {
 
   return (
     <>
-      <button
-        className={buttonStyle}
-        onClick={() => setShowLeaderboard(true)}
-      >
-        📊
-      </button>
+      <button className='showl' onClick={() => setShowLeaderboard(true)}>📊</button>
       
       {showLeaderboard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+        <div className="overlay">
           <div className="relative bg-white rounded-lg p-6 max-w-md w-full">
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="showl"
               onClick={() => setShowLeaderboard(false)}
-            >
-              <X size={24} />
+            > X
             </button>
-            <div className="overlay-content">
-              <Leaderboard leaderboard={leaderboard} setLeaderboard={setLeaderboard} />
+            <div>
+              <Leaderboard leaderboard={leaderboard} players={players} />
             </div>
           </div>
         </div>

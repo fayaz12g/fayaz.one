@@ -119,6 +119,15 @@ function initializeTriviaGame(io, sessions) {
             console.log(`It is ${currentPlayer.name}'s turn.`);
         });
 
+        socket.on('guessingTrivia', (sessionId) => {
+            io.to(sessionId).emit('makingGuessTrivia');
+        });
+
+        socket.on('passTrivia', (sessionId) => {
+            io.to(sessionId).emit('broPassedTrivia');
+            moveToNextPlayer(io, sessionId, sessions);
+        });
+
         socket.on('selectCategoryTrivia', (category, sessionId) => {
             if (!sessions[sessionId]) {
                 console.error(`Invalid session ${sessionId}`);
@@ -159,7 +168,7 @@ function initializeTriviaGame(io, sessions) {
             }
         });
 
-        socket.on('submitAnswerTrivia', (answer, sessionId) => {
+        socket.on('submitAnswerTrivia', (answer, sessionId, steal) => {
             if (!sessions[sessionId] || !sessions[sessionId].currentCard) {
                 console.error(`Invalid session or no current card for session ${sessionId}`);
                 return;
@@ -168,27 +177,37 @@ function initializeTriviaGame(io, sessions) {
             const { players, currentPlayerIndex, currentCard, currentHintIndex } = sessions[sessionId];
             const player = players.find(p => p.socketId === socket.id);
             
+            console.log(`Answer submitted by ${player.name}. ${currentHintIndex} hints are out. It is player ${currentPlayerIndex}'s turn.`)
+
             if (player) {
                 let pointsEarned = 0;
                 if (answer === currentCard.answer) {
-                    switch (currentHintIndex) {
-                        case 0:
-                            pointsEarned = 3;
-                            break;
-                        case 1:
-                            pointsEarned = 2;
-                            break;
-                        case 2:
-                            pointsEarned = 1;
-                            break;
+                    if (!steal) {
+                        switch (currentHintIndex) {
+                            case 0:
+                                pointsEarned = 3;
+                                break;
+                            case 1:
+                                pointsEarned = 2;
+                                break;
+                            case 2:
+                                pointsEarned = 1;
+                                break;
+                        }
+                    }
+                    else {
+                        pointsEarned = 1;
                     }
                     player.score = (player.score || 0) + pointsEarned; 
-                    io.to(sessionId).emit('correctAnswerTrivia', { playerName: player.name, pointsEarned, answer: currentCard.answer });
+                    io.to(sessionId).emit('correctAnswerTrivia', { answeringPlayer: player.name, pointsEarned, answer: currentCard.answer });
                     moveToNextPlayer(io, sessionId, sessions);
                 } else {
-                    io.to(sessionId).emit('incorrectAnswerTrivia', { playerName: player.name, answer });
+                    io.to(sessionId).emit('incorrectAnswerTrivia', { answeringPlayer: player.name, answer });
                     if (currentHintIndex === 2) {
                         moveToNextPlayer(io, sessionId, sessions);
+                    }
+                    if (steal) {
+                        player.score = (player.score || 0) - 1; 
                     }
                 }
                 io.to(sessionId).emit('updateLeaderboardTrivia', players);
