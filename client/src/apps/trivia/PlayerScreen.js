@@ -79,7 +79,7 @@ const PlayerScreen = ({
   });
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
-      setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
+      setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false, color: 'white' }));
       setShowOptions(false);
       setSteal(false);
       setCanSteal(false);
@@ -89,14 +89,14 @@ const PlayerScreen = ({
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
       if (playerName !== answeringPlayer) {
         console.log(`${playerName} can steal from ${answeringPlayer}!`);
-        setGameState(prevState => ({ ...prevState, phase: 'question', isMyTurn: true }));
+        setGameState(prevState => ({ ...prevState, phase: 'question', isMyTurn: true, color: 'white' }));
         setShowOptions(true);
         setCanSteal(true);
       } else {
         setShowOptions(false);
         setSteal(false);
         setCanSteal(false);
-        setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
+        setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false, color: 'white' }));
       }
     })
 
@@ -148,7 +148,11 @@ const PlayerScreen = ({
             <h2>It's your turn! Select a category:</h2>
             {gameState.categories.map(category => (
               <button key={category.id} onClick={() => selectCategory(category.color)}>
-                {category.name}
+                <img 
+                  src={gameState.logos[category.name]} 
+                  alt={`${category.name} logo`}
+                  style={{ maxWidth: '200px', maxHeight: '200px' }}
+                />
               </button>
             ))}
           </div>
@@ -162,7 +166,7 @@ const PlayerScreen = ({
               style={{ maxWidth: '200px', maxHeight: '200px' }}
             />
           {/* <h2>Category:</h2> */}
-          <h3>{gameState.currentQuestion.deckName}</h3>
+          {/* <h3>{gameState.currentQuestion.deckName}</h3> */}
           <h4>Hints:</h4>
           <ul>
             {gameState.currentQuestion.hints.map((hint, index) => (

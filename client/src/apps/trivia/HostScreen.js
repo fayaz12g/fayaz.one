@@ -48,6 +48,15 @@ const HostScreen = ({
         color: questionData.color  
       }));
     });
+
+    socket.on('newHint', ({ hints }) => {
+      console.log('New hint event received', hints);
+      setGameState(prevState => ({
+        ...prevState,
+        currentQuestion: { ...prevState.currentQuestion, hints }
+      }));
+    });
+    
     socket.on('updateLeaderboardTrivia', (leaderboard) => {
       setGameState(prevState => ({ ...prevState, leaderboard }));
     });
@@ -61,7 +70,7 @@ const HostScreen = ({
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setShowOptions(false);
-      setGameState(prevState => ({ ...prevState, answer: answer }));
+      setGameState(prevState => ({ ...prevState, answer: answer, color: 'white' }));
     });
     socket.on('updatePointsTrivia', ({ points }) => {
       setLeaderboard(prevLeaderboard => ({
@@ -73,7 +82,7 @@ const HostScreen = ({
     socket.on('incorrectAnswerTrivia', ({ answeringPlayer, answer }) => {
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
       setShowOptions(false);
-      setGameState(prevState => ({ ...prevState, answer: answer }));
+      setGameState(prevState => ({ ...prevState, answer: answer, color: 'white' }));
     });
 
     return () => {
@@ -118,8 +127,8 @@ const HostScreen = ({
                         alt={`${gameState.currentQuestion.deckName} logo`}
                         style={{ maxWidth: '200px', maxHeight: '200px' }}
                     />
-                    <h2>Category: </h2>
-                    <h3>{gameState.currentQuestion.deckName}</h3>
+                    {/* <h2>Category: </h2>
+                    <h3>{gameState.currentQuestion.deckName}</h3> */}
                     <h4>Hints:</h4>
                     <ul>
                         {gameState.currentQuestion.hints.map((hint, index) => (
