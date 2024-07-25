@@ -13,8 +13,7 @@ const Lobby = ({
 
 }) => {
 
-  setGameMode('default');
-  
+
   const handleRemovePlayer = (playerToRemove) => {
     setForceRemove(true);
     removePlayer(playerToRemove, true);
@@ -54,7 +53,10 @@ const Lobby = ({
 
   const handleStartGame = () => {
     if (socket) {
-      console.log('Starting game for Session', sessionId, 'in game mode', gameMode)
+      if (gameMode !== 'fun' && gameMode !== 'default' && gameMode !== 'personal') {
+        gameMode = 'default';
+      }
+      console.log('Starting game for Session', sessionId, 'in game mode', gameMode);
       socket.emit('startGameTrivia', { 
         sessionId, 
         gameMode,

@@ -1,0 +1,247 @@
+{
+    "id": "literature",
+    "name": "Literary Legends",
+    "color": "indigo",
+    "cards": [
+      {
+        "hints": [
+          "This English playwright wrote 'Romeo and Juliet' and 'Hamlet'",
+          "He is often referred to as 'The Bard'",
+          "He wrote 37 plays and 154 sonnets"
+        ],
+        "answer": "William Shakespeare"
+      },
+      {
+        "hints": [
+          "This American novelist wrote 'The Great Gatsby'",
+          "He was a leading figure in the Jazz Age",
+          "His other works include 'Tender Is the Night' and 'This Side of Paradise'"
+        ],
+        "answer": "F. Scott Fitzgerald"
+      },
+      {
+        "hints": [
+          "This British author created the character Sherlock Holmes",
+          "He was a physician by profession",
+          "His full name includes 'Conan'"
+        ],
+        "answer": "Sir Arthur Conan Doyle"
+      },
+      {
+        "hints": [
+          "This Russian author wrote 'War and Peace' and 'Anna Karenina'",
+          "He was known for his realistic fiction and moral views",
+          "His name rhymes with 'boy'"
+        ],
+        "answer": "Leo Tolstoy"
+      },
+      {
+        "hints": [
+          "This American poet wrote 'The Road Not Taken'",
+          "Many of his poems are about rural life in New England",
+          "He recited his poem 'The Gift Outright' at John F. Kennedy's inauguration"
+        ],
+        "answer": "Robert Frost"
+      },
+      {
+        "hints": [
+          "This British author created the world of Middle-earth",
+          "His most famous works include 'The Hobbit' and 'The Lord of the Rings'",
+          "He was a professor of Anglo-Saxon at Oxford University"
+        ],
+        "answer": "J.R.R. Tolkien"
+      },
+      {
+        "hints": [
+          "This Colombian author won the Nobel Prize in Literature in 1982",
+          "He is known for his use of magical realism",
+          "His most famous novel is 'One Hundred Years of Solitude'"
+        ],
+        "answer": "Gabriel García Márquez"
+      },
+      {
+        "hints": [
+          "This British author wrote the Harry Potter series",
+          "She initially published under the name 'J.K.'",
+          "Her full first name is Joanne"
+        ],
+        "answer": "J.K. Rowling"
+      },
+      {
+        "hints": [
+          "This American novelist wrote 'To Kill a Mockingbird'",
+          "The book won the Pulitzer Prize in 1961",
+          "She only published one other novel, 'Go Set a Watchman', in 2015"
+        ],
+        "answer": "Harper Lee"
+      },
+      {
+        "hints": [
+          "This Irish playwright wrote 'Pygmalion', which was adapted into the musical 'My Fair Lady'",
+          "He is the only person to have won both a Nobel Prize and an Oscar",
+          "His initials are G.B."
+        ],
+        "answer": "George Bernard Shaw"
+      },
+      {
+        "hints": [
+          "This American author wrote 'The Adventures of Tom Sawyer' and 'Adventures of Huckleberry Finn'",
+          "He used a pen name that refers to a nautical term",
+          "His real name was Samuel Clemens"
+        ],
+        "answer": "Mark Twain"
+      },
+      {
+        "hints": [
+          "This British author wrote '1984' and 'Animal Farm'",
+          "He used a pen name derived from the River Orwell",
+          "His real name was Eric Arthur Blair"
+        ],
+        "answer": "George Orwell"
+      },
+      {
+        "hints": [
+          "This American poet wrote 'I heard a Fly buzz - when I died'",
+          "She was known for her unconventional use of capitalization and punctuation",
+          "Most of her poems were published posthumously"
+        ],
+        "answer": "Emily Dickinson"
+      },
+      {
+        "hints": [
+          "This Nigerian author wrote 'Things Fall Apart'",
+          "The title of his most famous novel comes from a poem by W.B. Yeats",
+          "He wrote in English and criticized Joseph Conrad's 'Heart of Darkness'"
+        ],
+        "answer": "Chinua Achebe"
+      },
+      {
+        "hints": [
+          "This American novelist wrote 'The Catcher in the Rye'",
+          "He was known for his reclusive lifestyle",
+          "His full name is Jerome David, but he's known by his initials"
+        ],
+        "answer": "J.D. Salinger"
+      },
+      {
+        "hints": [
+          "This Chilean poet won the Nobel Prize in Literature in 1971",
+          "He wrote 'Twenty Love Poems and a Song of Despair'",
+          "His pen name was inspired by Czech poet Jan Neruda"
+        ],
+        "answer": "Pablo Neruda"
+      },
+      {
+        "hints": [
+          "This British author wrote 'Pride and Prejudice' and 'Emma'",
+          "She lived from 1775 to 1817",
+          "Her works often critique the British landed gentry"
+        ],
+        "answer": "Jane Austen"
+      },
+      {
+        "hints": [
+          "This American novelist wrote 'The Old Man and the Sea' and 'A Farewell to Arms'",
+          "He won the Nobel Prize in Literature in 1954",
+          "He was known for his adventurous lifestyle and minimalist writing style"
+        ],
+        "answer": "Ernest Hemingway"
+      },
+      {
+        "hints": [
+          "This French novelist wrote 'Les Misérables' and 'The Hunchback of Notre-Dame'",
+          "He was also a poet and politician",
+          "His first name means 'victor' in English"
+        ],
+        "answer": "Victor Hugo"
+      },
+      {
+        "hints": [
+          "This American poet wrote 'Song of Myself' and 'O Captain! My Captain!'",
+          "He is known as the 'father of free verse'",
+          "His most famous collection is 'Leaves of Grass'"
+        ],
+        "answer": "Walt Whitman"
+      },
+      {
+        "hints": [
+          "This Russian author wrote 'Crime and Punishment' and 'The Brothers Karamazov'",
+          "His works often explore human psychology and moral dilemmas",
+          "He spent four years in a Siberian prison camp"
+        ],
+        "answer": "Fyodor Dostoevsky"
+      },
+      {
+        "hints": [
+          "This British author wrote 'Brave New World'",
+          "He was the grandson of biologist Thomas Henry Huxley",
+          "His first name is Aldous"
+        ],
+        "answer": "Aldous Huxley"
+      },
+      {
+        "hints": [
+          "This American author wrote 'The Color Purple'",
+          "She won the Pulitzer Prize for Fiction in 1983",
+          "She is also known for her activism in civil rights and feminism"
+        ],
+        "answer": "Alice Walker"
+      },
+      {
+        "hints": [
+          "This Irish author wrote 'Ulysses' and 'Finnegans Wake'",
+          "He is known for his stream of consciousness technique",
+          "His first name is James"
+        ],
+        "answer": "James Joyce"
+      },
+      {
+        "hints": [
+          "This Chilean author wrote 'The House of the Spirits'",
+          "She is known for her use of magical realism",
+          "Her works often focus on the experiences of women and the political history of Chile"
+        ],
+        "answer": "Isabel Allende"
+      },
+      {
+        "hints": [
+          "This British author created the character of James Bond",
+          "He worked in naval intelligence during World War II",
+          "His first name is Ian"
+        ],
+        "answer": "Ian Fleming"
+      },
+      {
+        "hints": [
+          "This American sci-fi author wrote 'Fahrenheit 451' and 'The Martian Chronicles'",
+          "Many of his works were adapted into television shows",
+          "His first name is Ray"
+        ],
+        "answer": "Ray Bradbury"
+      },
+      {
+        "hints": [
+          "This Canadian author wrote 'The Handmaid's Tale'",
+          "She has won the Booker Prize twice",
+          "Her first name is Margaret"
+        ],
+        "answer": "Margaret Atwood"
+      },
+      {
+        "hints": [
+          "This Japanese author wrote 'Norwegian Wood' and '1Q84'",
+          "His works often contain elements of magical realism",
+          "His first name is Haruki"
+        ],
+        "answer": "Haruki Murakami"
+      },
+      {
+        "hints": [
+          "This Nigerian author wrote 'Half of a Yellow Sun' and 'Americanah'",
+          "She gave a famous TED talk titled 'The Danger of a Single Story'",
+          "Her first name is Chimamanda"
+        ],
+        "answer": "Chimamanda Ngozi Adichie"
+      }
+    ]
+  }
