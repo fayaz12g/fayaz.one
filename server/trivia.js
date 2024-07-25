@@ -212,7 +212,7 @@ function initializeTriviaGame(io, sessions) {
                     io.to(sessionId).emit('correctAnswerTrivia', { answeringPlayer: player.name, pointsEarned, answer: currentCard.answer });
                     moveToNextPlayer(io, sessionId, sessions);
                 } else {
-                    io.to(sessionId).emit('incorrectAnswerTrivia', { answeringPlayer: player.name, answer });
+                    io.to(sessionId).emit('incorrectAnswerTrivia', { answeringPlayer: player.name, answer: currentCard.answer });
                     if ((currentHintIndex === 2) || steal) {
                         moveToNextPlayer(io, sessionId, sessions);
                     }
