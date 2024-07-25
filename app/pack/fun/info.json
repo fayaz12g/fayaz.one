@@ -1,0 +1,34 @@
+{
+    "id": "fun",
+    "name": "Fun Pack",
+    "cards": [
+        {
+            "indigo": {
+                "id": "literature",
+                "name": "Literary Legends",
+                "color": "indigo"
+            }
+        },
+        {
+            "pink": {
+                "id": "ncstate",
+                "name": "NC State Trivia",
+                "color": "pink"
+            }
+        },
+        {
+            "cyan": {
+                "id": "appletech",
+                "name": "Apple Tech Timeline",
+                "color": "cyan"
+            }
+        },
+        {
+            "orange": {
+                "id": "nintendo",
+                "name": "Nintendo Nostalgia",
+                "color": "orange"
+            }
+        }
+    ]
+}
