@@ -128,6 +128,7 @@ const HostScreen = ({
                         alt={`${gameState.currentQuestion.deckName} logo`}
                         style={{ maxWidth: '200px', maxHeight: '200px' }}
                     />
+                    <br/>
                     <i>{gameState.currentQuestion.deckName}</i>
                     <h4>Hints:</h4>
                     <ul>
