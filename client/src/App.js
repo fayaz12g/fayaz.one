@@ -22,6 +22,15 @@ import AnimatedTitle from './apps/AnimatedTitle';
 // Import the new ImprovGame module
 import ImprovGame from './apps/improvimania/Improv';
 
+const getInitialTheme = () => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    }
+    return 'light'; // Default to light theme
+  };
+  
 function App() {
     const [ipAddress, setIpAddress] = useState(sessionStorage.getItem('ipAddress'));
     const [serverIP, setServerIP] = useState('');
@@ -47,7 +56,7 @@ function App() {
     const [connectionError, setConnectionError] = useState(false); 
     const [connectionWaiting, setConnectionWaiting] = useState(false);
     const [kicked, setKicked] = useState(false);
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(getInitialTheme);
     const [forceRemove, setForceRemove] = useState(false);
     const [confirmQuit, setConfirmQuit] = useState(false);
     const [game, setGame] = useState(sessionStorage.getItem('game'));
@@ -158,16 +167,22 @@ function App() {
     }, [socket, players, role, leaderboard, theme]);
 
     const toggleTheme = () => {
-      setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-      const titleBar = document.querySelector('.title-bar');
-      if (theme === 'light') {
-        titleBar.classList.remove('dark');
-        titleBar.classList.add('light');
-      } else if (theme === 'dark') {
-        titleBar.classList.remove('light');
-        titleBar.classList.add('dark');
-      }
-  };
+        setTheme(prevTheme => {
+          const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+          
+          // Update body class
+          document.body.className = newTheme;
+          
+          // Update title bar if it exists
+          const titleBar = document.querySelector('.title-bar');
+          if (titleBar) {
+            titleBar.classList.remove('light', 'dark');
+            titleBar.classList.add(newTheme);
+          }
+          
+          return newTheme;
+        });
+      };
 
     const resetEverything = () => {
         // Reset everything to default
