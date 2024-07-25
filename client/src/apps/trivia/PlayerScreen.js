@@ -158,6 +158,7 @@ const PlayerScreen = ({
                   alt={`${category.name} logo`}
                   style={{ maxWidth: '100px', maxHeight: '100px' }}
                 />
+                <b>{gameState.currentQuestion.deckName}</b>
               </button>
             ))}
           </div>
@@ -170,8 +171,7 @@ const PlayerScreen = ({
               alt={`${gameState.currentQuestion.deckName} logo`}
               style={{ maxWidth: '200px', maxHeight: '200px' }}
             />
-          {/* <h2>Category:</h2> */}
-          {/* <h3>{gameState.currentQuestion.deckName}</h3> */}
+            <b>{gameState.currentQuestion.deckName}</b>
           <h4>Hints:</h4>
           <ul>
             {gameState.currentQuestion.hints.map((hint, index) => (

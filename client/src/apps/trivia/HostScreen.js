@@ -67,7 +67,7 @@ const HostScreen = ({
     socket.on('nextPlayerTrivia', (playerName) => {
       setGameState(prevState => ({ ...prevState, currentPlayer: playerName, phase: 'category-selection' }));
     });
-    
+
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setShowOptions(false);
@@ -128,8 +128,7 @@ const HostScreen = ({
                         alt={`${gameState.currentQuestion.deckName} logo`}
                         style={{ maxWidth: '200px', maxHeight: '200px' }}
                     />
-                    {/* <h2>Category: </h2>
-                    <h3>{gameState.currentQuestion.deckName}</h3> */}
+                    <b>{gameState.currentQuestion.deckName}</b>
                     <h4>Hints:</h4>
                     <ul>
                         {gameState.currentQuestion.hints.map((hint, index) => (
