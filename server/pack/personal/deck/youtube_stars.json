@@ -1,0 +1,255 @@
+{
+    "id": "youtube_stars",
+    "name": "Alltime YouTubers",
+    "color": "red-500",
+    "cards": [
+      {
+        "hints": [
+          "This Swedish YouTuber is known for his gaming content and was once the most-subscribed individual creator",
+          "He famously had a rivalry with T-Series for the most subscribed YouTube channel",
+          "His fans are called the 'Bro Army'"
+        ],
+        "answer": "PewDiePie"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for his expensive stunts and philanthropy",
+          "He started the Team Trees initiative to plant 20 million trees",
+          "His main channel is one of the top 5 most-subscribed on YouTube"
+        ],
+        "answer": "MrBeast"
+      },
+      {
+        "hints": [
+          "This British-American YouTuber is famous for his Minecraft content",
+          "He's known for his speedrunning controversy and subsequent apology",
+          "His fans are called 'Dream Team' or 'Dream SMP'"
+        ],
+        "answer": "Dream"
+      },
+      {
+        "hints": [
+          "This Canadian YouTuber is known for her ASMR content",
+          "She often roleplays various characters in her videos",
+          "Her channel name is inspired by a gemstone"
+        ],
+        "answer": "Gibi ASMR"
+      },
+      {
+        "hints": [
+          "This beauty guru was one of the first major male makeup artists on YouTube",
+          "He has collaborated with Morphe for his own makeup line",
+          "He was involved in a highly publicized feud with Tati Westbrook"
+        ],
+        "answer": "James Charles"
+      },
+      {
+        "hints": [
+          "This Irish YouTuber is known for his gaming content and energetic personality",
+          "His catchphrase is 'Top of the morning to ya, laddies!'",
+          "He dated fellow YouTuber Wiishu for several years"
+        ],
+        "answer": "Jacksepticeye"
+      },
+      {
+        "hints": [
+          "This American YouTuber is famous for her storytime videos and conspiracy theories",
+          "She has released several documentaries about controversial figures",
+          "She has a makeup line called Conspiracy"
+        ],
+        "answer": "Shane Dawson"
+      },
+      {
+        "hints": [
+          "This British YouTuber is known for his football content and challenges",
+          "He was part of the Sidemen group",
+          "He has a successful second channel called MoreSidemen"
+        ],
+        "answer": "KSI"
+      },
+      {
+        "hints": [
+          "This American family vlogger faced controversy over his 'prank' videos on his children",
+          "His channel 'DaddyOFive' was terminated due to child abuse concerns",
+          "He lost custody of two of his children due to his YouTube content"
+        ],
+        "answer": "Michael Martin"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for her quirky persona and baking videos",
+          "She has published several cookbooks",
+          "Her catchphrase is 'Hey guys, it's Ro!'"
+        ],
+        "answer": "Rosanna Pansino"
+      },
+      {
+        "hints": [
+          "This beauty guru was one of the first to reach 1 million subscribers",
+          "She has her own makeup line called em Cosmetics",
+          "She was born in Vietnam and emigrated to the US as a child"
+        ],
+        "answer": "Michelle Phan"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for his science experiments and stunts",
+          "He often collaborates with other popular YouTubers like MrBeast",
+          "His videos often involve explosions or destroying expensive items"
+        ],
+        "answer": "Mark Rober"
+      },
+      {
+        "hints": [
+          "This British YouTuber is known for his music and comedy sketches",
+          "He has released several books, including 'Username: Evie'",
+          "He came out as queer in a video titled 'Daniel and Depression'"
+        ],
+        "answer": "Daniel Howell"
+      },
+      {
+        "hints": [
+          "This American YouTuber is famous for her true crime content",
+          "She often covers unsolved mysteries and conspiracy theories",
+          "Her catchphrase is 'Be sure to wash your hands'"
+        ],
+        "answer": "Bailey Sarian"
+      },
+      {
+        "hints": [
+          "This Canadian YouTuber is known for her lifestyle and fashion content",
+          "She has her own clothing line called Nudestix",
+          "She was one of the first big fashion influencers on YouTube"
+        ],
+        "answer": "Jenn Im"
+      },
+      {
+        "hints": [
+          "This American YouTuber is famous for his gaming content, particularly Minecraft",
+          "He's known for his speedruns and challenge videos",
+          "His Minecraft hunter series is particularly popular"
+        ],
+        "answer": "GeorgeNotFound"
+      },
+      {
+        "hints": [
+          "This British YouTuber is known for his commentary and reaction videos",
+          "He often collaborates with his girlfriend, fellow YouTuber Niachu",
+          "His second channel is called JackSucksAtStuff"
+        ],
+        "answer": "JackSucksAtLife"
+      },
+      {
+        "hints": [
+          "This American family vlogger documents life with her adopted children",
+          "She faced controversy for 'rehoming' her adopted son Huxley",
+          "Her channel primarily focuses on adoption and motherhood"
+        ],
+        "answer": "Myka Stauffer"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for his educational content about animals",
+          "He often features dangerous animals in his videos",
+          "His catchphrase is 'Be brave, stay wild'"
+        ],
+        "answer": "Coyote Peterson"
+      },
+      {
+        "hints": [
+          "This British YouTuber is famous for his football skill videos",
+          "He has collaborated with many professional footballers",
+          "He was part of the Sidemen group"
+        ],
+        "answer": "F2Freestylers"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for her ASMR and mukbang content",
+          "She often eats seafood in her videos",
+          "Her channel name is a play on the word 'savage'"
+        ],
+        "answer": "SAS-ASMR"
+      },
+      {
+        "hints": [
+          "This Canadian YouTuber is famous for her storytelling and animation videos",
+          "She often shares personal anecdotes through her animations",
+          "Her art style is known for its simplicity and charm"
+        ],
+        "answer": "Jaiden Animations"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for his tech reviews and unboxing videos",
+          "His channel name is a play on the word 'marquee'",
+          "He often uses the phrase 'Ladies and gentlemen'"
+        ],
+        "answer": "MKBHD"
+      },
+      {
+        "hints": [
+          "This British YouTuber is famous for his gaming content, particularly Minecraft",
+          "He's known for his Minecraft building tutorials",
+          "His channel name is inspired by a popular British snack"
+        ],
+        "answer": "Grian"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for her lifestyle and beauty content",
+          "She has her own jewelry line called Aurate X Jess",
+          "She was one of the first big lifestyle influencers on YouTube"
+        ],
+        "answer": "Jess Conte"
+      },
+      {
+        "hints": [
+          "This British YouTuber is famous for his football content and challenges",
+          "He was part of the Sidemen group",
+          "He has a successful second channel called W2S"
+        ],
+        "answer": "Wroetoshaw"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for his gaming content, particularly Among Us",
+          "He often uses a cartoon onion as his avatar",
+          "His catchphrase is 'Stay hydrated'"
+        ],
+        "answer": "Corpse Husband"
+      },
+      {
+        "hints": [
+          "This American family vlogger documents life with her large family",
+          "She has 6 biological children and 4 adopted children",
+          "Her channel primarily focuses on large family living and adoption"
+        ],
+        "answer": "Jamerrill Stewart"
+      },
+      {
+        "hints": [
+          "This British YouTuber is famous for his music and comedy sketches",
+          "He has released several books, including 'The Amazing Book Is Not on Fire'",
+          "He often collaborates with Daniel Howell"
+        ],
+        "answer": "Phil Lester"
+      },
+      {
+        "hints": [
+          "This American YouTuber is known for his reaction videos and commentary",
+          "He often reviews memes and internet culture",
+          "His catchphrase is 'Hey sisters'"
+        ],
+        "answer": "Kurtis Conner"
+      },
+      {
+      "hints": [
+        "This American YouTuber is known for his great Minecraft gaming videos",
+        "He hasn't posted a Minecraft video in years",
+        "He loves Lindsay Jane Angelina Boyle'"
+      ],
+      "answer": "Fayaz"
+    }
+    ]
+  }

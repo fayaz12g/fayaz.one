@@ -1,0 +1,167 @@
+{
+    "id": "musical_instruments",
+    "name": "Musical Instruments",
+    "color": "yellow-500",
+    "cards": [
+      {
+        "hints": [
+          "This string instrument is often associated with country and bluegrass music",
+          "It has a long neck and a round body",
+          "It typically has 5 strings and is played with a pick"
+        ],
+        "answer": "Banjo"
+      },
+      {
+        "hints": [
+          "This wind instrument is made of brass and has three valves",
+          "It's often used in jazz and orchestral music",
+          "Miles Davis was a famous player of this instrument"
+        ],
+        "answer": "Trumpet"
+      },
+      {
+        "hints": [
+          "This percussion instrument consists of a set of wooden bars struck by mallets",
+          "It's similar to the marimba but typically smaller",
+          "Its name comes from the Greek word for 'wood sound'"
+        ],
+        "answer": "Xylophone"
+      },
+      {
+        "hints": [
+          "This string instrument is larger than a violin but smaller than a cello",
+          "It's often called the 'alto' of the string family",
+          "It's held between the shoulder and chin when played"
+        ],
+        "answer": "Viola"
+      },
+      {
+        "hints": [
+          "This wind instrument is made of wood and has a distinctive double reed",
+          "It has a conical bore and is fingered similarly to a flute",
+          "Its name means 'high wood' in Italian"
+        ],
+        "answer": "Oboe"
+      },
+      {
+        "hints": [
+          "This keyboard instrument uses pressurized air to produce sound",
+          "It's often found in churches and cathedrals",
+          "Johann Sebastian Bach was a master of this instrument"
+        ],
+        "answer": "Pipe Organ"
+      },
+      {
+        "hints": [
+          "This percussion instrument consists of a set of tuned metal bars",
+          "It's similar to the xylophone but has a softer, more mellow tone",
+          "Its name comes from the French word for 'voice'"
+        ],
+        "answer": "Vibraphone"
+      },
+      {
+        "hints": [
+          "This string instrument is larger than a guitar and has a distinctive figure-eight shape",
+          "It's often used in Hawaiian music",
+          "Its name means 'jumping flea' in Hawaiian"
+        ],
+        "answer": "Ukulele"
+      },
+      {
+        "hints": [
+          "This wind instrument is the highest-pitched member of the woodwind family",
+          "It's held horizontally when played",
+          "Its name comes from the Latin word for 'breath'"
+        ],
+        "answer": "Flute"
+      },
+      {
+        "hints": [
+          "This percussion instrument consists of a set of drums and cymbals",
+          "It's often used in rock and jazz music",
+          "The player typically sits on a stool or throne"
+        ],
+        "answer": "Drum Kit"
+      },
+      {
+        "hints": [
+          "This string instrument is shaped like a teardrop and has a long neck",
+          "It's commonly used in Indian classical music",
+          "It has sympathetic strings that resonate along with the main strings"
+        ],
+        "answer": "Sitar"
+      },
+      {
+        "hints": [
+          "This wind instrument has a single reed and a cylindrical bore",
+          "It's often used in classical and jazz music",
+          "Benny Goodman was a famous player of this instrument"
+        ],
+        "answer": "Clarinet"
+      },
+      {
+        "hints": [
+          "This percussion instrument is a metal disc suspended from its center",
+          "It's struck with a stick or mallet to produce a ringing sound",
+          "Its name comes from the Latin word for 'bell'"
+        ],
+        "answer": "Cymbal"
+      },
+      {
+        "hints": [
+          "This string instrument is the largest and lowest-pitched of the violin family",
+          "It's played upright, resting on the floor",
+          "Its name means 'big' in Italian"
+        ],
+        "answer": "Double Bass"
+      },
+      {
+        "hints": [
+          "This wind instrument is made of brass and has a distinctive slide",
+          "It's often used in orchestral and brass band music",
+          "Its name comes from the Italian word for 'large trumpet'"
+        ],
+        "answer": "Trombone"
+      },
+      {
+        "hints": [
+          "This percussion instrument consists of two small wooden cylinders joined by a string",
+          "It's often used in Latin American music",
+          "Its name is Spanish for 'little drum'"
+        ],
+        "answer": "Maracas"
+      },
+      {
+        "hints": [
+          "This string instrument is similar to a guitar but has a rounded back",
+          "It's often used in folk and classical music",
+          "Its name comes from the Italian word for 'lute'"
+        ],
+        "answer": "Mandolin"
+      },
+      {
+        "hints": [
+          "This wind instrument is the lowest-pitched member of the woodwind family",
+          "It has a distinctive curved metal neck",
+          "Its name comes from the French word for 'bundle of wood'"
+        ],
+        "answer": "Bassoon"
+      },
+      {
+        "hints": [
+          "This percussion instrument consists of a set of hanging metal tubes",
+          "It's often used in ambient and new age music",
+          "Its sound is produced by wind blowing through the tubes"
+        ],
+        "answer": "Wind Chimes"
+      },
+      {
+        "hints": [
+          "This keyboard instrument uses felt-covered hammers to strike strings",
+          "It was invented in Italy in the early 18th century",
+          "Its name means 'soft-loud' in Italian"
+        ],
+        "answer": "Piano"
+      }
+    ]
+  }
