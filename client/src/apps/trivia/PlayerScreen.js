@@ -204,7 +204,7 @@ const PlayerScreen = ({
         return (
         <div>
         <h1>Welcome, {playerName}!</h1>
-        <h2>Waiting for the host to start the game...</h2>;
+        <h2>Waiting for the host to start the game...</h2>
         </div>
       );
     };
