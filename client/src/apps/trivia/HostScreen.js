@@ -19,14 +19,26 @@ const HostScreen = ({
     currentQuestion: null,
     currentPlayer: null,
     color: null,
-    answer: null
+    answer: null,
+    logos: {}
   });
+  
   const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
-    socket.on('gameStartedTrivia', (categories) => {
-      setGameState(prevState => ({ ...prevState, phase: 'category-selection', categories }));
-    });
+    socket.on('gameStartedTrivia', (categories, logos) => {
+      const logosMap = logos.reduce((acc, logo) => {
+          acc[logo.name] = logo.imagePath;
+          return acc;
+      }, {});
+
+      setGameState(prevState => ({
+          ...prevState,
+          phase: 'category-selection',
+          categories: categories,
+          logos: logosMap
+      }));
+  });
 
     socket.on('newQuestionTrivia', (questionData) => {
       setGameState(prevState => ({ 
@@ -98,26 +110,35 @@ const HostScreen = ({
         );
       case 'question':
         return (
-          <div className='App' style={{ backgroundColor: gameState.color }}> 
-            <h2>Category: </h2>
-            <h3>{gameState.currentQuestion.deckName}</h3>
-            <h4>Hints:</h4>
-            <ul>
-              {gameState.currentQuestion.hints.map((hint, index) => (
-                <li key={index}>{hint}</li>
-              ))}
-            </ul>
-            {showOptions && (
-              <div>
-              <h4>Options:</h4>
-            <ul>
-              {gameState.currentQuestion.options.map((option, index) => (
-                <li key={index}>{option}</li>
-              ))}
-            </ul>
-            </div>
+          <div className='App' style={{ backgroundColor: gameState.color }}>
+            {gameState.currentQuestion && (
+                <>
+                    <img 
+                        src={gameState.logos[gameState.currentQuestion.deckName]} 
+                        alt={`${gameState.currentQuestion.deckName} logo`}
+                        style={{ maxWidth: '200px', maxHeight: '200px' }}
+                    />
+                    <h2>Category: </h2>
+                    <h3>{gameState.currentQuestion.deckName}</h3>
+                    <h4>Hints:</h4>
+                    <ul>
+                        {gameState.currentQuestion.hints.map((hint, index) => (
+                            <li key={index}>{hint}</li>
+                        ))}
+                    </ul>
+                    {showOptions && (
+                        <div>
+                            <h4>Options:</h4>
+                            <ul>
+                                {gameState.currentQuestion.options.map((option, index) => (
+                                    <li key={index}>{option}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </>
             )}
-          </div>
+        </div>
         );
       default:
         return null;

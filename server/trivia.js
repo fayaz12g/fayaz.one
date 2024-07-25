@@ -4,9 +4,9 @@ const path = require('path');
 let cardDecks = {};
 let packName = "default";
 
-function loadCardDecks() {
+function loadCardDecks( gameMode ) {
     try {
-        const packPath = path.join(__dirname, 'pack', packName);
+        const packPath = path.join(__dirname, 'pack', gameMode);
         const infoPath = path.join(packPath, 'info.json');
         const infoData = fs.readFileSync(infoPath, 'utf8');
         const info = JSON.parse(infoData);
@@ -81,7 +81,6 @@ function drawCard(color) {
 }
 
 function initializeTriviaGame(io, sessions) {
-    loadCardDecks();
 
     io.on('connection', (socket) => {
         console.log('New client connected');
@@ -97,6 +96,8 @@ function initializeTriviaGame(io, sessions) {
 
         socket.on('startGameTrivia', ({sessionId, gameMode}) => {
             console.log(`Starting game for session ${sessionId}`);
+            loadCardDecks(gameMode);
+
             if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
                 console.error(`Invalid session or no players for session ${sessionId}`);
                 return;
@@ -106,9 +107,10 @@ function initializeTriviaGame(io, sessions) {
             sessions[sessionId].gameMode = gameMode;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
             const categories = getAvailableCategories();
+            const logos = getAvailableLogos();
             
             console.log(`Emitting gameStartedTrivia to all players in session ${sessionId}`);
-            io.to(sessionId).emit('gameStartedTrivia', categories);
+            io.to(sessionId).emit('gameStartedTrivia', categories, logos);
             
             console.log(`Emitting nextPlayerTrivia to all players in session ${sessionId}`);
             io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
@@ -263,6 +265,15 @@ function getAvailableCategories() {
         }));
 }
 
+function getAvailableLogos() {
+    return Object.keys(cardDecks)
+        .filter(color => cardDecks[color].cards.length > 0)
+        .map(color => ({
+            color: color,
+            name: cardDecks[color].name,
+            imagePath: cardDecks[color].imagePath
+        }));
+}
 
 module.exports = {
     initializeTriviaGame

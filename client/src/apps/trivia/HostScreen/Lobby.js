@@ -12,13 +12,24 @@ const Lobby = ({
   setForceRemove,
 
 }) => {
+
+  setGameMode('default');
+  
   const handleRemovePlayer = (playerToRemove) => {
     setForceRemove(true);
     removePlayer(playerToRemove, true);
   };
 
   const toggleGameMode = () => {
-    setGameMode(gameMode === 'freeforall' ? 'classic' : 'freeforall');
+    setGameMode(prevMode => {
+      if (prevMode === 'default') {
+        return 'fun';
+      } else if (prevMode === 'fun') {
+        return 'personal';
+      } else {
+        return 'default';
+      }
+    });
   };
 
   const PlayerListItem = ({ player }) => {
@@ -72,7 +83,7 @@ const Lobby = ({
               Game Mode:
               <div className="button-wrapper">
                 <button onClick={toggleGameMode} className="game-mode-button">
-                  {gameMode === 'freeforall' ? 'Party' : 'Classic'}
+                  {gameMode}
                 </button>
               </div>
               <br />

@@ -38,12 +38,20 @@ const PlayerScreen = ({
   };
 
   useEffect(() => {
-    console.log('PlayerScreen mounted');
-
-    socket.on('gameStartedTrivia', (categories) => {
+    socket.on('gameStartedTrivia', (categories, logos) => {
       console.log('Game started event received', categories);
-      setGameState(prevState => ({ ...prevState, phase: 'game', categories }));
-    });
+      const logosMap = logos.reduce((acc, logo) => {
+          acc[logo.name] = logo.imagePath;
+          return acc;
+      }, {});
+
+      setGameState(prevState => ({
+          ...prevState,
+          phase: 'game',
+          categories: categories,
+          logos: logosMap
+      }));
+  });
 
     socket.on('yourTurnTrivia', (categories) => {
       console.log('Your turn event received', categories);
@@ -148,6 +156,11 @@ const PlayerScreen = ({
       case 'question':
         return (
           <div>
+            <img 
+              src={gameState.logos[gameState.currentQuestion.deckName]} 
+              alt={`${gameState.currentQuestion.deckName} logo`}
+              style={{ maxWidth: '200px', maxHeight: '200px' }}
+            />
           {/* <h2>Category:</h2> */}
           <h3>{gameState.currentQuestion.deckName}</h3>
           <h4>Hints:</h4>
