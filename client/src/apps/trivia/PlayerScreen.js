@@ -156,7 +156,7 @@ const PlayerScreen = ({
                 <img 
                   src={gameState.logos[category.name]} 
                   alt={`${category.name} logo`}
-                  style={{ maxWidth: '10px', maxHeight: '10px' }}
+                  style={{ maxWidth: '100px', maxHeight: '100px' }}
                 />
               </button>
             ))}
