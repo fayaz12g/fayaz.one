@@ -13,6 +13,7 @@ const PlayerScreen = ({
     phase: 'lobby',
     categories: [],
     currentQuestion: null,
+    currentPlayer: null,
     isMyTurn: false,
     color: null 
   });
@@ -100,6 +101,10 @@ const PlayerScreen = ({
       }
     })
 
+    socket.on('nextPlayerTrivia', (playerName) => {
+      setGameState(prevState => ({ ...prevState, currentPlayer: playerName }));
+    });
+
     socket.on('newHint', ({ hints }) => {
       console.log('New hint event received', hints);
       setGameState(prevState => ({
@@ -139,9 +144,9 @@ const PlayerScreen = ({
     console.log('Rendering game content, current state:', gameState);
     switch (gameState.phase) {
       case 'waiting':
-        return <h2>Waiting for your turn...</h2>;
+        return <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
       case 'game':
-        return <h2>Game has started. Waiting for your turn...</h2>;
+        return <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
       case 'category-selection':
         return (
           <div>
@@ -151,7 +156,7 @@ const PlayerScreen = ({
                 <img 
                   src={gameState.logos[category.name]} 
                   alt={`${category.name} logo`}
-                  style={{ maxWidth: '70px', maxHeight: '70px' }}
+                  style={{ maxWidth: '10px', maxHeight: '10px' }}
                 />
               </button>
             ))}

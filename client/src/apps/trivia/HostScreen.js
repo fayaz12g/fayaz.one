@@ -67,6 +67,7 @@ const HostScreen = ({
     socket.on('nextPlayerTrivia', (playerName) => {
       setGameState(prevState => ({ ...prevState, currentPlayer: playerName, phase: 'category-selection' }));
     });
+    
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setShowOptions(false);
