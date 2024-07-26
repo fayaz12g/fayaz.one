@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSpring, animated, config } from 'react-spring';
 import './Lobby.css';
+import AnimatedTitle from '../../AnimatedTitle';
 
 const Lobby = ({
   socket,
@@ -83,6 +84,7 @@ const Lobby = ({
 
   return (
     <animated.div style={lobbyAnimation} className="lobby-container">
+      <AnimatedTitle />
       <div className="app-container">
         <div className="App players-container">
           <h4>Players:</h4>

@@ -81,7 +81,7 @@ body::after {
   animation-duration: 10s, 150s;
   animation-timing-function: linear, ease-in-out;
   animation-iteration-count: infinite, infinite;
-  transition: background-image 0.9s ease;
+  transition: background-color 0.9s ease;
 }
 
 body.light::before,
@@ -141,12 +141,14 @@ body.dark::after {
 }
 
 body.light .App {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+  background-color: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+  background-color: rgba(255, 255, 255, 0.75); /* average of the gradient colors */
   color: #000000;
 }
 
 body.dark .App {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6));
+  background-color: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6));
+  background-color: rgba(0, 0, 0, 0.75); /* average of the gradient colors */
   color: #ffffff;
 }
 
@@ -181,6 +183,7 @@ body.light h4 {
      1px -1px 0 #000,
     -1px  1px 0 #000,
      1px  1px 0 #000;
+  transition: background-color 0.9s ease, color 0.9s ease;
 }
 
 body.dark h4 {
@@ -193,6 +196,7 @@ body.dark h4 {
      1px -1px 0 #000,
     -1px  1px 0 #000,
      1px  1px 0 #000;
+  transition: background-color 0.9s ease, color 0.9s ease;
 }
 
 body.light h1, body.light h2, body.light h3 {
@@ -380,12 +384,23 @@ body.dark {
 
 .host-screen {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  width: 100%;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
+  height: 100vh;
+}
+
+.content-container {
+  display: flex;
+  width: 100%; 
+}
+
+.game-content {
+  flex: 1;
+  margin-right: 20px; 
+}
+
+.leaderboard-content {
+  flex: 1;
 }
 
 .animated-title-container {

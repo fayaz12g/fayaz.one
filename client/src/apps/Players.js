@@ -30,6 +30,7 @@ const Players = ({
   guessingTheme,
   sentGuess,
   game,
+  setLeaderboard
 }) => {
   const [noName, setNoName] = useState(false);
 
@@ -142,6 +143,7 @@ const Players = ({
       guessingTheme={guessingTheme}
       sentGuess={sentGuess}
       game={game}
+      setLeaderboard={setLeaderboard}
     />
   );
 

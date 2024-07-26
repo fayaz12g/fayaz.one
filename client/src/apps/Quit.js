@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import './Quit.css'; 
 import '../App.css';
 
-const Quit = ({ playerName, forceRemove, removePlayer, setConfirmQuit, resetEverything }) => {
+const Quit = ({ playerName, forceRemove, removePlayer, setConfirmQuit, resetEverything, setGame}) => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   const handleQuit = () => {
     setConfirmQuit(false);
     removePlayer(playerName, forceRemove);
     resetEverything();
+    setGame(null);
+
   };
 
   return (

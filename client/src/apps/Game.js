@@ -47,7 +47,8 @@ const Game = ({
     setGame,
     theme,
     role,
-    guessesMade
+    guessesMade,
+    setLeaderboard,
     
 }) => {
   
@@ -83,6 +84,7 @@ const Game = ({
           setGame={setGame}
           theme={theme}
           guessesMade={guessesMade}
+          setLeaderboard={setLeaderboard}
         />
       );
   
@@ -114,6 +116,7 @@ const Game = ({
           guessingTheme={guessingTheme}
           sentGuess={sentGuess}
           game={game}
+          setLeaderboard={setLeaderboard}
         />
       );
 

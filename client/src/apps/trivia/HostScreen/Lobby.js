@@ -4,38 +4,31 @@ import AnimatedTitle from '../../AnimatedTitle';
 
 const Lobby = ({
   socket,
-  ipAddress,
-  sessionCreated,
-  createSession,
-  gameStarted,
   sessionId,
   players,
-  rounds,
-  setRounds,
-  currentRound,
-  sessionList,
-  leaderboard,
   removePlayer,
-  titleTheme,
-  AudioPlayer,
-  isEndScene,
-  speakingTheme,
-  guessingTheme,
   gameMode,
   setGameMode,
-  currentLine,
-  isEndGame,
-  scriptFile,
   setForceRemove,
-  forceRemove,
+
 }) => {
+
+
   const handleRemovePlayer = (playerToRemove) => {
     setForceRemove(true);
     removePlayer(playerToRemove, true);
   };
 
   const toggleGameMode = () => {
-    setGameMode(gameMode === 'freeforall' ? 'classic' : 'freeforall');
+    setGameMode(prevMode => {
+      if (prevMode === 'default') {
+        return 'fun';
+      } else if (prevMode === 'fun') {
+        return 'personal';
+      } else {
+        return 'default';
+      }
+    });
   };
 
   const PlayerListItem = ({ player }) => {
@@ -60,6 +53,10 @@ const Lobby = ({
 
   const handleStartGame = () => {
     if (socket) {
+      if (gameMode !== 'fun' && gameMode !== 'default' && gameMode !== 'personal') {
+        gameMode = 'default';
+      }
+      console.log('Starting game for Session', sessionId, 'in game mode', gameMode);
       socket.emit('startGameTrivia', { 
         sessionId, 
         gameMode,
@@ -74,9 +71,9 @@ const Lobby = ({
         <div className="App players-container">
           <h4>Players:</h4>
           <ul>
-            {Array.isArray(players) ? players.map((player) => (
+            {players.map((player) => (
               <PlayerListItem key={player.id} player={player} />
-            )) : null}
+            ))}
           </ul>
         </div>
         <div className="App settings">
@@ -88,7 +85,7 @@ const Lobby = ({
               Game Mode:
               <div className="button-wrapper">
                 <button onClick={toggleGameMode} className="game-mode-button">
-                  {gameMode === 'freeforall' ? 'Party' : 'Classic'}
+                  {gameMode}
                 </button>
               </div>
               <br />

@@ -4,97 +4,108 @@ import Lobby from './HostScreen/Lobby';
 
 const HostScreen = ({
   socket,
-  ipAddress,
-  sessionCreated,
-  createSession,
-  gameStarted,
   sessionId,
   players,
-  setPlayers,
-  rounds,
-  setRounds,
-  currentRound,
-  sessionList,
-  leaderboard,
   removePlayer,
-  titleTheme,
-  AudioPlayer,
-  isEndScene,
-  speakingTheme,
-  guessingTheme,
   gameMode,
   setGameMode,
-  currentLine,
-  isEndGame,
-  scriptFile,
   setForceRemove,
-  forceRemove,
+  setLeaderboard,
+  leaderboard,
 }) => {
   const [gameState, setGameState] = useState({
     phase: 'lobby',
     players: [],
     currentQuestion: null,
-    leaderboard: {}
+    currentPlayer: null,
+    color: null,
+    answer: null,
+    logos: {}
   });
+  
+  const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
-    socket.on('updatePlayers', (players) => {
-      setGameState(prevState => ({ ...prevState, players }));
-      setPlayers(players);
-      console.log("someone joined")
-    });
+    socket.on('gameStartedTrivia', (categories, logos) => {
+      const logosMap = logos.reduce((acc, logo) => {
+          acc[logo.name] = logo.imagePath;
+          return acc;
+      }, {});
 
-    socket.on('gameStartedTrivia', (categories) => {
-      setGameState(prevState => ({ ...prevState, phase: 'category-selection', categories }));
-    });
+      setGameState(prevState => ({
+          ...prevState,
+          phase: 'category-selection',
+          categories: categories,
+          logos: logosMap
+      }));
+  });
 
     socket.on('newQuestionTrivia', (questionData) => {
-      setGameState(prevState => ({ ...prevState, phase: 'question', currentQuestion: questionData }));
+      setGameState(prevState => ({ 
+        ...prevState, 
+        phase: 'question', 
+        currentQuestion: questionData,
+        color: questionData.color  
+      }));
     });
 
+    socket.on('newHint', ({ hints }) => {
+      console.log('New hint event received', hints);
+      setGameState(prevState => ({
+        ...prevState,
+        currentQuestion: { ...prevState.currentQuestion, hints }
+      }));
+    });
+    
     socket.on('updateLeaderboardTrivia', (leaderboard) => {
       setGameState(prevState => ({ ...prevState, leaderboard }));
     });
+    socket.on('makingGuessTrivia', (leaderboard) => {
+      setShowOptions(true);
+    });
+
+    socket.on('nextPlayerTrivia', (playerName) => {
+      setGameState(prevState => ({ ...prevState, currentPlayer: playerName, phase: 'category-selection' }));
+    });
+
+    socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
+      console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
+      setShowOptions(false);
+      setGameState(prevState => ({ ...prevState, answer: answer, color: 'white' }));
+    });
+    socket.on('updatePointsTrivia', ({ points }) => {
+      setLeaderboard(prevLeaderboard => ({
+          ...prevLeaderboard,
+          ...points
+      }));
+      console.log("Updating leaderboard to be", points);
+  });
+    socket.on('incorrectAnswerTrivia', ({ answeringPlayer, answer }) => {
+      console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
+      setShowOptions(false);
+      setGameState(prevState => ({ ...prevState, answer: answer, color: 'white' }));
+    });
 
     return () => {
-      socket.off('updatePlayers');
-      socket.off('gameStartedTrivia');
-      socket.off('newQuestionTrivia');
-      socket.off('updateLeaderboardTrivia');
     };
   }, [socket]);
 
+  const startGame = () => {
+    socket.emit('startGameTrivia', sessionId);
+  };
 
   const renderLobby = () => (
     <Lobby
       socket={socket}
-      ipAddress={ipAddress}
-      sessionCreated={sessionCreated}
-      createSession={createSession}
-      gameStarted={gameStarted}
       sessionId={sessionId}
       players={players}
-      rounds={rounds}
-      setRounds={setRounds}
-      currentRound={currentRound}
-      sessionList={sessionList}
-      leaderboard={leaderboard}
       removePlayer={removePlayer}
-      titleTheme={titleTheme}
-      AudioPlayer={AudioPlayer}
-      isEndScene={isEndScene}
-      speakingTheme={speakingTheme}
-      guessingTheme={guessingTheme}
       gameMode={gameMode}
       setGameMode={setGameMode}
-      currentLine={currentLine}
-      isEndGame={isEndGame}
-      scriptFile={scriptFile}
       setForceRemove={setForceRemove}
-      forceRemove={forceRemove}
+      startGame={startGame}
     />
   );
-
 
   const renderGameContent = () => {
     switch (gameState.phase) {
@@ -102,28 +113,42 @@ const HostScreen = ({
         return renderLobby();
       case 'category-selection':
         return (
-          <div>
-            <h2>Waiting for player to select a category...</h2>
+          <div className='App'>
+            {gameState.answer && <b>The answer was {gameState.answer}</b>}
+            <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
           </div>
         );
       case 'question':
         return (
-          <div>
-            <h2>Current Question</h2>
-            <h3>Category: {gameState.currentQuestion.deckName}</h3>
-            <h4>Hints:</h4>
-            <ul>
-              {gameState.currentQuestion.hints.map((hint, index) => (
-                <li key={index}>{hint}</li>
-              ))}
-            </ul>
-            <h4>Options:</h4>
-            <ul>
-              {gameState.currentQuestion.options.map((option, index) => (
-                <li key={index}>{option}</li>
-              ))}
-            </ul>
-          </div>
+          <div className='App' style={{ backgroundColor: gameState.color }}>
+            {gameState.currentQuestion && (
+                <>
+                    <img 
+                        src={gameState.logos[gameState.currentQuestion.deckName]} 
+                        alt={`${gameState.currentQuestion.deckName} logo`}
+                        style={{ maxWidth: '200px', maxHeight: '200px' }}
+                    />
+                    <br/>
+                    <i>{gameState.currentQuestion.deckName}</i>
+                    <h4>Hints:</h4>
+                    <ul>
+                        {gameState.currentQuestion.hints.map((hint, index) => (
+                            <li key={index}>{hint}</li>
+                        ))}
+                    </ul>
+                    {showOptions && (
+                        <div>
+                            <h4>Options:</h4>
+                            <ul>
+                                {gameState.currentQuestion.options.map((option, index) => (
+                                    <li key={index}>{option}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
         );
       default:
         return null;
@@ -131,10 +156,18 @@ const HostScreen = ({
   };
 
   return (
-    <div className="host-screen">
+<div className="host-screen">
+  <div className="content-container">
+    <div className="game-content">
       {renderGameContent()}
-      <Leaderboard leaderboard={leaderboard} players={players} />
     </div>
+    {(gameState.phase !== 'lobby') && (
+      <div className="leaderboard-content">
+        <Leaderboard leaderboard={leaderboard} players={players} />
+      </div>
+    )}
+  </div>
+</div>
   );
 };
 

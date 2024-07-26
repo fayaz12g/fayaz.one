@@ -1,0 +1,247 @@
+{
+    "id": "ncstate",
+    "name": "NC State Trivia",
+    "color": "pink",
+    "cards": [
+      {
+        "hints": [
+          "This is NC State's official mascot",
+          "It's a wolf that wears a Wolfpack jersey",
+          "Its name starts with 'Mr.'"
+        ],
+        "answer": "Mr. Wuf"
+      },
+      {
+        "hints": [
+          "This is NC State's primary color",
+          "It's often paired with white",
+          "It's a bright, vibrant shade"
+        ],
+        "answer": "Wolfpack Red"
+      },
+      {
+        "hints": [
+          "This iconic bell tower was completed in 1937",
+          "It stands 115 feet tall",
+          "It's named after the university's first president"
+        ],
+        "answer": "Memorial Bell Tower"
+      },
+      {
+        "hints": [
+          "This famous basketball coach led NC State to two NCAA championships",
+          "He coached the Wolfpack from 1980 to 1990",
+          "He's known for his animated sideline behavior"
+        ],
+        "answer": "Jim Valvano"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's student newspaper",
+          "It's been in publication since 1920",
+          "Its name refers to a device used by engineers"
+        ],
+        "answer": "Technician"
+      },
+      {
+        "hints": [
+          "This building houses NC State's main library",
+          "It's named after a former governor of North Carolina",
+          "It's often called the 'bookstack tower'"
+        ],
+        "answer": "D.H. Hill Library"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's football stadium",
+          "It opened in 1966",
+          "It's named after a former football coach and athletic director"
+        ],
+        "answer": "Carter-Finley Stadium"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's basketball arena",
+          "It opened in 1999",
+          "It's named after two NC State alumni who were major donors"
+        ],
+        "answer": "PNC Arena"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's main campus",
+          "It's located in Raleigh",
+          "Its name refers to its location within the city"
+        ],
+        "answer": "Main Campus"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's centennial campus",
+          "It's a research park and mixed-use campus",
+          "It was established in 1984"
+        ],
+        "answer": "Centennial Campus"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's chancellor",
+          "He became chancellor in 2019",
+          "His first name is Randy"
+        ],
+        "answer": "Randy Woodson"
+      },
+      {
+        "hints": [
+          "This is the year NC State was founded",
+          "It was established as a land-grant college",
+          "It's in the late 19th century"
+        ],
+        "answer": "1887"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's yearbook",
+          "It's been published since 1903",
+          "Its name is Latin for 'pine twig'"
+        ],
+        "answer": "Agromeck"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's student-run radio station",
+          "It's been broadcasting since 1944",
+          "Its call letters are WKNC"
+        ],
+        "answer": "WKNC 88.1 FM"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's fight song",
+          "It was written in 1926",
+          "Its first line is 'Shout aloud to the men who will play the game to win'"
+        ],
+        "answer": "Red and White Song"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's alma mater",
+          "It was written in 1925",
+          "Its opening line is 'Where the winds of Dixie softly blow'"
+        ],
+        "answer": "NC State Alma Mater"
+      },
+      {
+        "hints": [
+          "This famous basketball player led NC State to its first NCAA championship in 1974",
+          "He was nicknamed 'The Skywalker'",
+          "He later played for the Denver Nuggets in the NBA"
+        ],
+        "answer": "David Thompson"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's largest dining hall",
+          "It's located on East Campus",
+          "It's known for its all-you-can-eat buffet"
+        ],
+        "answer": "Fountain Dining Hall"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's student union",
+          "It's located in the heart of campus",
+          "It's named after a former chancellor"
+        ],
+        "answer": "Talley Student Union"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's mascot before Mr. Wuf",
+          "It was a real wolf",
+          "It was used from 1921 to 1958"
+        ],
+        "answer": "Lobo"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's oldest building",
+          "It was built in 1889",
+          "It's named after the university's first president"
+        ],
+        "answer": "Holladay Hall"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's engineering program",
+          "It's one of the largest engineering schools in the country",
+          "It's named after a former governor of North Carolina"
+        ],
+        "answer": "College of Engineering"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's veterinary school",
+          "It's consistently ranked as one of the top vet schools in the country",
+          "It was established in 1979"
+        ],
+        "answer": "College of Veterinary Medicine"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's iconic statue",
+          "It's located near the Free Expression Tunnel",
+          "It depicts the university's mascot"
+        ],
+        "answer": "Wolfpack Statue"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's underpass covered in graffiti",
+          "It's a popular spot for student expression",
+          "Its name reflects its purpose"
+        ],
+        "answer": "Free Expression Tunnel"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's textile school",
+          "It's the only college in the U.S. devoted to textiles",
+          "It was established in 1899"
+        ],
+        "answer": "Wilson College of Textiles"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's design school",
+          "It offers programs in architecture, graphic design, and more",
+          "It's named after a former dean"
+        ],
+        "answer": "College of Design"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's science museum",
+          "It's located on Centennial Campus",
+          "Its name means 'to know' in Latin"
+        ],
+        "answer": "Nature Research Center"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's arboretum",
+          "It covers 10 acres in the heart of campus",
+          "It's named after a former professor of horticulture"
+        ],
+        "answer": "J.C. Raulston Arboretum"
+      },
+      {
+        "hints": [
+          "This is the name of NC State's nuclear reactor",
+          "It was the first nuclear reactor to be licensed and operated by a university",
+          "It's used for research and teaching"
+        ],
+        "answer": "PULSTAR Reactor"
+      }
+    ]
+  }

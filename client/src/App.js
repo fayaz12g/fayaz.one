@@ -11,6 +11,7 @@ import titleTheme from './sound/improvimania/theme.m4a';
 import speakingTheme from './sound/improvimania/speaking.m4a';
 import guessingTheme from './sound/improvimania/guessing.m4a';
 import finishTheme from './sound/improvimania/finish.m4a';
+import guessingTitle from './sound/guessing/guesstitle.m4a';
 
 // Menu Imports
 import AudioPlayer from './apps/AudioPlayer';
@@ -21,6 +22,15 @@ import AnimatedTitle from './apps/AnimatedTitle';
 // Import the new ImprovGame module
 import ImprovGame from './apps/improvimania/Improv';
 
+const getInitialTheme = () => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    }
+    return 'light'; // Default to light theme
+  };
+  
 function App() {
     const [ipAddress, setIpAddress] = useState(sessionStorage.getItem('ipAddress'));
     const [serverIP, setServerIP] = useState('');
@@ -46,7 +56,7 @@ function App() {
     const [connectionError, setConnectionError] = useState(false); 
     const [connectionWaiting, setConnectionWaiting] = useState(false);
     const [kicked, setKicked] = useState(false);
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(getInitialTheme);
     const [forceRemove, setForceRemove] = useState(false);
     const [confirmQuit, setConfirmQuit] = useState(false);
     const [game, setGame] = useState(sessionStorage.getItem('game'));
@@ -126,6 +136,7 @@ function App() {
             });
             socket.on('updatePlayers', ({ players }) => {
                 setPlayers(players);
+                console.log(`Players updated!`)
             });
             socket.on('playerRemoved', ({ removedPlayer, kickPlayer }) => {
                 console.log(`Player ${removedPlayer} was removed. Kicked: ${kickPlayer}`);
@@ -156,16 +167,22 @@ function App() {
     }, [socket, players, role, leaderboard, theme]);
 
     const toggleTheme = () => {
-      setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-      const titleBar = document.querySelector('.title-bar');
-      if (theme === 'light') {
-        titleBar.classList.remove('dark');
-        titleBar.classList.add('light');
-      } else if (theme === 'dark') {
-        titleBar.classList.remove('light');
-        titleBar.classList.add('dark');
-      }
-  };
+        setTheme(prevTheme => {
+          const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+          
+          // Update body class
+          document.body.className = newTheme;
+          
+          // Update title bar if it exists
+          const titleBar = document.querySelector('.title-bar');
+          if (titleBar) {
+            titleBar.classList.remove('light', 'dark');
+            titleBar.classList.add(newTheme);
+          }
+          
+          return newTheme;
+        });
+      };
 
     const resetEverything = () => {
         // Reset everything to default
@@ -352,15 +369,17 @@ function App() {
         theme={theme}
         role={role}
         guessesMade={guessesMade}
+        setLeaderboard={setLeaderboard}
       />
     );
 
   return (
     <div>
     {/* Audio components */}
-    <AudioPlayer audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={isEndScene}/>
-    <AudioPlayer audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={gameStarted && !isEndScene}/>
-    <AudioPlayer audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={!gameStarted} />
+    <AudioPlayer audioSrc={guessingTheme} loopStart={0} loopEnd={16} isPlaying={ game === 'improv' && isEndScene}/>
+    <AudioPlayer audioSrc={speakingTheme} loopStart={0} loopEnd={12} isPlaying={ game === 'improv' && gameStarted && !isEndScene}/>
+    <AudioPlayer audioSrc={titleTheme} loopStart={24} loopEnd={71.9} isPlaying={(game === 'improv' || game === null) && !gameStarted} />
+    <AudioPlayer audioSrc={guessingTitle} loopStart={13} loopEnd={48} isPlaying={(game === 'guessing' || game === 'trivia') && !gameStarted}  />
     <AudioPlayer audioSrc={finishTheme} loop={false} isPlaying={isEndGame} />
     
 
@@ -415,6 +434,7 @@ function App() {
                     removePlayer={removePlayer} 
                     resetEverything={resetEverything}
                     setConfirmQuit={setConfirmQuit}
+                    setGame={setGame}
                 />
             )}
           <div className="version-text smalltext">
