@@ -58,13 +58,13 @@ body {
 }
 
 body.light {
-  background: linear-gradient(90deg, #FFA500, #FFC0CB, #F08080);
+  background: linear-gradient(270deg, #ffefa8, #ff7891, #84ff99);
   background-size: 400% 400%;
   animation: backgroundShiftLight 120s ease infinite;
 }
 
 body.dark {
-  background: linear-gradient(270deg, #8B4500, #8B3A62, #8B0000);
+  background: linear-gradient(270deg, #00afdb, #ff7139, #8b0068);
   background-size: 400% 400%;
   animation: backgroundShiftDark 120s ease infinite;
 }
@@ -137,18 +137,32 @@ body.dark::after {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1;
-  transition: background-color 0.9s ease, color 0.9s ease;
+  transition: background-position 0.9s ease, color 0.9s ease;
+  background: linear-gradient(to top, 
+    rgba(0, 0, 0, 0.9) 0%, 
+    rgba(0, 0, 0, 0.6) 50%, 
+    rgba(255, 255, 255, 0.6) 50%, 
+    rgba(255, 255, 255, 0.9) 100%);
+  background-size: 100% 200%; /* Ensure the gradient covers twice the height */
+  background-position: 0% 0%; /* Default position for dark mode */
+  overflow: hidden; /* To prevent any unwanted overflow */
 }
 
-body.light .App {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+/* Light Mode */
+body.dark .App {
+  background-position: 0% 100%; /* Show the light gradient from 50% to 100% */
   color: #000000;
 }
 
-body.dark .App {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6));
+/* Dark Mode */
+body.light .App {
+  background-position: 0% 0%; /* Show the dark gradient from 0% to 50% */
   color: #ffffff;
 }
+
+
+
+
 
 .App div {
   color: inherit;
@@ -359,11 +373,6 @@ body.dark {
   color: var(--toggle-color);
   transition: color 0.9s ease;
   text-align: center;
-}
-
-.scale-200 {
-  transform: scale(2);
-  transform-origin: 0 0;
 }
 
 .animated-title-container {
