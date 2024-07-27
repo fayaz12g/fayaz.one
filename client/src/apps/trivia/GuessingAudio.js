@@ -20,7 +20,7 @@ const GuessingAudio = ({ color }) => {
     };
 
     const setupNewAudio = async () => {
-      const newAudio = green;
+      const newAudio = await loadAudio(color);
       if (currentAudio) {
         setNextAudio(newAudio);
       } else {
