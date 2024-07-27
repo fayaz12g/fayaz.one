@@ -121,7 +121,7 @@ function initializeTriviaGame(io, sessions) {
             console.log("Sent", categories, "as categories.")
         });
 
-        socket.on('startGameTrivia', ({sessionId, selectedCategories}) => {
+        socket.on('startGameTrivia', ({sessionId, selectedCategories, allowStealing}) => {
             console.log(`Starting game for session ${sessionId}`);
 
             if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
@@ -138,12 +138,13 @@ function initializeTriviaGame(io, sessions) {
                 }, {});
 
             sessions[sessionId].currentPlayerIndex = 0;
+            sessions[sessionId].allowStealing = allowStealing;
             sessions[sessionId].cardDecks = filteredCardDecks;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
             const categories = getAvailableCategories(filteredCardDecks);
             const logos = getAvailableLogos(filteredCardDecks);
             
-            io.to(sessionId).emit('gameStartedTrivia', categories, logos);
+            io.to(sessionId).emit('gameStartedTrivia', categories, logos, allowStealing);
             io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
             io.to(currentPlayer.socketId).emit('yourTurnTrivia', categories);
             
@@ -202,7 +203,7 @@ function initializeTriviaGame(io, sessions) {
                     hintNumber: sessions[sessionId].currentHintIndex + 1
                 });
                 
-                if (sessions[sessionId].currentHintIndex === 2) {
+                if ((sessions[sessionId].currentHintIndex === 2) && sessions[sessionId].allowStealing) {
                     io.to(sessionId).emit('allPlayersCanAnswer');
                 }
             }

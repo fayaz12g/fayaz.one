@@ -116,7 +116,7 @@ const Lobby = ({
             disabled={players.length < 2 || selectedCategories.length === 0}
             className="start-game"
         >
-            {players.length > 1 && selectedCategories.length > 0 ? "Start Game" : "Waiting for more players and category selection..."}
+            {players.length > 1 && selectedCategories.length > 0 ? "Start Game" : "Waiting for more players or category selection..."}
         </button>
     </div>
 );

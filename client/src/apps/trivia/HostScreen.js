@@ -21,13 +21,14 @@ const HostScreen = ({
     color: null,
     answer: null,
     categories: [],
-    logos: {}
+    logos: {},
+    allowStealing: false
   });
   
   const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
-    socket.on('gameStartedTrivia', (categories, logos) => {
+    socket.on('gameStartedTrivia', (categories, logos, allowStealing) => {
       const logosMap = logos.reduce((acc, logo) => {
           acc[logo.name] = logo.imagePath;
           return acc;
@@ -37,7 +38,8 @@ const HostScreen = ({
           ...prevState,
           phase: 'category-selection',
           categories: categories,
-          logos: logosMap
+          logos: logosMap,
+          allowStealing: allowStealing
       }));
   });
 
@@ -156,9 +158,8 @@ const HostScreen = ({
   };
 
   return (
-<div className="host-screen">
-  <div className="content-container">
-    <div className="game-content">
+<div>
+    <div>
       {renderGameContent()}
     </div>
     {(gameState.phase !== 'lobby') && (
@@ -166,7 +167,6 @@ const HostScreen = ({
         <Leaderboard leaderboard={leaderboard} players={players} />
       </div>
     )}
-  </div>
 </div>
   );
 };

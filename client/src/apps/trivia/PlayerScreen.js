@@ -15,7 +15,8 @@ const PlayerScreen = ({
     currentQuestion: null,
     currentPlayer: null,
     isMyTurn: false,
-    color: null 
+    color: null,
+    allowStealing: false
   });
   const [showOptions, setShowOptions] = useState(false);
   const [steal, setSteal] = useState(false);
@@ -39,7 +40,7 @@ const PlayerScreen = ({
   };
 
   useEffect(() => {
-    socket.on('gameStartedTrivia', (categories, logos) => {
+    socket.on('gameStartedTrivia', (categories, logos, allowStealing) => {
       console.log('Game started event received', categories);
       const logosMap = logos.reduce((acc, logo) => {
           acc[logo.name] = logo.imagePath;
@@ -50,7 +51,8 @@ const PlayerScreen = ({
           ...prevState,
           phase: 'game',
           categories: categories,
-          logos: logosMap
+          logos: logosMap,
+          allowStealing: allowStealing
       }));
   });
 
@@ -194,11 +196,11 @@ const PlayerScreen = ({
           {!showOptions && gameState.isMyTurn && (
             <button onClick={handleMakeGuessClick}>Make a Guess</button>
           )}
-          {canSteal && <h4>This is your chance to steal!</h4>}
-          {canSteal && !steal && gameState.isMyTurn && (
+          {canSteal && gameState.allowStealing && <h4>This is your chance to steal!</h4>}
+          {canSteal && gameState.allowStealing && !steal && gameState.isMyTurn && (
             <button onClick={handleStealClick}>STEAL</button>
           )}
-          {canSteal && !steal && gameState.isMyTurn && (
+          {canSteal && gameState.allowStealing && !steal && gameState.isMyTurn && (
             <button onClick={handlePassClick}>PASS</button>
           )}
           {showOptions && (
