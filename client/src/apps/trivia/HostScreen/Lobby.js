@@ -91,8 +91,8 @@ const Lobby = ({
                                                 <label style={{ color: category.color }}>
                                                     <input
                                                         type="checkbox"
-                                                        checked={selectedCategories.includes(category.color)}
-                                                        onChange={() => handleCategoryToggle(category.color)}
+                                                        checked={selectedCategories.includes(category.id)}
+                                                        onChange={() => handleCategoryToggle(category.id)}
                                                     />
                                                     {category.name}
                                                 </label>

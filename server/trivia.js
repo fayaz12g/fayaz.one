@@ -121,33 +121,33 @@ function initializeTriviaGame(io, sessions) {
             console.log("Sent", categories, "as categories.")
         });
 
-        socket.on('startGameTrivia', ({sessionId, selectedCategories, allowStealing}) => {
+        socket.on('startGameTrivia', ({ sessionId, selectedCategories, allowStealing }) => {
             console.log(`Starting game for session ${sessionId}`);
-
+        
             if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
                 console.error(`Invalid session or no players for session ${sessionId}`);
                 return;
             }
-
+        
             // Filter cardDecks based on selectedCategories
             const filteredCardDecks = Object.keys(cardDecks)
-                .filter(key => selectedCategories.includes(key))
+                .filter(key => selectedCategories.includes(cardDecks[key].id))
                 .reduce((obj, key) => {
                     obj[key] = cardDecks[key];
                     return obj;
                 }, {});
-
+        
             sessions[sessionId].currentPlayerIndex = 0;
             sessions[sessionId].allowStealing = allowStealing;
             sessions[sessionId].cardDecks = filteredCardDecks;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
             const categories = getAvailableCategories(filteredCardDecks);
             const logos = getAvailableLogos(filteredCardDecks);
-            
+        
             io.to(sessionId).emit('gameStartedTrivia', categories, logos, allowStealing);
             io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
             io.to(currentPlayer.socketId).emit('yourTurnTrivia', categories);
-            
+        
             console.log(`It is ${currentPlayer.name}'s turn.`);
         });
 
@@ -184,7 +184,8 @@ function initializeTriviaGame(io, sessions) {
                     hints: [currentCard.hints[0]],
                     options: options,
                     deckName: currentCard.deckName,
-                    color: extractedColor
+                    color: extractedColor,
+                    key: category
                 });
             }
         });
