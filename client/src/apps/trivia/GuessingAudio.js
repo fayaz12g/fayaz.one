@@ -10,7 +10,7 @@ const GuessingAudio = ({ color }) => {
   useEffect(() => {
     const loadAudio = async (audioColor) => {
       const colorToLoad = validColors.includes(audioColor) ? audioColor : 'green';
-    
+
       try {
         const audioPath = `/sound/guessing/${colorToLoad}.m4a`;
         const audio = new Audio(audioPath);
@@ -58,58 +58,62 @@ const GuessingAudio = ({ color }) => {
 
   useEffect(() => {
     if (nextAudio && currentAudio) {
-      const fadeOutDuration = 3000; // 3 seconds
-      const fadeInDuration = 3000; // 3 seconds
+      const fadeDuration = 1000; // 1 second
       const fadeInterval = 50; // Update every 50ms
+      const maxDuration = 44000; // 44 seconds in milliseconds
 
       let fadeOutTimer;
       let fadeInTimer;
 
-      const startTime = currentAudio.currentTime;
-      nextAudio.currentTime = startTime;
-      nextAudio.loop = true;
-      nextAudio.volume = 0;
-      nextAudio.play();
-
       const fadeOut = () => {
-        const elapsedTime = Date.now() - fadeOutStartTime;
-        const newVolume = Math.max(0, 1 - elapsedTime / fadeOutDuration);
-        
-        if (currentAudioRef.current) {
-          currentAudioRef.current.volume = newVolume;
-        }
+        const startTime = Date.now();
+        const fadeOutStep = () => {
+          const elapsedTime = Date.now() - startTime;
+          const newVolume = Math.max(0, 1 - elapsedTime / fadeDuration);
 
-        if (elapsedTime < fadeOutDuration) {
-          fadeOutTimer = setTimeout(fadeOut, fadeInterval);
-        } else {
           if (currentAudioRef.current) {
-            currentAudioRef.current.pause();
-            currentAudioRef.current.src = '';
+            currentAudioRef.current.volume = newVolume;
           }
-          setCurrentAudio(null);
-        }
+
+          if (elapsedTime < fadeDuration) {
+            fadeOutTimer = setTimeout(fadeOutStep, fadeInterval);
+          } else {
+            if (currentAudioRef.current) {
+              currentAudioRef.current.pause();
+              currentAudioRef.current.src = '';
+            }
+            setCurrentAudio(null);
+          }
+        };
+        fadeOutStep();
       };
 
       const fadeIn = () => {
-        const elapsedTime = Date.now() - fadeInStartTime;
-        const newVolume = Math.min(1, elapsedTime / fadeInDuration);
-        
-        if (nextAudioRef.current) {
-          nextAudioRef.current.volume = newVolume;
-        }
+        const startTime = Date.now();
+        nextAudio.currentTime = (currentAudioRef.current ? currentAudioRef.current.currentTime : 0) % maxDuration;
+        nextAudio.volume = 0;
+        nextAudio.play();
 
-        if (elapsedTime < fadeInDuration) {
-          fadeInTimer = setTimeout(fadeIn, fadeInterval);
-        } else {
-          setCurrentAudio(nextAudio);
-          setNextAudio(null);
-        }
+        const fadeInStep = () => {
+          const elapsedTime = Date.now() - startTime;
+          const newVolume = Math.min(1, elapsedTime / fadeDuration);
+
+          if (nextAudioRef.current) {
+            nextAudioRef.current.volume = newVolume;
+          }
+
+          if (elapsedTime < fadeDuration) {
+            fadeInTimer = setTimeout(fadeInStep, fadeInterval);
+          } else {
+            setCurrentAudio(nextAudio);
+            setNextAudio(null);
+          }
+        };
+        fadeInStep();
       };
 
-      const fadeOutStartTime = Date.now();
-      const fadeInStartTime = Date.now();
       fadeOut();
-      fadeIn();
+      setTimeout(fadeIn, fadeDuration); // Start fade-in after fade-out has started
 
       return () => {
         clearTimeout(fadeOutTimer);
@@ -117,6 +121,21 @@ const GuessingAudio = ({ color }) => {
       };
     }
   }, [nextAudio]);
+
+  useEffect(() => {
+    const updateAudioLoop = (audio) => {
+      if (audio) {
+        audio.addEventListener('timeupdate', () => {
+          if (audio.currentTime >= 44) {
+            audio.currentTime = 0;
+          }
+        });
+      }
+    };
+
+    updateAudioLoop(currentAudio);
+    updateAudioLoop(nextAudio);
+  }, [currentAudio, nextAudio]);
 
   return null; // This component doesn't render anything visible
 };
