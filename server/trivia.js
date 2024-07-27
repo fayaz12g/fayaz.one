@@ -4,6 +4,8 @@ const path = require('path');
 let cardDecks = {};
 let packName = "default";
 
+let filteredCardDecks = {};
+
 function loadCardDecks() {
     const packPath = path.join(__dirname, 'pack');
     cardDecks = {}; // Reset cardDecks
@@ -129,8 +131,7 @@ function initializeTriviaGame(io, sessions) {
                 return;
             }
         
-            // Filter cardDecks based on selectedCategories
-            const filteredCardDecks = Object.keys(cardDecks)
+            filteredCardDecks = Object.keys(cardDecks)
                 .filter(key => selectedCategories.includes(cardDecks[key].id))
                 .reduce((obj, key) => {
                     obj[key] = cardDecks[key];
@@ -160,11 +161,15 @@ function initializeTriviaGame(io, sessions) {
                 sessions[sessionId].passers = 0;
             }
             sessions[sessionId].passers++;
-    
+            console.log(`${socket.id} has passed the trivia.`)
             if (sessions[sessionId].passers === sessions[sessionId].players.length - 1) {
+                console.log("Everyone has passed.")
                 io.to(sessionId).emit('broPassedTrivia');
                 moveToNextPlayer(io, sessionId, sessions);
                 sessions[sessionId].passers = 0;
+            }
+            else {
+                console.log(`${sessions[sessionId].passers} peoople have passed. ${sessions[sessionId].players.length - 1} people need to pass. That means we need ${(sessions[sessionId].players.length - 1) - sessions[sessionId].passers} more.`)
             }
         });
 
@@ -245,7 +250,7 @@ function initializeTriviaGame(io, sessions) {
                     moveToNextPlayer(io, sessionId, sessions);
                 } else {
                     io.to(sessionId).emit('incorrectAnswerTrivia', { answeringPlayer: player.name, answer: currentCard.answer });
-                    if ((currentHintIndex === 2) || steal) {
+                    if ((currentHintIndex === 2) || steal || !sessions[sessionId].allowStealing) {
                         moveToNextPlayer(io, sessionId, sessions);
                     }
                     if (steal) {
