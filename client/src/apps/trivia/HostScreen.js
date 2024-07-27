@@ -20,6 +20,7 @@ const HostScreen = ({
     currentPlayer: null,
     color: null,
     answer: null,
+    categories: [],
     logos: {}
   });
   
@@ -68,6 +69,10 @@ const HostScreen = ({
       setGameState(prevState => ({ ...prevState, currentPlayer: playerName, phase: 'category-selection' }));
     });
 
+    socket.on('updateCategories', (categories) => {
+      setGameState(prevState => ({ ...prevState, categories: categories }));
+    });
+
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setShowOptions(false);
@@ -90,20 +95,14 @@ const HostScreen = ({
     };
   }, [socket]);
 
-  const startGame = () => {
-    socket.emit('startGameTrivia', sessionId);
-  };
-
   const renderLobby = () => (
     <Lobby
       socket={socket}
       sessionId={sessionId}
       players={players}
       removePlayer={removePlayer}
-      gameMode={gameMode}
-      setGameMode={setGameMode}
       setForceRemove={setForceRemove}
-      startGame={startGame}
+      categories={gameState.categories}
     />
   );
 

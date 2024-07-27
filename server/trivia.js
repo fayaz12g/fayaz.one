@@ -4,36 +4,51 @@ const path = require('path');
 let cardDecks = {};
 let packName = "default";
 
-function loadCardDecks( gameMode ) {
-    try {
-        const packPath = path.join(__dirname, 'pack', gameMode);
-        const infoPath = path.join(packPath, 'info.json');
-        const infoData = fs.readFileSync(infoPath, 'utf8');
-        const info = JSON.parse(infoData);
+function loadCardDecks() {
+    const packPath = path.join(__dirname, 'pack');
+    const cardDecks = {};
 
-        info.cards.forEach(colorInfo => {
-            const color = Object.keys(colorInfo)[0];
-            const deckInfo = colorInfo[color];
+    function loadDecksRecursively(dir) {
+        const items = fs.readdirSync(dir, { withFileTypes: true });
 
-            const cardsPath = path.join(packPath, 'deck', `${deckInfo.id}.json`);
-            const cardsData = fs.readFileSync(cardsPath, 'utf8');
-            const cardsJson = JSON.parse(cardsData);
+        for (const item of items) {
+            const fullPath = path.join(dir, item.name);
 
-            const imagePath = path.join(packPath, 'image', `${deckInfo.id}.png`);
+            if (item.isDirectory()) {
+                loadDecksRecursively(fullPath);
+            } else if (item.name === 'info.json') {
+                try {
+                    const infoData = fs.readFileSync(fullPath, 'utf8');
+                    const info = JSON.parse(infoData);
 
-            cardDecks[color] = {
-                id: deckInfo.id,
-                name: deckInfo.name,
-                cards: cardsJson.cards,
-                imagePath: imagePath
-            };
-        });
+                    info.cards.forEach(colorInfo => {
+                        const color = Object.keys(colorInfo)[0];
+                        const deckInfo = colorInfo[color];
 
-        console.log('Card decks loaded successfully');
-    } catch (err) {
-        console.error('Error loading card decks:', err);
-        cardDecks = {};
+                        const cardsPath = path.join(dir, 'deck', `${deckInfo.id}.json`);
+                        const cardsData = fs.readFileSync(cardsPath, 'utf8');
+                        const cardsJson = JSON.parse(cardsData);
+
+                        const imagePath = path.join(dir, 'image', `${deckInfo.id}.png`);
+
+                        cardDecks[`${dir}_${color}`] = {
+                            id: deckInfo.id,
+                            name: deckInfo.name,
+                            cards: cardsJson.cards,
+                            imagePath: imagePath,
+                            packPath: dir
+                        };
+                    });
+                } catch (err) {
+                    console.error(`Error loading card deck from ${fullPath}:`, err);
+                }
+            }
+        }
     }
+
+    loadDecksRecursively(packPath);
+    console.log('Card decks loaded successfully');
+    return cardDecks;
 }
 
 function generateOptions(correctAnswer, color) {
@@ -94,28 +109,30 @@ function initializeTriviaGame(io, sessions) {
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
         });
 
-        socket.on('startGameTrivia', ({sessionId, gameMode}) => {
+        socket.on('startGameTrivia', ({sessionId, selectedCategories}) => {
             console.log(`Starting game for session ${sessionId}`);
-            loadCardDecks(gameMode);
 
             if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
                 console.error(`Invalid session or no players for session ${sessionId}`);
                 return;
             }
 
+            // Filter cardDecks based on selectedCategories
+            const filteredCardDecks = Object.keys(cardDecks)
+                .filter(key => selectedCategories.includes(key))
+                .reduce((obj, key) => {
+                    obj[key] = cardDecks[key];
+                    return obj;
+                }, {});
+
             sessions[sessionId].currentPlayerIndex = 0;
-            sessions[sessionId].gameMode = gameMode;
+            sessions[sessionId].cardDecks = filteredCardDecks;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
-            const categories = getAvailableCategories();
-            const logos = getAvailableLogos();
+            const categories = getAvailableCategories(filteredCardDecks);
+            const logos = getAvailableLogos(filteredCardDecks);
             
-            console.log(`Emitting gameStartedTrivia to all players in session ${sessionId}`);
             io.to(sessionId).emit('gameStartedTrivia', categories, logos);
-            
-            console.log(`Emitting nextPlayerTrivia to all players in session ${sessionId}`);
             io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
-            
-            console.log(`Emitting yourTurnTrivia to player ${currentPlayer.name}`);
             io.to(currentPlayer.socketId).emit('yourTurnTrivia', categories);
             
             console.log(`It is ${currentPlayer.name}'s turn.`);
@@ -255,23 +272,23 @@ function moveToNextPlayer(io, sessionId, sessions) {
     console.log(`It is ${nextPlayer.name}'s turn.`);
 }
 
-function getAvailableCategories() {
-    return Object.keys(cardDecks)
-        .filter(color => cardDecks[color].cards.length > 0)
-        .map(color => ({
-            id: cardDecks[color].id,
-            name: cardDecks[color].name,
-            color: color
+function getAvailableCategories(decks) {
+    return Object.keys(decks)
+        .filter(key => decks[key].cards.length > 0)
+        .map(key => ({
+            id: decks[key].id,
+            name: decks[key].name,
+            color: key
         }));
 }
 
-function getAvailableLogos() {
-    return Object.keys(cardDecks)
-        .filter(color => cardDecks[color].cards.length > 0)
-        .map(color => ({
-            color: color,
-            name: cardDecks[color].name,
-            imagePath: cardDecks[color].imagePath
+function getAvailableLogos(decks) {
+    return Object.keys(decks)
+        .filter(key => decks[key].cards.length > 0)
+        .map(key => ({
+            color: key,
+            name: decks[key].name,
+            imagePath: decks[key].imagePath
         }));
 }
 
