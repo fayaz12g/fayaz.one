@@ -19,7 +19,7 @@ const HostScreen = ({
     players: [],
     currentQuestion: null,
     currentPlayer: null,
-    color: 'green',
+    color: null,
     answer: null,
     categories: [],
     logos: {},
@@ -41,7 +41,7 @@ const HostScreen = ({
           categories: categories,
           logos: logosMap,
           allowStealing: allowStealing,
-          color: 'white'
+          color: null
       }));
   });
 
@@ -81,7 +81,7 @@ const HostScreen = ({
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
       setShowOptions(false);
-      setGameState(prevState => ({ ...prevState, answer: answer, color: 'white' }));
+      setGameState(prevState => ({ ...prevState, answer: answer, color: null }));
     });
     socket.on('updatePointsTrivia', ({ points }) => {
       setLeaderboard(prevLeaderboard => ({
@@ -93,7 +93,7 @@ const HostScreen = ({
     socket.on('incorrectAnswerTrivia', ({ answeringPlayer, answer }) => {
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
       setShowOptions(false);
-      setGameState(prevState => ({ ...prevState, answer: answer, color: 'white' }));
+      setGameState(prevState => ({ ...prevState, answer: answer, color: null }));
     });
 
     return () => {

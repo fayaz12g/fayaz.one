@@ -5,16 +5,19 @@ const GuessingAudio = ({ color }) => {
   const [nextAudio, setNextAudio] = useState(null);
   const currentAudioRef = useRef(null);
   const nextAudioRef = useRef(null);
+  const validColors = ['green', 'yellow', 'blue', 'red', 'pink', 'indigo', 'orange', 'violet'];
 
   useEffect(() => {
     const loadAudio = async (audioColor) => {
+      const colorToLoad = validColors.includes(audioColor) ? audioColor : 'green';
+    
       try {
-        const audioPath = `/sound/guessing/${audioColor}.m4a`;
+        const audioPath = `/sound/guessing/${colorToLoad}.m4a`;
         const audio = new Audio(audioPath);
         await audio.load();
         return audio;
       } catch (error) {
-        console.error(`Failed to load audio for color ${audioColor}:`, error);
+        console.error(`Failed to load audio for color ${colorToLoad}:`, error);
         return new Audio('/sound/guessing/green.m4a');
       }
     };

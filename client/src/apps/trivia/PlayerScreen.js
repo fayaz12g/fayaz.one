@@ -15,7 +15,7 @@ const PlayerScreen = ({
     currentQuestion: null,
     currentPlayer: null,
     isMyTurn: false,
-    color: 'green',
+    color: null,
     allowStealing: false
   });
   const [showOptions, setShowOptions] = useState(false);
@@ -53,7 +53,7 @@ const PlayerScreen = ({
           categories: categories,
           logos: logosMap,
           allowStealing: allowStealing,
-          color: 'white'
+          color: null
       }));
   });
 
@@ -83,7 +83,7 @@ const PlayerScreen = ({
   });
     socket.on('correctAnswerTrivia', ({ answeringPlayer, pointsEarned, answer }) => {
       console.log(`${answeringPlayer} answered correctly! They earned ${pointsEarned} points. The answer was: ${answer}`);
-      setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false, color: 'white' }));
+      setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false, color: null }));
       setShowOptions(false);
       setSteal(false);
       setCanSteal(false);
@@ -93,14 +93,14 @@ const PlayerScreen = ({
       console.log(`${answeringPlayer} answered incorrectly with: ${answer}`);
       if (playerName !== answeringPlayer) {
         console.log(`${playerName} can steal from ${answeringPlayer}!`);
-        setGameState(prevState => ({ ...prevState, phase: 'question', isMyTurn: true, color: 'white' }));
+        setGameState(prevState => ({ ...prevState, phase: 'question', isMyTurn: true, color: null }));
         setShowOptions(true);
         setCanSteal(true);
       } else {
         setShowOptions(false);
         setSteal(false);
         setCanSteal(false);
-        setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false, color: 'white' }));
+        setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false, color: null }));
       }
     })
 
