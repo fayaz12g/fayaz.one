@@ -1,0 +1,34 @@
+{
+    "id": "pop",
+    "name": "Pop Culture",
+    "cards": [
+      {
+        "red": {
+          "id": "youtube_stars",
+          "name": "Alltime YouTubers",
+          "color": "red-500"
+        }
+      },
+      {
+        "blue": {
+          "id": "broadway_buzz",
+          "name": "Broadway Buzz",
+          "color": "blue-500"
+        }
+      },
+      {
+        "yellow": {
+        "id": "hollywood",
+        "name": "Hollywood Adventures",
+        "color": "yellow"
+        }
+      },
+      {
+        "indigo": {
+            "id": "literature",
+            "name": "Literary Legends",
+            "color": "indigo"
+        }
+    }
+    ]
+  }

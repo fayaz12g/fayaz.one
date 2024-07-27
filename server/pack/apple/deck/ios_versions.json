@@ -1,0 +1,127 @@
+{
+    "id": "ios_versions",
+    "name": "iOS Versions",
+    "color": "blue-900",
+    "cards": [
+      {
+        "hints": [
+          "This version introduced the ability to copy and paste text",
+          "It added support for MMS messages",
+          "Released in 2009"
+        ],
+        "answer": "iOS 3"
+      },
+      {
+        "hints": [
+          "This version introduced the ability to create folders on the home screen",
+          "It added support for FaceTime video calls",
+          "Released in 2010"
+        ],
+        "answer": "iOS 4"
+      },
+      {
+        "hints": [
+          "This version introduced iCloud integration",
+          "It added the Notification Center and iMessage",
+          "Released in 2011"
+        ],
+        "answer": "iOS 5"
+      },
+      {
+        "hints": [
+          "This version replaced Google Maps with Apple Maps",
+          "It introduced the Passbook app (later renamed to Wallet)",
+          "Released in 2012"
+        ],
+        "answer": "iOS 6"
+      },
+      {
+        "hints": [
+          "This version introduced AirDrop for iOS devices",
+          "It featured a major redesign with a flatter interface",
+          "Released in 2013"
+        ],
+        "answer": "iOS 7"
+      },
+      {
+        "hints": [
+          "This version introduced the Health app",
+          "It added support for Touch ID in third-party apps",
+          "Released in 2014"
+        ],
+        "answer": "iOS 8"
+      },
+      {
+        "hints": [
+          "This version introduced the News app",
+          "It added support for 3D Touch on compatible devices",
+          "Released in 2015"
+        ],
+        "answer": "iOS 9"
+      },
+      {
+        "hints": [
+          "This version allowed users to remove built-in apps",
+          "It introduced the Home app for HomeKit devices",
+          "Released in 2016"
+        ],
+        "answer": "iOS 10"
+      },
+      {
+        "hints": [
+          "This version introduced ARKit for augmented reality experiences",
+          "It added a redesigned Control Center",
+          "Released in 2017"
+        ],
+        "answer": "iOS 11"
+      },
+      {
+        "hints": [
+          "This version introduced Screen Time to monitor device usage",
+          "It added support for grouped notifications",
+          "Released in 2018"
+        ],
+        "answer": "iOS 12"
+      },
+      {
+        "hints": [
+          "This version allowed you to change the text size in Safari",
+          "It introduced Dark Mode system-wide",
+          "Released in 2019"
+        ],
+        "answer": "iOS 13"
+      },
+      {
+        "hints": [
+          "This version introduced App Library for organizing apps",
+          "It added support for home screen widgets",
+          "Released in 2020"
+        ],
+        "answer": "iOS 14"
+      },
+      {
+        "hints": [
+          "This version introduced Focus modes",
+          "It added Live Text for recognizing text in images",
+          "Released in 2021"
+        ],
+        "answer": "iOS 15"
+      },
+      {
+        "hints": [
+          "This version introduced the ability to edit and unsend messages",
+          "It added a redesigned Lock Screen with widgets",
+          "Released in 2022"
+        ],
+        "answer": "iOS 16"
+      },
+      {
+        "hints": [
+          "This version introduced the Journal app",
+          "It added interactive widgets and StandBy mode",
+          "Released in 2023"
+        ],
+        "answer": "iOS 17"
+      }
+    ]
+  }

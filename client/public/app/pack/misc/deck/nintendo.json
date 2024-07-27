@@ -1,0 +1,247 @@
+{
+    "id": "nintendo",
+    "name": "Nintendo Nostalgia",
+    "color": "orange",
+    "cards": [
+      {
+        "hints": [
+          "This plumber first appeared in the game 'Donkey Kong' in 1981",
+          "He's known for his red cap, blue overalls, and mustache",
+          "This character's brother is named Luigi"
+        ],
+        "answer": "Mario"
+      },
+      {
+        "hints": [
+          "This Nintendo console, released in 1983 in Japan, revived the video game industry",
+          "It was known as the Famicom in Japan",
+          "Its controller had a distinctive rectangular shape with a cross-shaped D-pad"
+        ],
+        "answer": "Nintendo Entertainment System (NES)"
+      },
+      {
+        "hints": [
+          "This handheld console, released in 1989, came bundled with Tetris",
+          "It had a green monochrome screen and used game cartridges",
+          "Pokémon Red and Blue were released for this system in the late 1990s"
+        ],
+        "answer": "Game Boy"
+      },
+      {
+        "hints": [
+          "This action-adventure game series features a hero named Link",
+          "The princess in this series is named Zelda",
+          "The first game in this series was released in 1986"
+        ],
+        "answer": "The Legend of Zelda"
+      },
+      {
+        "hints": [
+          "This gaming franchise involves catching and battling creatures",
+          "It started with Red and Green versions in Japan in 1996",
+          "The anime series features Ash Ketchum as the main character"
+        ],
+        "answer": "Pokémon"
+      },
+      {
+        "hints": [
+          "This 1996 Nintendo 64 game revolutionized 3D platformers",
+          "It stars Nintendo's most famous character",
+          "Players collect stars to progress through Princess Peach's castle"
+        ],
+        "answer": "Super Mario 64"
+      },
+      {
+        "hints": [
+          "This racing game series features characters from the Mario universe",
+          "Players can use items like bananas and shells to hinder opponents",
+          "The first game was released on the SNES in 1992"
+        ],
+        "answer": "Mario Kart"
+      },
+      {
+        "hints": [
+          "This console, released in 2006, introduced motion controls to a wide audience",
+          "Its controller was called the Wii Remote or 'Wiimote'",
+          "Wii Sports was a popular launch title for this system"
+        ],
+        "answer": "Nintendo Wii"
+      },
+      {
+        "hints": [
+          "This fighting game series features characters from various Nintendo franchises",
+          "The first game was released on the Nintendo 64 in 1999",
+          "It's known for its large roster of playable characters"
+        ],
+        "answer": "Super Smash Bros."
+      },
+      {
+        "hints": [
+          "This ape character first appeared as the villain in Donkey Kong",
+          "He later starred in his own series of platformer games",
+          "His signature move is rolling"
+        ],
+        "answer": "Donkey Kong"
+      },
+      {
+        "hints": [
+          "This Nintendo character is a green dinosaur",
+          "He first appeared in Super Mario World on the SNES",
+          "He can eat enemies and turn them into eggs"
+        ],
+        "answer": "Yoshi"
+      },
+      {
+        "hints": [
+          "This handheld console, released in 2011, featured glasses-free 3D technology",
+          "It was backward compatible with Nintendo DS games",
+          "It received an updated version called the 'New 3DS' in 2014"
+        ],
+        "answer": "Nintendo 3DS"
+      },
+      {
+        "hints": [
+          "This Nintendo character is an intergalactic bounty hunter",
+          "The reveal of this character's gender in the first game was a surprise to many",
+          "This character's suit is powered by Chozo technology"
+        ],
+        "answer": "Samus Aran"
+      },
+      {
+        "hints": [
+          "This hybrid console, released in 2017, can be played as both a handheld and a home console",
+          "Its controllers are called Joy-Cons",
+          "Breath of the Wild was a launch title for this system"
+        ],
+        "answer": "Nintendo Switch"
+      },
+      {
+        "hints": [
+          "This character is known as the 'King of the Koopas'",
+          "He's the main antagonist in most Mario games",
+          "He first appeared in Super Mario Bros. in 1985"
+        ],
+        "answer": "Bowser"
+      },
+      {
+        "hints": [
+          "This Nintendo franchise involves catching bugs and fishing",
+          "The game operates in real-time, syncing with the system's internal clock",
+          "Tom Nook is a recurring character in this series"
+        ],
+        "answer": "Animal Crossing"
+      },
+      {
+        "hints": [
+          "This sci-fi racing game series debuted on the SNES",
+          "It's known for its high-speed gameplay and futuristic settings",
+          "The most recent mainline entry was F-Zero GX on the GameCube"
+        ],
+        "answer": "F-Zero"
+      },
+      {
+        "hints": [
+          "This puzzle game, created by Gunpei Yokoi, was released in 1984",
+          "It features characters named Mr. Game & Watch",
+          "It used LCD technology to create simple animations"
+        ],
+        "answer": "Game & Watch"
+      },
+      {
+        "hints": [
+          "This Nintendo character is a pink puffball known for his ability to inhale enemies",
+          "He first appeared in a Game Boy game in 1992",
+          "His name in Japanese means 'vacuum'"
+        ],
+        "answer": "Kirby"
+      },
+      {
+        "hints": [
+          "This 1986 NES game popularized the Metroidvania genre",
+          "It features a spaceship called the Gunship",
+          "The main character's name is often mistaken for the title of the game"
+        ],
+        "answer": "Metroid"
+      },
+      {
+        "hints": [
+          "This Nintendo executive was the face of the company's presentations for many years",
+          "He was known for his humorous presentations and the phrase 'My body is ready'",
+          "He passed away in 2015, leading to widespread mourning in the gaming community"
+        ],
+        "answer": "Satoru Iwata"
+      },
+      {
+        "hints": [
+          "This Nintendo character is an ape who wears a red tie with his initials",
+          "He's the grandson of the original Donkey Kong",
+          "His sidekick is Diddy Kong"
+        ],
+        "answer": "Donkey Kong (modern version)"
+      },
+      {
+        "hints": [
+          "This Nintendo franchise involves managing a town and its inhabitants",
+          "Players can design homes, interact with villagers, and collect items",
+          "The most recent entry in the series became a cultural phenomenon during the COVID-19 pandemic"
+        ],
+        "answer": "Animal Crossing"
+      },
+      {
+        "hints": [
+          "This Nintendo character is a Hylian knight and the protagonist of his series",
+          "He's often tasked with rescuing Princess Zelda",
+          "Despite the series' name, this character is not named Zelda"
+        ],
+        "answer": "Link"
+      },
+      {
+        "hints": [
+          "This Nintendo console, released in 2001, was the first to use optical discs",
+          "It was known for its unique controller design with a large A button",
+          "Super Smash Bros. Melee was a popular game for this system"
+        ],
+        "answer": "Nintendo GameCube"
+      },
+      {
+        "hints": [
+          "This Nintendo franchise involves turn-based strategy gameplay",
+          "It features characters like Marth, Roy, and Ike",
+          "The series title translates to 'Emblem of Fire' in English"
+        ],
+        "answer": "Fire Emblem"
+      },
+      {
+        "hints": [
+          "This Nintendo character is a gorilla who wears a red tie",
+          "He first appeared as Mario's nemesis in 1981",
+          "He later became a protagonist in his own series of games"
+        ],
+        "answer": "Donkey Kong"
+      },
+      {
+        "hints": [
+          "This Nintendo handheld console was released in 2004",
+          "It featured two screens, with the bottom one being touch-sensitive",
+          "It was succeeded by the 3DS"
+        ],
+        "answer": "Nintendo DS"
+      },
+      {
+        "hints": [
+          "This Nintendo franchise involves exploring a garden-like environment",
+          "The main characters are plant-animal hybrids",
+          "The game involves multitasking and time management"
+        ],
+        "answer": "Pikmin"
+      },
+      {
+        "hints": [
+          "This Nintendo character is a star-shaped creature",
+          "It grants wishes to the inhabitants of Dream Land",
+          "It's a recurring character in the Kirby series"
+        ],
+        "answer": "Star"
+      }
+    ]
+  }

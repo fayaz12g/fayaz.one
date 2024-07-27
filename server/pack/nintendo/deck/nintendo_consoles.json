@@ -1,0 +1,127 @@
+{
+    "id": "nintendo_consoles",
+    "name": "Nintendo Consoles",
+    "color": "blue-100",
+    "cards": [
+      {
+        "hints": [
+          "This console introduced the Virtual Boy",
+          "It was Nintendo's first 32-bit console",
+          "Released in 1995"
+        ],
+        "answer": "Virtual Boy"
+      },
+      {
+        "hints": [
+          "This console introduced motion controls to gaming",
+          "Its controller was called the Wii Remote",
+          "Released in 2006"
+        ],
+        "answer": "Nintendo Wii"
+      },
+      {
+        "hints": [
+          "This handheld console introduced two screens",
+          "One of its screens was a touchscreen",
+          "Released in 2004"
+        ],
+        "answer": "Nintendo DS"
+      },
+      {
+        "hints": [
+          "This console was Nintendo's first to use optical discs",
+          "It competed against the PlayStation 2 and Xbox",
+          "Released in 2001"
+        ],
+        "answer": "Nintendo GameCube"
+      },
+      {
+        "hints": [
+          "This console introduced the concept of a hybrid home/portable system",
+          "It features detachable Joy-Con controllers",
+          "Released in 2017"
+        ],
+        "answer": "Nintendo Switch"
+      },
+      {
+        "hints": [
+          "This console was Nintendo's first home video game system",
+          "It revived the American video game industry after the crash of 1983",
+          "Released in 1985 in North America"
+        ],
+        "answer": "Nintendo Entertainment System (NES)"
+      },
+      {
+        "hints": [
+          "This handheld console introduced the Game Boy Camera accessory",
+          "It was the first handheld console with a color screen",
+          "Released in 1998"
+        ],
+        "answer": "Game Boy Color"
+      },
+      {
+        "hints": [
+          "This console introduced the C-stick for camera control",
+          "It featured glasses-free 3D technology",
+          "Released in 2011"
+        ],
+        "answer": "Nintendo 3DS"
+      },
+      {
+        "hints": [
+          "This console introduced the Super FX chip for 3D graphics",
+          "It competed against the Sega Genesis",
+          "Released in 1990 in Japan"
+        ],
+        "answer": "Super Nintendo Entertainment System (SNES)"
+      },
+      {
+        "hints": [
+          "This console introduced the Rumble Pak accessory",
+          "It was Nintendo's first 64-bit console",
+          "Released in 1996"
+        ],
+        "answer": "Nintendo 64"
+      },
+      {
+        "hints": [
+          "This handheld console introduced link cable multiplayer",
+          "It originally launched with Tetris",
+          "Released in 1989"
+        ],
+        "answer": "Game Boy"
+      },
+      {
+        "hints": [
+          "This console introduced the Wii U GamePad with a built-in screen",
+          "It was Nintendo's first HD console",
+          "Released in 2012"
+        ],
+        "answer": "Wii U"
+      },
+      {
+        "hints": [
+          "This handheld console introduced a backlit screen to the Game Boy line",
+          "It had a clamshell design",
+          "Released in 2003"
+        ],
+        "answer": "Game Boy Advance SP"
+      },
+      {
+        "hints": [
+          "This handheld console introduced dual analog sticks to Nintendo handhelds",
+          "It was marketed as a budget version of another Nintendo handheld",
+          "Released in 2013"
+        ],
+        "answer": "Nintendo 2DS"
+      },
+      {
+        "hints": [
+          "This was Nintendo's first handheld to compete with Sony's PlayStation Portable",
+          "It featured a widescreen display",
+          "Released in 2001"
+        ],
+        "answer": "Game Boy Advance"
+      }
+    ]
+  }

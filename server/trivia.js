@@ -2,43 +2,43 @@ const fs = require('fs');
 const path = require('path');
 
 let cardDecks = {};
-let packName = "default";
-
 let filteredCardDecks = {};
 
 function loadCardDecks() {
     const packPath = path.join(__dirname, 'pack');
-    cardDecks = {}; // Reset cardDecks
-
+    cardDecks = {};
+    
     function loadDecksRecursively(dir) {
         const items = fs.readdirSync(dir, { withFileTypes: true });
-
+        
         for (const item of items) {
             const fullPath = path.join(dir, item.name);
-
+            
             if (item.isDirectory()) {
                 loadDecksRecursively(fullPath);
             } else if (item.name === 'info.json') {
                 try {
                     const infoData = fs.readFileSync(fullPath, 'utf8');
                     const info = JSON.parse(infoData);
-
+                    
                     info.cards.forEach(colorInfo => {
                         const color = Object.keys(colorInfo)[0];
                         const deckInfo = colorInfo[color];
-
+                        
                         const cardsPath = path.join(dir, 'deck', `${deckInfo.id}.json`);
                         const cardsData = fs.readFileSync(cardsPath, 'utf8');
                         const cardsJson = JSON.parse(cardsData);
-
+                        
                         const imagePath = path.join(dir, 'image', `${deckInfo.id}.png`);
-
+                        
                         cardDecks[`${dir}_${color}`] = {
                             id: deckInfo.id,
                             name: deckInfo.name,
                             cards: cardsJson.cards,
                             imagePath: imagePath,
-                            packPath: dir
+                            packPath: dir,
+                            packName: info.name,  
+                            packId: info.id 
                         };
                     });
                 } catch (err) {
@@ -47,25 +47,31 @@ function loadCardDecks() {
             }
         }
     }
-
+    
     loadDecksRecursively(packPath);
     console.log('Card decks loaded successfully');
 }
 
 function generateOptions(correctAnswer, color) {
-    const options = [correctAnswer];
     const deck = cardDecks[color];
     if (!deck || deck.cards.length < 4) {
         console.error(`Not enough cards in ${color} deck to generate options`);
-        return options;
+        return [correctAnswer];
     }
-    while (options.length < 4) {
-        const randomCard = deck.cards[Math.floor(Math.random() * deck.cards.length)];
-        if (!options.includes(randomCard.answer)) {
-            options.push(randomCard.answer);
-        }
+
+    const uniqueOptions = new Set([correctAnswer]);
+    const availableAnswers = deck.cards.map(card => card.answer)
+                                 .filter(answer => answer !== correctAnswer);
+
+    while (uniqueOptions.size < 4 && availableAnswers.length > 0) {
+        const randomIndex = Math.floor(Math.random() * availableAnswers.length);
+        const randomAnswer = availableAnswers[randomIndex];
+        
+        uniqueOptions.add(randomAnswer);
+        availableAnswers.splice(randomIndex, 1);
     }
-    return shuffle(options);
+
+    return shuffle(Array.from(uniqueOptions));
 }
 
 function shuffle(array) {
@@ -296,12 +302,15 @@ function getAvailableCategories(decks) {
     return Object.keys(decks)
         .filter(key => decks[key].cards.length > 0)
         .map(key => {
-            const [pack, color] = key.split('_'); 
+            const [packPath, color] = key.split('_');
             return {
                 id: decks[key].id,
                 name: decks[key].name,
                 color: color,
-                pack: pack,
+                pack: packPath,
+                packName: decks[key].packName,  
+                packId: decks[key].packId, 
+                imagePath: decks[key].imagePath,
                 key: key
             };
         });

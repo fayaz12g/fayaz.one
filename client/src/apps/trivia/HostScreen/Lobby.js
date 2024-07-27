@@ -104,13 +104,13 @@ const Lobby = ({
               <div>
                 <div className="categories-scroll-box">
                   {/* Group categories by pack name */}
-                  {Object.entries(groupByPack(categories)).map(([pack, categories]) => {
-                    const packName = pack.split('/').pop();
+                  {Object.entries(groupByPack(categories)).map(([packId, categories]) => {
+                    const packName = categories[0].packName;  // Use the first category's packName
                     return (
-                      <div key={pack}>
-                        <h4 style={{
+                        <div key={packId}>
+                            <h4 style={{
                                 textShadow: '3px 2px 4px rgba(0, 0, 0, 0.9)'
-                              }}>{packName}</h4>
+                            }}>{packName}</h4>
                         {categories.map(category => (
                           <div key={category.id}>
                             <label

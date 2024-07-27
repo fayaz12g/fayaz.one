@@ -1,0 +1,20 @@
+{
+    "id": "misc",
+    "name": "Misc. Trivia",
+    "cards": [
+      {
+        "yellow": {
+          "id": "musical_instruments",
+          "name": "Musical Instruments",
+          "color": "yellow-500"
+        }
+      },
+      {
+        "green": {
+          "id": "ccna_networking",
+          "name": "CCNA Networking",
+          "color": "green-500"
+        }
+      }
+    ]
+  }
