@@ -1,14 +1,7 @@
 {
-    "id": "default",
-    "name": "Default Pack",
+    "id": "socialstudies",
+    "name": "Social Studies",
     "cards": [
-        {
-          "yellow": {
-          "id": "hollywood",
-          "name": "Hollywood Adventures",
-          "color": "yellow"
-          }
-        },
         {
             "red": {
             "id": "qcc",
