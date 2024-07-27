@@ -31,6 +31,9 @@ const Lobby = ({
         ? prev.filter(c => c !== categoryId)
         : [...prev, categoryId]
     );
+    if (!selectAll) {
+      setSelectAll(true)
+  }
   };
 
   const handleStartGame = () => {
@@ -81,7 +84,7 @@ const Lobby = ({
             ))}
           </ul>
         </div>
-        <div className="App settings">
+        <div className="App settings-trivia">
           <div>
             <p style={{ fontFamily: 'Impact' }}>Game Settings:</p>
             <div>
@@ -105,10 +108,17 @@ const Lobby = ({
                     const packName = pack.split('/').pop();
                     return (
                       <div key={pack}>
-                        <h4>{packName}</h4>
+                        <h4 style={{
+                                textShadow: '3px 2px 4px rgba(0, 0, 0, 0.9)'
+                              }}>{packName}</h4>
                         {categories.map(category => (
                           <div key={category.id}>
-                            <label style={{ color: category.color }}>
+                            <label
+                              style={{
+                                color: category.color,
+                                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
+                              }}
+                            >
                               <input
                                 type="checkbox"
                                 checked={selectedCategories.includes(category.id)}

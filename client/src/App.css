@@ -23,26 +23,6 @@
   font-style: normal;
 }
 
-@keyframes backgroundShiftLight {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-@keyframes backgroundShiftDark {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-@keyframes dotMoveLeft {
-  from { background-position: 0 0; }
-  to { background-position: 30px 0; }
-}
-
-@keyframes dotMoveRight {
-  from { background-position: 0 0; }
-  to { background-position: -30px 0; }
-}
-
 body {
   font-family: 'Patrick Hand';
   /** 'Test New', 'Quill Ink', 'Patrick Hand', cursive, sans-serif; **/
@@ -54,7 +34,6 @@ body {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  transition: background-color 0.9s ease;
 }
 
 body.light {
@@ -68,63 +47,6 @@ body.dark {
   background-size: 400% 400%;
   animation: backgroundShiftDark 120s ease infinite;
 }
-
-body::before,
-body::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: 30px 30px;
-  animation-duration: 10s, 150s;
-  animation-timing-function: linear, ease-in-out;
-  animation-iteration-count: infinite, infinite;
-  transition: background-color 0.9s ease;
-}
-
-body.light::before,
-body.dark::before {
-  animation-name: dotMoveLeft, radialPulse;
-}
-
-body.light::after,
-body.dark::after {
-  top: 15px;
-  animation-name: dotMoveRight, radialPulse;
-}
-
-body.light::before,
-body.light::after {
-  animation-name: dotMoveLeft, radialPulse;
-}
-
-body.dark::before,
-body.dark::after {
-  animation-name: dotMoveLeft, radialPulseDark;
-}
-
-body.light::after,
-body.dark::after {
-  top: 15px;
-  animation-name: dotMoveRight, radialPulse;
-}
-
-body.dark::after {
-  animation-name: dotMoveRight, radialPulseDark;
-}
-
-@keyframes radialPulse {
-  0%, 100% { background-image: radial-gradient(circle, rgba(255,255,255,0.8) 10%, rgba(255,255,255,0) 1%); }
-  50% { background-image: radial-gradient(circle, rgba(255,255,255,0.8) 10%, rgba(255,255,255,0) 20%); }
-}
-
-@keyframes radialPulseDark {
-  0%, 100% { background-image: radial-gradient(circle, rgba(0,0,0,0.8) 10%, rgba(0,0,0,0) 1%); }
-  50% { background-image: radial-gradient(circle, rgba(0,0,0,0.8) 10%, rgba(0,0,0,0) 20%); }
-}
-
 /* App Container */
 .App {
   text-align: center;
@@ -148,21 +70,17 @@ body.dark::after {
   overflow: hidden; /* To prevent any unwanted overflow */
 }
 
-/* Light Mode */
+/* Dark Mode */
 body.dark .App {
   background-position: 0% 100%; /* Show the light gradient from 50% to 100% */
-  color: #000000;
-}
-
-/* Dark Mode */
-body.light .App {
-  background-position: 0% 0%; /* Show the dark gradient from 0% to 50% */
   color: #ffffff;
 }
 
-
-
-
+/* Light Mode */
+body.light .App {
+  background-position: 0% 0%; /* Show the dark gradient from 0% to 50% */
+  color: #000000;
+}
 
 .App div {
   color: inherit;

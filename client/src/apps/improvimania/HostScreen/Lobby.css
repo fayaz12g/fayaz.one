@@ -33,10 +33,13 @@
   flex-direction: column;
   align-items: center;
   border: 0.1px solid #ccc;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
 }
 
+body.light .players-container, body.light .settings {
+  background-color: rgba(0, 0, 0, 0.7);
+}
 
 .start-game {
   padding: 10px 20px;

@@ -96,9 +96,9 @@ const Lobby = ({
         </div>
         <div className="App settings">
           <div>
-            <p style={{ fontFamily: 'Alloy Ink' }}>
+            <h2 style={{ fontFamily: 'Alloy Ink'}}>
               Game Settings:
-            </p>
+            </h2>
             <label>
               Number of rounds:
               <br />

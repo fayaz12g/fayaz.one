@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { useLocation } from 'react-router-dom';
 import './App.css';
+import './Dots.css';
 
 // Improvimania Imports
 import titleImage from './image/improvimania/title.png';
