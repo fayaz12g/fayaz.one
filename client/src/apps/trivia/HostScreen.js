@@ -70,6 +70,7 @@ const HostScreen = ({
     });
 
     socket.on('updateCategories', (categories) => {
+      console.log("Categories updated to:", categories)
       setGameState(prevState => ({ ...prevState, categories: categories }));
     });
 

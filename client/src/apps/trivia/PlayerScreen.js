@@ -147,23 +147,31 @@ const PlayerScreen = ({
         return <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
       case 'game':
         return <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
-      case 'category-selection':
-        return (
-          <div>
-            <h2>It's your turn! Select a category:</h2>
-            {gameState.categories.map(category => (
-              <button key={category.id} onClick={() => selectCategory(category.color)}>
-                <img 
-                  src={gameState.logos[category.name]} 
-                  alt={`${category.name} logo`}
-                  style={{ maxWidth: '100px', maxHeight: '100px' }}
-                />
-                <br/>
-                <i>{category.name}</i>
-              </button>
-            ))}
-          </div>
-        );
+        case 'category-selection':
+          const categoryButtonStyle = (100 / gameState.categories.length) + '%'; 
+          return (
+              <div>
+                  <h2>It's your turn! Select a category:</h2>
+                  {gameState.categories.map(category => (
+                      <button 
+                          key={category.id} 
+                          onClick={() => selectCategory(category.color)}
+                          style={{ 
+                              width: categoryButtonStyle, 
+                              backgroundColor: category.color 
+                          }}
+                      >
+                          <img 
+                              src={gameState.logos[category.name]} 
+                              alt={`${category.name} logo`}
+                              style={{ maxWidth: '100px', maxHeight: '100px' }}
+                          />
+                          <br/>
+                          <i>{category.name}</i>
+                      </button>
+                  ))}
+              </div>
+          );
       case 'question':
         return (
           <div>

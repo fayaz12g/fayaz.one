@@ -20,10 +20,11 @@
   }
 
   .host-screen {
+    margin-left: -20%;
     display: flex;
     justify-content: center;
     align-items: stretch;
-    width: 100%;
+    width: 140%;
   }
   
   .players-container {
@@ -86,3 +87,18 @@
     }
   }
 
+  .categories-scroll-box {
+    max-height: 600px;
+    max-width: 400px;
+    overflow-y: auto;
+    border: 0px solid #ccc;
+    padding: 10px;
+  }
+  
+  .player-item {
+    cursor: pointer;
+  }
+  
+  .player-item:hover {
+    text-decoration: line-through;
+  }

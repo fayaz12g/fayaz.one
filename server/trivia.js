@@ -6,7 +6,7 @@ let packName = "default";
 
 function loadCardDecks() {
     const packPath = path.join(__dirname, 'pack');
-    const cardDecks = {};
+    cardDecks = {}; // Reset cardDecks
 
     function loadDecksRecursively(dir) {
         const items = fs.readdirSync(dir, { withFileTypes: true });
@@ -48,7 +48,6 @@ function loadCardDecks() {
 
     loadDecksRecursively(packPath);
     console.log('Card decks loaded successfully');
-    return cardDecks;
 }
 
 function generateOptions(correctAnswer, color) {
@@ -99,14 +98,27 @@ function initializeTriviaGame(io, sessions) {
 
     io.on('connection', (socket) => {
         console.log('New client connected');
+        
 
         socket.on('joinGame', (playerName, sessionId) => {
             console.log(`Player ${playerName} joining session ${sessionId}`);
             if (!sessions[sessionId]) {
                 sessions[sessionId] = { players: [], currentPlayerIndex: 0, currentCard: null, currentHintIndex: 0 };
             }
+            const player = { name: playerName, socketId: socket.id, score: 0 };
+            sessions[sessionId].players.push(player);
+            socket.join(sessionId);
+
             console.log(`Updated player list:`, sessions[sessionId].players);
             io.to(sessionId).emit('updatePlayers', { players: sessions[sessionId].players });
+        });
+
+        socket.on('getCategories', (sessionId) => {
+            console.log("Categories requested for Trivia Session", sessionId)
+            loadCardDecks();
+            const categories = getAvailableCategories(cardDecks);
+            io.to(sessionId).emit('updateCategories', categories);
+            console.log("Sent", categories, "as categories.")
         });
 
         socket.on('startGameTrivia', ({sessionId, selectedCategories}) => {
@@ -166,11 +178,12 @@ function initializeTriviaGame(io, sessions) {
                 sessions[sessionId].currentCard = currentCard;
                 sessions[sessionId].currentHintIndex = 0;
                 const options = generateOptions(currentCard.answer, category);
+                const extractedColor = category.split('_')[1];
                 io.to(sessionId).emit('newQuestionTrivia', {
                     hints: [currentCard.hints[0]],
                     options: options,
                     deckName: currentCard.deckName,
-                    color: category
+                    color: extractedColor
                 });
             }
         });
@@ -268,19 +281,25 @@ function moveToNextPlayer(io, sessionId, sessions) {
     
     const nextPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
     io.to(sessionId).emit('nextPlayerTrivia', nextPlayer.name);
-    io.to(nextPlayer.socketId).emit('yourTurnTrivia', getAvailableCategories());
+    io.to(nextPlayer.socketId).emit('yourTurnTrivia', getAvailableCategories(filteredCardDecks));
     console.log(`It is ${nextPlayer.name}'s turn.`);
 }
 
 function getAvailableCategories(decks) {
     return Object.keys(decks)
         .filter(key => decks[key].cards.length > 0)
-        .map(key => ({
-            id: decks[key].id,
-            name: decks[key].name,
-            color: key
-        }));
+        .map(key => {
+            const [pack, color] = key.split('_'); 
+            return {
+                id: decks[key].id,
+                name: decks[key].name,
+                color: color,
+                pack: pack 
+            };
+        });
 }
+
+
 
 function getAvailableLogos(decks) {
     return Object.keys(decks)
