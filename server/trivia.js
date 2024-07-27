@@ -296,7 +296,8 @@ function getAvailableCategories(decks) {
                 id: decks[key].id,
                 name: decks[key].name,
                 color: color,
-                pack: pack 
+                pack: pack,
+                key: key
             };
         });
 }

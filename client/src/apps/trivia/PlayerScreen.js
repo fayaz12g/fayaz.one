@@ -15,7 +15,7 @@ const PlayerScreen = ({
     currentQuestion: null,
     currentPlayer: null,
     isMyTurn: false,
-    color: null,
+    color: 'green',
     allowStealing: false
   });
   const [showOptions, setShowOptions] = useState(false);
@@ -52,7 +52,8 @@ const PlayerScreen = ({
           phase: 'game',
           categories: categories,
           logos: logosMap,
-          allowStealing: allowStealing
+          allowStealing: allowStealing,
+          color: 'white'
       }));
   });
 
@@ -157,7 +158,7 @@ const PlayerScreen = ({
                   {gameState.categories.map(category => (
                       <button 
                           key={category.id} 
-                          onClick={() => selectCategory(category.color)}
+                          onClick={() => selectCategory(category.key)}
                           style={{ 
                               width: categoryButtonStyle, 
                               backgroundColor: category.color 

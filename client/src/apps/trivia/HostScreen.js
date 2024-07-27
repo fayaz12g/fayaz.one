@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Leaderboard from './HostScreen/Leaderboard';
 import Lobby from './HostScreen/Lobby';
+import GuessingAudio from './GuessingAudio';
 
 const HostScreen = ({
   socket,
@@ -18,7 +19,7 @@ const HostScreen = ({
     players: [],
     currentQuestion: null,
     currentPlayer: null,
-    color: null,
+    color: 'green',
     answer: null,
     categories: [],
     logos: {},
@@ -39,7 +40,8 @@ const HostScreen = ({
           phase: 'category-selection',
           categories: categories,
           logos: logosMap,
-          allowStealing: allowStealing
+          allowStealing: allowStealing,
+          color: 'white'
       }));
   });
 
@@ -159,6 +161,7 @@ const HostScreen = ({
 
   return (
 <div>
+    <GuessingAudio color={gameState.color} />
     <div>
       {renderGameContent()}
     </div>
