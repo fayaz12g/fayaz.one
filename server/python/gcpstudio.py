@@ -155,6 +155,7 @@ class GCPStudio:
                         self.shift_bits(old_path, shift_up=False)
                     os.rename(old_path, new_path)
 
+
     def play_sound(self, sound_path):
         if os.path.exists(sound_path):
             pygame.mixer.music.load(sound_path)
