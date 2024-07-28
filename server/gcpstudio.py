@@ -471,16 +471,30 @@ class GCPStudio:
                 for root, _, files in os.walk(image_path):
                     for file in files:
                         zipf.write(os.path.join(root, file), file)
+
+            # Process sound folder
+            sound_path = os.path.join(temp_pack_dir, "sound")
+            for file in os.listdir(sound_path):
+                if file.endswith(".m4a"):
+                    file_path = os.path.join(sound_path, file)
+                    os.rename(file_path, file_path[:-4] + ".gcs")
             
-            # Delete temporary deck and image folders
+            with zipfile.ZipFile(os.path.join(temp_pack_dir, "sound.gcsp"), 'w') as zipf:
+                for root, _, files in os.walk(sound_path):
+                    for file in files:
+                        zipf.write(os.path.join(root, file), file)
+            
+            # Delete temporary deck and image and sound folders
             shutil.rmtree(deck_path)
             shutil.rmtree(image_path)
+            shutil.rmtree(sound_path)
             
             # Create final ZIP archive
             with zipfile.ZipFile(output_path, 'w') as zipf:
                 zipf.write(os.path.join(temp_pack_dir, "info.json"), "info.json")
                 zipf.write(os.path.join(temp_pack_dir, "deck.gcdp"), "deck.gcdp")
                 zipf.write(os.path.join(temp_pack_dir, "image.gcip"), "image.gcip")
+                zipf.write(os.path.join(temp_pack_dir, "sound.gcsp"), "sound.gcsp")
 
     def shift_bits(self, file_path, shift_up=True):
         with open(file_path, 'rb') as file:
