@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, colorchooser, simpledialog
+import customtkinter
 import os
 import json
 import zipfile
@@ -511,6 +512,6 @@ class GCPStudio:
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = customtkinter.CTk()
     app = GCPStudio(root)
     root.mainloop()
