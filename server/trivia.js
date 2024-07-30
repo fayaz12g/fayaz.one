@@ -129,7 +129,7 @@ function initializeTriviaGame(io, sessions) {
             console.log("Sent", categories, "as categories.")
         });
 
-        socket.on('startGameTrivia', ({ sessionId, selectedCategories, allowStealing, count }) => {
+        socket.on('startGameTrivia', ({ sessionId, selectedCategories, allowStealing, count, showAnswers }) => {
             console.log(`Starting game for session ${sessionId}`);
         
             if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
@@ -147,13 +147,14 @@ function initializeTriviaGame(io, sessions) {
             sessions[sessionId].currentPlayerIndex = 0;
             sessions[sessionId].count = count;
             sessions[sessionId].allowStealing = allowStealing;
+            sessions[sessionId].showAnswers = showAnswers;
             sessions[sessionId].gameStarted = true;
             sessions[sessionId].cardDecks = filteredCardDecks;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
             const categories = getAvailableCategories(filteredCardDecks);
             const logos = getAvailableLogos(filteredCardDecks);
         
-            io.to(sessionId).emit('gameStartedTrivia', categories, logos, allowStealing, count);
+            io.to(sessionId).emit('gameStartedTrivia', categories, logos, allowStealing, count, showAnswers);
             io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
             io.to(currentPlayer.socketId).emit('yourTurnTrivia', categories);
         
@@ -198,7 +199,8 @@ function initializeTriviaGame(io, sessions) {
                     options: options,
                     deckName: currentCard.deckName,
                     color: extractedColor,
-                    key: category
+                    key: category,
+                    answer: currentCard.answer
                 });
             }
         });
@@ -223,7 +225,7 @@ function initializeTriviaGame(io, sessions) {
             }
         });
 
-        socket.on('submitAnswerTrivia', (answer, sessionId, steal) => {
+        socket.on('submitAnswerTrivia', (answer, sessionId, steal, double) => {
             if (!sessions[sessionId] || !sessions[sessionId].currentCard) {
                 console.error(`Invalid session or no current card for session ${sessionId}`);
                 return;

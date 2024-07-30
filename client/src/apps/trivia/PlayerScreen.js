@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LeaderboardOverlay from './HostScreen/LeaderboardOverlay';
+import { motion } from 'framer-motion'
 
 const PlayerScreen = ({
   socket,
@@ -17,11 +18,14 @@ const PlayerScreen = ({
     isMyTurn: false,
     color: null,
     count: 4,
-    allowStealing: false
+    allowStealing: false,
+    answer: null,
+    showAnswers: false,
   });
   const [showOptions, setShowOptions] = useState(false);
   const [steal, setSteal] = useState(false);
   const [canSteal, setCanSteal] = useState(false);
+  const [double, setDouble] = useState(false);
 
   const handleMakeGuessClick = () => {
     setShowOptions(true);
@@ -41,7 +45,7 @@ const PlayerScreen = ({
   };
 
   useEffect(() => {
-    socket.on('gameStartedTrivia', (categories, logos, allowStealing, count) => {
+    socket.on('gameStartedTrivia', (categories, logos, allowStealing, count, showAnswers) => {
       console.log('Game started event received', categories);
       const logosMap = logos.reduce((acc, logo) => {
           acc[logo.name] = logo.imagePath;
@@ -55,7 +59,8 @@ const PlayerScreen = ({
           logos: logosMap,
           allowStealing: allowStealing,
           count: count,
-          color: null
+          color: null,
+          showAnswers: showAnswers
       }));
   });
 
@@ -73,7 +78,8 @@ const PlayerScreen = ({
         ...prevState, 
         phase: 'question', 
         currentQuestion: questionData, 
-        color: questionData.color
+        color: questionData.color,
+        answer: questionData.answer
       }));
     });
     socket.on('updatePointsTrivia', ({ points }) => {
@@ -141,7 +147,7 @@ const PlayerScreen = ({
 
   const submitAnswer = (answer) => {
     console.log('Submitting answer', answer, 'stolen?', canSteal);
-    socket.emit('submitAnswerTrivia', answer, sessionId, canSteal);
+    socket.emit('submitAnswerTrivia', answer, sessionId, canSteal, double);
     setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: false }));
   };
 
@@ -153,29 +159,29 @@ const PlayerScreen = ({
       case 'game':
         return <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
         case 'category-selection':
-          const categoryButtonStyle = (100 / gameState.categories.length) + '%'; 
           return (
-              <div>
-                  <h2>It's your turn! Select a category:</h2>
-                  {gameState.categories.map(category => (
-                      <button 
-                          key={category.id} 
-                          onClick={() => selectCategory(category.key)}
-                          style={{ 
-                              width: categoryButtonStyle, 
-                              backgroundColor: category.color 
-                          }}
-                      >
-                          <img 
-                              src={gameState.logos[category.name]} 
-                              alt={`${category.name} logo`}
-                              style={{ maxWidth: '100px', maxHeight: '100px' }}
-                          />
-                          <br/>
-                          <i>{category.name}</i>
-                      </button>
-                  ))}
+            <div className="category-selection-container">
+              <h2 className="text-2xl font-bold mb-4">It's your turn! Select a category:</h2>
+              <div className="category-grid">
+                {gameState.categories.map(category => (
+                  <motion.button 
+                    key={category.id} 
+                    onClick={() => selectCategory(category.key)}
+                    className="category-button"
+                    style={{ backgroundColor: category.color }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <img 
+                      src={gameState.logos[category.name]} 
+                      alt={`${category.name} logo`}
+                      className="category-image"
+                    />
+                    <span className="category-name">{category.name}</span>
+                  </motion.button>
+                ))}
               </div>
+            </div>
           );
       case 'question':
         return (
@@ -218,6 +224,7 @@ const PlayerScreen = ({
               )}
             </div>
           )}
+          {!gameState.isMyTurn && gameState.showAnswers && <h4>Answer: {gameState.answer}</h4>}
         </div>
         );
       default:

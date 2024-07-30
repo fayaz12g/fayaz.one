@@ -10,6 +10,9 @@ const Lobby = ({
   setForceRemove,
   categories,
   gameState,
+  setGameState,
+  showAnswers,
+  setShowAnswers
 }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [allowStealing, setAllowStealing] = useState(true);
@@ -34,8 +37,23 @@ const Lobby = ({
     );
     if (!selectAll) {
       setSelectAll(true)
-  }
+    }
   };
+
+  const handleAllowStealingChange = (e) => {
+    setAllowStealing(e.target.checked);
+    if (e.target.checked) {
+      setShowAnswers(false);
+    }
+  };
+
+  const handleShowAnswersChange = (e) => {
+    setShowAnswers(e.target.checked);
+    if (e.target.checked) {
+      setAllowStealing(false);
+    }
+  };
+
 
   const handleStartGame = () => {
     const count = gameState.count;
@@ -46,6 +64,7 @@ const Lobby = ({
         selectedCategories,
         allowStealing,
         count,
+        showAnswers,
       });
     }
   };
@@ -66,6 +85,19 @@ const Lobby = ({
     if (socket) {
       console.log('Requesting categories for Session', sessionId);
       socket.emit('getCategories', sessionId);
+    }
+  };
+
+  const handleCountChange = (event) => {
+    const newCount = parseInt(event.target.value, 10);
+    if (newCount >= 2 && newCount <= 10) {
+      setGameState(prevState => ({ ...prevState, count: newCount }));
+    }
+    else if (newCount > 10) {
+      setGameState(prevState => ({ ...prevState, count: 10 }));
+    }
+    else if (newCount < 2) {
+      setGameState(prevState => ({ ...prevState, count: 2 }));
     }
   };
 
@@ -95,9 +127,31 @@ const Lobby = ({
                 <input
                   type="checkbox"
                   checked={allowStealing}
-                  onChange={(e) => setAllowStealing(e.target.checked)}
+                  onChange={handleAllowStealingChange}
                 />
                 Allow Stealing
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={showAnswers}
+                  onChange={handleShowAnswersChange}
+                />
+                Show Answers to Other Players
+              </label>
+            </div>
+            <div>
+              <label>
+                Number of Questions:
+                <input
+                  type="number"
+                  min="2"
+                  max="10"
+                  value={gameState.count}
+                  onChange={handleCountChange}
+                />
               </label>
             </div>
             {categories.length > 0 && (

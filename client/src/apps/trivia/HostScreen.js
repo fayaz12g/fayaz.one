@@ -24,10 +24,11 @@ const HostScreen = ({
     categories: [],
     logos: {},
     count: 4,
-    allowStealing: false
+    allowStealing: false,
   });
   
   const [showOptions, setShowOptions] = useState(false);
+  const [showAnswers, setShowAnswers] = useState(false);
 
   useEffect(() => {
     socket.on('gameStartedTrivia', (categories, logos, allowStealing) => {
@@ -110,6 +111,9 @@ const HostScreen = ({
       setForceRemove={setForceRemove}
       categories={gameState.categories}
       gameState={gameState}
+      setGameState={setGameState}
+      showAnswers={showAnswers}
+      setShowAnswers={setShowAnswers}
     />
   );
 
