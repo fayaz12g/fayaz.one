@@ -38,7 +38,7 @@ function startGameImprov(io, sessions, sessionId, rounds, gameMode, scriptFile) 
     const playerCount = sessions[sessionId]?.players.length || 0;
     const isFreeForAll = gameMode === 'freeforall';
     
-    if (sessions[sessionId] && (isFreeForAll ? playerCount > 3 : playerCount === 4)) {
+    if (sessions[sessionId]) {
         sessions[sessionId].rounds = rounds;
         sessions[sessionId].currentRound = 0;
         sessions[sessionId].gameMode = gameMode;
@@ -68,23 +68,40 @@ function startRound(io, sessions, sessionId) {
         loadScripts();
     }
 
+    let previousSpeaker1 = null;
+    if (session.roles) {
+        for (const [socketId, role] of Object.entries(session.roles)) {
+            if (role === 'Speaker 1') {
+                previousSpeaker1 = socketId;
+                break;
+            }
+        }
+    }
+
     session.roles = {};
     
     const players = session.players;
     const isFreeForAll = session.gameMode === 'freeforall';
-    const roles = ['Speaker 1', 'Speaker 2'];
+    
+    const roles = ['Speaker 1', 'Speaker 2', 'Speaker 3'];
     const shuffledRoles = shuffle(roles);
 
-    // Assign roles
-    players.forEach((player, index) => {
-        if (index === 0) {
-            session.roles[player.socketId] = 'Adlibber';
-        } else if (index < 3) {
-            session.roles[player.socketId] = shuffledRoles.pop();
-        } else {
-            session.roles[player.socketId] = 'Guesser';
-        }
-    });
+    if (previousSpeaker1 && !isFreeForAll) {
+        session.roles[previousSpeaker1] = 'Guesser';
+        const remainingPlayers = players.filter(player => player.socketId !== previousSpeaker1);
+
+        remainingPlayers.forEach((player, index) => {
+            session.roles[player.socketId] = shuffledRoles[index];
+        });
+    } else {
+        players.forEach((player, index) => {
+            if (index < roles.length) {
+                session.roles[player.socketId] = shuffledRoles[index];
+            } else {
+                session.roles[player.socketId] = 'Guesser';
+            }
+        });
+    }
 
     const randomScriptIndex = Math.floor(Math.random() * scripts.length);
     session.currentScript = scripts[randomScriptIndex];
@@ -103,6 +120,7 @@ function startRound(io, sessions, sessionId) {
 
     nextLine(io, sessions, sessionId);
 }
+
 
 function nextLine(io, sessions, sessionId) {
     const session = sessions[sessionId];
@@ -192,30 +210,41 @@ function endScene(io, sessions, sessionId) {
 
 function guessAdlibber(io, sessions, sessionId, guesserSocketId, guess) {
     const session = sessions[sessionId];
+    if (!session) {
+        console.error(`Session ${sessionId} not found`);
+        return;
+    }
+
     const roles = session.gameMode === 'freeforall' ? session.originalRoles : session.roles;
     const guesser = session.players.find(player => player.socketId === guesserSocketId);
     const adlibber = session.players.find(player => roles[player.socketId] === 'Speaker 1');
 
-    if (guesser.name != adlibber.name) {
+    if (!guesser || !adlibber) {
+        console.error(`Guesser or Adlibber not found. Guesser: ${guesser}, Adlibber: ${adlibber}`);
+        return;
+    }
+
+    let correctGuess = false;
+
+    if (guesser.name !== adlibber.name) {
         if (adlibber.name === guess) {
-            guesser.points += 1;
+            guesser.points = (guesser.points || 0) + 1;
             correctGuess = true;
             io.to(sessionId).emit('updatePoints', { points: { [guesser.name]: guesser.points } });
             console.log(`${guesser.name} has correctly guessed the Adlibber.`);
         } else {
-            adlibber.points += 1;
-            correctGuess = false;
+            adlibber.points = (adlibber.points || 0) + 1;
             io.to(sessionId).emit('updatePoints', { points: { [adlibber.name]: adlibber.points } });
             console.log(`The Adlibber (${adlibber.name}) has fooled ${guesserSocketId}.`);
         }
     }
 
-    let correctGuess;
-    io.to(sessionId).emit('guessMade', { name: [guesser.name], guess, correct: correctGuess });
+    io.to(sessionId).emit('guessMade', { name: guesser.name, guess, correct: correctGuess });
 
     if (session.gameMode === 'freeforall') {
         session.guesses++;
-        if (session.guesses >= 3) {
+        const totalPlayers = session.players.length;
+        if (session.guesses >= totalPlayers - 1) {  // Players minus one because Adlibber doesn't guess
             if (session.currentRound >= session.rounds) {
                 console.log('Game has ended');
                 io.to(sessionId).emit('endGame');
@@ -232,6 +261,8 @@ function guessAdlibber(io, sessions, sessionId, guesserSocketId, guess) {
         }
     }
 }
+
+
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
