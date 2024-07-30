@@ -61,7 +61,7 @@ function App() {
     const [forceRemove, setForceRemove] = useState(false);
     const [confirmQuit, setConfirmQuit] = useState(false);
     const [game, setGame] = useState(sessionStorage.getItem('game'));
-    const [clientVersion] = useState('0.8 Super');
+    const [clientVersion] = useState('0.9 Ship');
     const [serverVersion, setServerV] = useState('Disconnected');
     const [scriptFile, setScriptFile] = useState('scripts');
 
