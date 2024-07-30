@@ -25,6 +25,7 @@ const HostScreen = ({
     logos: {},
     count: 4,
     allowStealing: false,
+    random: false,
   });
   
   const [showOptions, setShowOptions] = useState(false);
@@ -52,7 +53,8 @@ const HostScreen = ({
         ...prevState, 
         phase: 'question', 
         currentQuestion: questionData,
-        color: questionData.color  
+        color: questionData.color,
+        random: questionData.random,
       }));
     });
 
@@ -124,7 +126,7 @@ const HostScreen = ({
       case 'category-selection':
         return (
           <div className='App'>
-            {gameState.answer && <b>The answer was {gameState.answer}</b>}
+            {gameState.answer && <h1>The answer was {gameState.answer}</h1>}
             <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
           </div>
         );
@@ -140,6 +142,7 @@ const HostScreen = ({
                     />
                     <br/>
                     <i>{gameState.currentQuestion.deckName}</i>
+                    {gameState.random && <h2>Double Points for RANDOM Category</h2>}
                     <h4>Hints:</h4>
                     <ul>
                         {gameState.currentQuestion.hints.map((hint, index) => (

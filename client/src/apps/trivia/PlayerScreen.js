@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import LeaderboardOverlay from './HostScreen/LeaderboardOverlay';
 import { motion } from 'framer-motion'
+import random from './HostScreen/random.png'
 
 const PlayerScreen = ({
   socket,
@@ -21,6 +22,7 @@ const PlayerScreen = ({
     allowStealing: false,
     answer: null,
     showAnswers: false,
+    random: false,
   });
   const [showOptions, setShowOptions] = useState(false);
   const [steal, setSteal] = useState(false);
@@ -42,6 +44,12 @@ const PlayerScreen = ({
     setShowOptions(false);
     setSteal(false);
     setCanSteal(false);
+  };
+
+  const selectRandomCategory = () => {
+    console.log('Selecting random category');
+    socket.emit('randomCategoryTrivia', sessionId, gameState.count);
+    setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: true }));
   };
 
   useEffect(() => {
@@ -79,6 +87,7 @@ const PlayerScreen = ({
         phase: 'question', 
         currentQuestion: questionData, 
         color: questionData.color,
+        random: questionData.random,
         answer: questionData.answer
       }));
     });
@@ -158,31 +167,45 @@ const PlayerScreen = ({
         return <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
       case 'game':
         return <h2>Waiting for {gameState.currentPlayer} to select a category...</h2>
-        case 'category-selection':
-          return (
-            <div className="category-selection-container">
-              <h2 className="text-2xl font-bold mb-4">It's your turn! Select a category:</h2>
-              <div className="category-grid">
-                {gameState.categories.map(category => (
-                  <motion.button 
-                    key={category.id} 
-                    onClick={() => selectCategory(category.key)}
-                    className="category-button"
-                    style={{ backgroundColor: category.color }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <img 
-                      src={gameState.logos[category.name]} 
-                      alt={`${category.name} logo`}
-                      className="category-image"
-                    />
-                    <span className="category-name">{category.name}</span>
-                  </motion.button>
-                ))}
-              </div>
+      case 'category-selection':
+        return (
+          <div className="category-selection-container">
+            <h2 className="text-2xl font-bold mb-4">It's your turn! Select a category:</h2>
+            <div className="category-grid">
+              {gameState.categories.map(category => (
+                <motion.button 
+                  key={category.id} 
+                  onClick={() => selectCategory(category.key)}
+                  className="category-button"
+                  style={{ backgroundColor: category.color }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <img 
+                    src={gameState.logos[category.name]} 
+                    alt={`${category.name} logo`}
+                    className="category-image"
+                  />
+                  <span className="category-name">{category.name}</span>
+                </motion.button>
+              ))}
+              <motion.button 
+                onClick={selectRandomCategory}
+                className="category-button"
+                style={{ background: 'linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)' }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <img 
+                  src={random}
+                  alt="Random category"
+                  className="category-image"
+                />
+                <span className="category-name">Random</span>
+              </motion.button>
             </div>
-          );
+          </div>
+        );
       case 'question':
         return (
           <div>
@@ -193,6 +216,7 @@ const PlayerScreen = ({
             />
             <br/>
             <i>{gameState.currentQuestion.deckName}</i>
+            {gameState.random && <h2>Double Points for RANDOM Category</h2>}
           <h4>Hints:</h4>
           <ul>
             {gameState.currentQuestion.hints.map((hint, index) => (
@@ -230,8 +254,8 @@ const PlayerScreen = ({
       default:
         return (
         <div>
-        <h1>Welcome, {playerName}!</h1>
-        <h2>Waiting for the host to start the game...</h2>
+        <h2>Welcome, {playerName}!</h2>
+        <h4>Waiting for the host to start the game...</h4>
         </div>
       );
     };

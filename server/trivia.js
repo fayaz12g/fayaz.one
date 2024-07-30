@@ -52,10 +52,15 @@ function loadCardDecks() {
     console.log('Card decks loaded successfully');
 }
 
+function getRandomCategory(categories) {
+    const randomIndex = Math.floor(Math.random() * categories.length);
+    return categories[randomIndex];
+}
+
 function generateOptions(correctAnswer, color, count) {
     const deck = filteredCardDecks[color];
-    if (!deck || deck.cards.length < count) {
-        console.error(`Not enough cards in ${color} deck to generate options`);
+    if (!deck || deck.cards.length === 0) {
+        console.warn(`No cards in ${color} deck to generate options`);
         return [correctAnswer];
     }
 
@@ -63,12 +68,18 @@ function generateOptions(correctAnswer, color, count) {
     const availableAnswers = deck.cards.map(card => card.answer)
                                  .filter(answer => answer !== correctAnswer);
 
-    while (uniqueOptions.size < count && availableAnswers.length > 0) {
+    const maxPossibleOptions = Math.min(count, availableAnswers.length + 1);
+
+    while (uniqueOptions.size < maxPossibleOptions && availableAnswers.length > 0) {
         const randomIndex = Math.floor(Math.random() * availableAnswers.length);
         const randomAnswer = availableAnswers[randomIndex];
         
         uniqueOptions.add(randomAnswer);
         availableAnswers.splice(randomIndex, 1);
+    }
+
+    if (uniqueOptions.size < count) {
+        console.warn(`Could only generate ${uniqueOptions.size} options instead of the requested ${count}`);
     }
 
     return shuffle(Array.from(uniqueOptions));
@@ -149,6 +160,7 @@ function initializeTriviaGame(io, sessions) {
             sessions[sessionId].allowStealing = allowStealing;
             sessions[sessionId].showAnswers = showAnswers;
             sessions[sessionId].gameStarted = true;
+            sessions[sessionId].doublePoints = false;
             sessions[sessionId].cardDecks = filteredCardDecks;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
             const categories = getAvailableCategories(filteredCardDecks);
@@ -182,6 +194,34 @@ function initializeTriviaGame(io, sessions) {
             }
         });
 
+        socket.on('randomCategoryTrivia', (sessionId, count) => {
+            if (!sessions[sessionId]) {
+                console.error(`Invalid session ${sessionId}`);
+                return;
+            }
+
+            const availableCategories = getAvailableCategories(filteredCardDecks);
+            const randomCategory = getRandomCategory(availableCategories);
+            
+            const currentCard = drawCard(randomCategory.key);
+            if (currentCard) {
+                sessions[sessionId].currentCard = currentCard;
+                sessions[sessionId].doublePoints = true;
+                sessions[sessionId].currentHintIndex = 0;
+                const options = generateOptions(currentCard.answer, randomCategory.key, count);
+                const extractedColor = randomCategory.key.split('_')[1];
+                io.to(sessionId).emit('newQuestionTrivia', {
+                    hints: [currentCard.hints[0]],
+                    options: options,
+                    deckName: currentCard.deckName,
+                    color: extractedColor,
+                    key: randomCategory.key,
+                    random: true,
+                    answer: currentCard.answer
+                });
+            }
+        });
+
         socket.on('selectCategoryTrivia', (category, sessionId, count) => {
             if (!sessions[sessionId]) {
                 console.error(`Invalid session ${sessionId}`);
@@ -200,6 +240,7 @@ function initializeTriviaGame(io, sessions) {
                     deckName: currentCard.deckName,
                     color: extractedColor,
                     key: category,
+                    random: false,
                     answer: currentCard.answer
                 });
             }
@@ -255,6 +296,11 @@ function initializeTriviaGame(io, sessions) {
                     else {
                         pointsEarned = 1;
                     }
+                    if (sessions[sessionId].doublePoints) {
+                        pointsEarned = (2 * pointsEarned)
+                        sessions[sessionId].doublePoints = false;
+                    }
+
                     player.score = (player.score || 0) + pointsEarned; 
                     io.to(sessionId).emit('correctAnswerTrivia', { answeringPlayer: player.name, pointsEarned, answer: currentCard.answer });
                     moveToNextPlayer(io, sessionId, sessions);
