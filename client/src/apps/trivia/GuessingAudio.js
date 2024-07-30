@@ -1,143 +1,70 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const GuessingAudio = ({ color }) => {
-  const [currentAudio, setCurrentAudio] = useState(null);
-  const [nextAudio, setNextAudio] = useState(null);
-  const currentAudioRef = useRef(null);
-  const nextAudioRef = useRef(null);
+  const [audioContext] = useState(() => new (window.AudioContext || window.webkitAudioContext)());
+  const sourceRef = useRef(null);
+  const gainNodeRef = useRef(null);
+  const currentColorRef = useRef(null);
   const validColors = ['green', 'yellow', 'blue', 'red', 'pink', 'indigo', 'orange', 'violet'];
 
   useEffect(() => {
-    const loadAudio = async (audioColor) => {
+    const loadAndPlayAudio = async (audioColor) => {
       const colorToLoad = validColors.includes(audioColor) ? audioColor : 'green';
+      const audioPath = `/sound/guessing/${colorToLoad}.m4a`;
 
       try {
-        const audioPath = `/sound/guessing/${colorToLoad}.m4a`;
-        const audio = new Audio(audioPath);
-        await audio.load();
-        return audio;
+        const response = await fetch(audioPath);
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+        if (sourceRef.current) {
+          sourceRef.current.stop();
+        }
+
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        source.loop = true;
+
+        const gainNode = audioContext.createGain();
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        source.start();
+        gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 3);
+
+        sourceRef.current = source;
+        gainNodeRef.current = gainNode;
+        currentColorRef.current = audioColor;
+
       } catch (error) {
         console.error(`Failed to load audio for color ${colorToLoad}:`, error);
-        return new Audio('/sound/guessing/green.m4a');
       }
     };
 
-    const setupNewAudio = async () => {
-      const newAudio = await loadAudio(color);
-      if (currentAudio) {
-        setNextAudio(newAudio);
+    if (color !== currentColorRef.current) {
+      if (gainNodeRef.current) {
+        gainNodeRef.current.gain.linearRampToValueAtTime(0, audioContext.currentTime + 3);
+        setTimeout(() => {
+          if (sourceRef.current) {
+            sourceRef.current.stop();
+          }
+          loadAndPlayAudio(color);
+        }, 3000);
       } else {
-        setCurrentAudio(newAudio);
-        newAudio.loop = true;
-        newAudio.play();
+        loadAndPlayAudio(color);
       }
-    };
-
-    setupNewAudio();
+    }
 
     return () => {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.src = '';
-      }
-      if (nextAudio) {
-        nextAudio.pause();
-        nextAudio.src = '';
+      if (sourceRef.current) {
+        sourceRef.current.stop();
       }
     };
-  }, [color]);
+  }, [color, audioContext]);
 
-  useEffect(() => {
-    if (currentAudio) {
-      currentAudioRef.current = currentAudio;
-    }
-    if (nextAudio) {
-      nextAudioRef.current = nextAudio;
-    }
-  }, [currentAudio, nextAudio]);
-
-  useEffect(() => {
-    if (nextAudio && currentAudio) {
-      const fadeDuration = 1000; // 1 second
-      const fadeInterval = 50; // Update every 50ms
-      const maxDuration = 44000; // 44 seconds in milliseconds
-
-      let fadeOutTimer;
-      let fadeInTimer;
-
-      const fadeOut = () => {
-        const startTime = Date.now();
-        const fadeOutStep = () => {
-          const elapsedTime = Date.now() - startTime;
-          const newVolume = Math.max(0, 1 - elapsedTime / fadeDuration);
-
-          if (currentAudioRef.current) {
-            currentAudioRef.current.volume = newVolume;
-          }
-
-          if (elapsedTime < fadeDuration) {
-            fadeOutTimer = setTimeout(fadeOutStep, fadeInterval);
-          } else {
-            if (currentAudioRef.current) {
-              currentAudioRef.current.pause();
-              currentAudioRef.current.src = '';
-            }
-            setCurrentAudio(null);
-          }
-        };
-        fadeOutStep();
-      };
-
-      const fadeIn = () => {
-        const startTime = Date.now();
-        nextAudio.currentTime = (currentAudioRef.current ? currentAudioRef.current.currentTime : 0) % maxDuration;
-        nextAudio.volume = 0;
-        nextAudio.play();
-
-        const fadeInStep = () => {
-          const elapsedTime = Date.now() - startTime;
-          const newVolume = Math.min(1, elapsedTime / fadeDuration);
-
-          if (nextAudioRef.current) {
-            nextAudioRef.current.volume = newVolume;
-          }
-
-          if (elapsedTime < fadeDuration) {
-            fadeInTimer = setTimeout(fadeInStep, fadeInterval);
-          } else {
-            setCurrentAudio(nextAudio);
-            setNextAudio(null);
-          }
-        };
-        fadeInStep();
-      };
-
-      fadeOut();
-      setTimeout(fadeIn, fadeDuration); // Start fade-in after fade-out has started
-
-      return () => {
-        clearTimeout(fadeOutTimer);
-        clearTimeout(fadeInTimer);
-      };
-    }
-  }, [nextAudio]);
-
-  useEffect(() => {
-    const updateAudioLoop = (audio) => {
-      if (audio) {
-        audio.addEventListener('timeupdate', () => {
-          if (audio.currentTime >= 44) {
-            audio.currentTime = 0;
-          }
-        });
-      }
-    };
-
-    updateAudioLoop(currentAudio);
-    updateAudioLoop(nextAudio);
-  }, [currentAudio, nextAudio]);
-
-  return null; // This component doesn't render anything visible
+  return null;
 };
 
 export default GuessingAudio;

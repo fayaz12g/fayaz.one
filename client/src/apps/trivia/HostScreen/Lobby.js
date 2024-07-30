@@ -144,7 +144,7 @@ const Lobby = ({
             </div>
             <div>
               <label>
-                Number of Questions:
+                Number of Options:
                 <input
                   type="number"
                   min="2"
@@ -154,11 +154,12 @@ const Lobby = ({
                 />
               </label>
             </div>
-            {categories.length > 0 && (
-              <p style={{ fontFamily: 'Impact' }}>Select Categories:</p>
-            )}
+            </div>
+            </div>
+            <div className="App players-container">
             {categories.length > 0 ? (
               <div>
+                <p style={{ fontFamily: 'Impact' }}>Select Categories:</p>
                 <div className="categories-scroll-box">
                   {/* Group categories by pack name */}
                   {Object.entries(groupByPack(categories)).map(([packId, categories]) => {
@@ -200,8 +201,7 @@ const Lobby = ({
                 <button onClick={handleGetCategories}>Get Categories</button>
               </div>
             )}
-          </div>
-        </div>
+            </div>
       </div>
       <button
         onClick={handleStartGame}
