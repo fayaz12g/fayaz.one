@@ -61,8 +61,8 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('gimmeSessions', (sessionId) => {
-        socket.emit('availableSessions', playerName); 
+    socket.on('gimmeSessions', (playerName) => {
+        socket.emit('availableSessions', sessionIds); 
     });
 
     socket.on('createSession', (game) => {
