@@ -16,6 +16,7 @@ const PlayerScreen = ({
     currentPlayer: null,
     isMyTurn: false,
     color: null,
+    count: 4,
     allowStealing: false
   });
   const [showOptions, setShowOptions] = useState(false);
@@ -40,7 +41,7 @@ const PlayerScreen = ({
   };
 
   useEffect(() => {
-    socket.on('gameStartedTrivia', (categories, logos, allowStealing) => {
+    socket.on('gameStartedTrivia', (categories, logos, allowStealing, count) => {
       console.log('Game started event received', categories);
       const logosMap = logos.reduce((acc, logo) => {
           acc[logo.name] = logo.imagePath;
@@ -53,6 +54,7 @@ const PlayerScreen = ({
           categories: categories,
           logos: logosMap,
           allowStealing: allowStealing,
+          count: count,
           color: null
       }));
   });
@@ -128,7 +130,7 @@ const PlayerScreen = ({
 
   const selectCategory = (category) => {
     console.log('Selecting category', category);
-    socket.emit('selectCategoryTrivia', category, sessionId);
+    socket.emit('selectCategoryTrivia', category, sessionId, gameState.count);
     setGameState(prevState => ({ ...prevState, phase: 'waiting', isMyTurn: true }));
   };
 

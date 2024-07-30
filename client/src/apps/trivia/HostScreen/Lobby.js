@@ -9,6 +9,7 @@ const Lobby = ({
   removePlayer,
   setForceRemove,
   categories,
+  gameState,
 }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [allowStealing, setAllowStealing] = useState(true);
@@ -37,12 +38,14 @@ const Lobby = ({
   };
 
   const handleStartGame = () => {
+    const count = gameState.count;
     if (socket && selectedCategories.length > 0) {
       console.log('Starting game for Session', sessionId, 'with categories', selectedCategories);
       socket.emit('startGameTrivia', {
         sessionId,
         selectedCategories,
         allowStealing,
+        count,
       });
     }
   };

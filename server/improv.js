@@ -39,6 +39,7 @@ function startGameImprov(io, sessions, sessionId, rounds, gameMode, scriptFile) 
         sessions[sessionId].currentRound = 0;
         sessions[sessionId].gameMode = gameMode;
         sessions[sessionId].guesses = 0;
+        sessions[sessionId].gameStarted = true;
         
         io.to(sessionId).emit('gameStarted', { 
             rounds: sessions[sessionId].rounds,

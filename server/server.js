@@ -71,6 +71,7 @@ io.on('connection', (socket) => {
             sessionId: shortSessionId, 
             game: game,
             players: [],
+            gameStarted: false,
             hostSocket: socket.id
         };
         socket.join(shortSessionId);

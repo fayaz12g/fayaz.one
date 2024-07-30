@@ -23,6 +23,7 @@ const HostScreen = ({
     answer: null,
     categories: [],
     logos: {},
+    count: 4,
     allowStealing: false
   });
   
@@ -108,6 +109,7 @@ const HostScreen = ({
       removePlayer={removePlayer}
       setForceRemove={setForceRemove}
       categories={gameState.categories}
+      gameState={gameState}
     />
   );
 

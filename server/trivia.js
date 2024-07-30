@@ -52,9 +52,9 @@ function loadCardDecks() {
     console.log('Card decks loaded successfully');
 }
 
-function generateOptions(correctAnswer, color) {
-    const deck = cardDecks[color];
-    if (!deck || deck.cards.length < 4) {
+function generateOptions(correctAnswer, color, count) {
+    const deck = filteredCardDecks[color];
+    if (!deck || deck.cards.length < count) {
         console.error(`Not enough cards in ${color} deck to generate options`);
         return [correctAnswer];
     }
@@ -63,7 +63,7 @@ function generateOptions(correctAnswer, color) {
     const availableAnswers = deck.cards.map(card => card.answer)
                                  .filter(answer => answer !== correctAnswer);
 
-    while (uniqueOptions.size < 4 && availableAnswers.length > 0) {
+    while (uniqueOptions.size < count && availableAnswers.length > 0) {
         const randomIndex = Math.floor(Math.random() * availableAnswers.length);
         const randomAnswer = availableAnswers[randomIndex];
         
@@ -83,7 +83,7 @@ function shuffle(array) {
 }
 
 function drawCard(color) {
-    const deck = cardDecks[color];
+    const deck = filteredCardDecks[color];
     if (!deck || deck.cards.length === 0) {
         console.error(`No cards available for color: ${color}`);
         return null;
@@ -129,7 +129,7 @@ function initializeTriviaGame(io, sessions) {
             console.log("Sent", categories, "as categories.")
         });
 
-        socket.on('startGameTrivia', ({ sessionId, selectedCategories, allowStealing }) => {
+        socket.on('startGameTrivia', ({ sessionId, selectedCategories, allowStealing, count }) => {
             console.log(`Starting game for session ${sessionId}`);
         
             if (!sessions[sessionId] || sessions[sessionId].players.length === 0) {
@@ -145,13 +145,15 @@ function initializeTriviaGame(io, sessions) {
                 }, {});
         
             sessions[sessionId].currentPlayerIndex = 0;
+            sessions[sessionId].count = count;
             sessions[sessionId].allowStealing = allowStealing;
+            sessions[sessionId].gameStarted = true;
             sessions[sessionId].cardDecks = filteredCardDecks;
             const currentPlayer = sessions[sessionId].players[sessions[sessionId].currentPlayerIndex];
             const categories = getAvailableCategories(filteredCardDecks);
             const logos = getAvailableLogos(filteredCardDecks);
         
-            io.to(sessionId).emit('gameStartedTrivia', categories, logos, allowStealing);
+            io.to(sessionId).emit('gameStartedTrivia', categories, logos, allowStealing, count);
             io.to(sessionId).emit('nextPlayerTrivia', currentPlayer.name);
             io.to(currentPlayer.socketId).emit('yourTurnTrivia', categories);
         
@@ -179,7 +181,7 @@ function initializeTriviaGame(io, sessions) {
             }
         });
 
-        socket.on('selectCategoryTrivia', (category, sessionId) => {
+        socket.on('selectCategoryTrivia', (category, sessionId, count) => {
             if (!sessions[sessionId]) {
                 console.error(`Invalid session ${sessionId}`);
                 return;
@@ -189,7 +191,7 @@ function initializeTriviaGame(io, sessions) {
             if (currentCard) {
                 sessions[sessionId].currentCard = currentCard;
                 sessions[sessionId].currentHintIndex = 0;
-                const options = generateOptions(currentCard.answer, category);
+                const options = generateOptions(currentCard.answer, category, count);
                 const extractedColor = category.split('_')[1];
                 io.to(sessionId).emit('newQuestionTrivia', {
                     hints: [currentCard.hints[0]],
