@@ -46,6 +46,10 @@ const Players = ({
     }
   };
   
+  const refreshSessions = () => {
+    socket.emit('gimmeSessions', playerName); 
+  };
+
   const handleJoinClick = (sessionIds) => {
     if (!playerName) {
       setNoName(true);
@@ -199,7 +203,14 @@ const Players = ({
                   </div>
                 )
               ) : (
+                <div>
                 <p>No active sessions available.</p>
+                <button
+                onClick={refreshSessions}
+              >
+                Refresh
+              </button>
+              </div>
               )}
             </div>
             {noName && (

@@ -34,7 +34,11 @@ function initializeImprovGame(io, sessions) {
 
 function startGameImprov(io, sessions, sessionId, rounds, gameMode, scriptFile) {
     console.log(`Starting game for session ${sessionId} with ${rounds} rounds in ${gameMode} mode, using script file: ${scriptFile}.json`);
-    if (sessions[sessionId] && sessions[sessionId].players.length === 4) {
+    
+    const playerCount = sessions[sessionId]?.players.length || 0;
+    const isFreeForAll = gameMode === 'freeforall';
+    
+    if (sessions[sessionId] && (isFreeForAll ? playerCount > 3 : playerCount === 4)) {
         sessions[sessionId].rounds = rounds;
         sessions[sessionId].currentRound = 0;
         sessions[sessionId].gameMode = gameMode;
@@ -64,36 +68,23 @@ function startRound(io, sessions, sessionId) {
         loadScripts();
     }
 
-    let previousSpeaker1 = null;
-    if (session.roles) {
-        for (const [socketId, role] of Object.entries(session.roles)) {
-            if (role === 'Speaker 1') {
-                previousSpeaker1 = socketId;
-                break;
-            }
-        }
-    }
-
-    const roles = ['Speaker 1', 'Speaker 2', 'Speaker 3'];
-    const shuffledRoles = shuffle(roles);
-    
     session.roles = {};
     
-    if (previousSpeaker1) {
-        session.roles[previousSpeaker1] = 'Guesser';
-        const remainingPlayers = session.players.filter(player => player.socketId !== previousSpeaker1);
+    const players = session.players;
+    const isFreeForAll = session.gameMode === 'freeforall';
+    const roles = ['Speaker 1', 'Speaker 2'];
+    const shuffledRoles = shuffle(roles);
 
-        remainingPlayers.forEach((player, index) => {
-            session.roles[player.socketId] = shuffledRoles[index];
-        });
-    } else {
-        const allRoles = ['Guesser', ...roles];
-        const shuffledAllRoles = shuffle(allRoles);
-
-        session.players.forEach((player, index) => {
-            session.roles[player.socketId] = shuffledAllRoles[index];
-        });
-    }
+    // Assign roles
+    players.forEach((player, index) => {
+        if (index === 0) {
+            session.roles[player.socketId] = 'Adlibber';
+        } else if (index < 3) {
+            session.roles[player.socketId] = shuffledRoles.pop();
+        } else {
+            session.roles[player.socketId] = 'Guesser';
+        }
+    });
 
     const randomScriptIndex = Math.floor(Math.random() * scripts.length);
     session.currentScript = scripts[randomScriptIndex];

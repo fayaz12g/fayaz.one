@@ -61,6 +61,10 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('gimmeSessions', (sessionId) => {
+        socket.emit('availableSessions', playerName); 
+    });
+
     socket.on('createSession', (game) => {
         if (Object.keys(sessions).length === 0) {
             currentSession = 0; 
