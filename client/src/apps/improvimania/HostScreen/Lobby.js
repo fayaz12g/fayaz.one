@@ -82,6 +82,13 @@ const Lobby = ({
     }
   };
 
+  const isStartGameDisabled = (gameMode === 'classic' && players.length !== 4) || 
+                              (gameMode === 'freeforall' && players.length < 4);
+
+  const startGameButtonText = gameMode === 'classic' 
+    ? (players.length === 4 ? "Start Game" : "Waiting for 4 players...")
+    : (players.length >= 4 ? "Start Game" : "Waiting for at least 4 players...");
+
   return (
     <animated.div style={lobbyAnimation} className="lobby-container">
       <AnimatedTitle />
@@ -123,8 +130,8 @@ const Lobby = ({
           </div>
         </div>
       </div>
-      <button onClick={handleStartGame} disabled={players.length !== 4} className="start-game">
-        {players.length === 4 ? "Start Game" : "Waiting for 4 players..."}
+      <button onClick={handleStartGame} disabled={isStartGameDisabled} className="start-game">
+        {startGameButtonText}
       </button>
     </animated.div>
   );
