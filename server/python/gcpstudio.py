@@ -7,20 +7,11 @@ import zipfile
 import shutil
 import tempfile
 from PIL import Image, ImageTk
-import pygame
-
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox, colorchooser, simpledialog
-import customtkinter
-import os
-import json
-import zipfile
-import shutil
-import tempfile
-from PIL import Image, ImageTk
-import pygame
 import requests
 from pathlib import Path
+from pydub import AudioSegment
+from pydub.playback import play
+import pygame
 
 class GCPStudio:
     def __init__(self, root):
@@ -31,10 +22,6 @@ class GCPStudio:
         self.temp_dir = None
         self.current_gcp_path = None
         self.opened_packs = {}
-
-        pygame.init()
-        pygame.mixer.init()
-
         self.setup_ui()
 
     def setup_ui(self):
@@ -97,7 +84,22 @@ class GCPStudio:
 
         # Bind pack tree selection
         self.pack_tree.bind('<<TreeviewSelect>>', self.on_pack_select)
+        self.pack_tree.bind("<Button-3>", self.show_pack_context_menu)
 
+    def show_pack_context_menu(self, event):
+        selected_item = self.pack_tree.identify_row(event.y)
+        if selected_item:
+            self.pack_tree.selection_set(selected_item)
+            menu = tk.Menu(self.root, tearoff=0)
+            menu.add_command(label="Remove Pack", command=lambda: self.remove_pack(selected_item))
+            menu.tk_popup(event.x_root, event.y_root)
+
+    def remove_pack(self, pack_id):
+        self.pack_tree.delete(pack_id)
+        if pack_id in self.opened_packs:
+            del self.opened_packs[pack_id]
+
+            
     def download_packs(self):
         # Default packstore URL
         default_url = "https://raw.githubusercontent.com/fayaz12g/gcpstudio/main/packstore.json"
@@ -196,8 +198,15 @@ class GCPStudio:
         self.temp_dir = None
         self.current_gcp_path = None
 
-    def open_gcp(self):
-        file_path = filedialog.askopenfilename(title="Select GCP file", filetypes=[("GCP files", "*.gcp")])
+    def set_tag_colors(self):
+        for item in self.decks_tree.get_children():
+            deck_id = self.decks_tree.item(item, 'values')[1]
+            color = self.decks_tree.item(item, 'values')[3]
+            self.decks_tree.tag_configure(deck_id, background=color)
+            
+    def open_gcp(self, file_path=None):
+        if file_path is None:
+            file_path = filedialog.askopenfilename(title="Select GCP file", filetypes=[("GCP files", "*.gcp")])
         if not file_path:
             return
 
@@ -236,7 +245,13 @@ class GCPStudio:
             self.pack_name_entry.delete(0, tk.END)
             self.pack_name_entry.insert(0, info.get('name', ''))
 
-             # Initialize the images dictionary
+            # Add to pack manager tree if not already added
+            pack_id = info.get('id', '')
+            pack_name = info.get('name', '')
+            if pack_id not in self.opened_packs:
+                self.add_pack_to_tree(pack_id, pack_name, file_path)
+
+            # Initialize the images dictionary
             self.decks_tree.images = {}
 
             # Clear and update decks tree
@@ -246,20 +261,8 @@ class GCPStudio:
                 image_path = os.path.join(self.temp_dir, "image", f"{deck['id']}.png")
                 sound_path = os.path.join(self.temp_dir, "sound", f"{deck['id']}.m4a")
                 
-                item = self.decks_tree.insert('', 'end', values=('', deck['id'], deck['name'], deck['color'], '', 'Edit'))
+                item = self.decks_tree.insert('', 'end', values=('', deck['id'], deck['name'], deck['color'], '', 'Edit'), tags=(deck['id'],))
                 self.update_tree_item_image(item, image_path)
-                self.decks_tree.set(item, 'Sound', '▶' if os.path.exists(sound_path) else '')
-                
-                if os.path.exists(image_path):
-                    image = Image.open(image_path).resize((30, 30))
-                    photo = ImageTk.PhotoImage(image)
-                else:
-                    photo = None
-                
-                item = self.decks_tree.insert('', 'end', values=('', deck['id'], deck['name'], deck['color'], '', 'Edit'))
-                if photo:
-                    self.decks_tree.set(item, 'Image', '')
-                    self.decks_tree.item(item, image=photo)
                 self.decks_tree.set(item, 'Sound', '▶' if os.path.exists(sound_path) else '')
 
             self.decks_tree.bind('<Double-1>', self.edit_deck)
@@ -268,6 +271,7 @@ class GCPStudio:
         except Exception as e:
             messagebox.showerror("Error", f"Failed to open GCP file: {str(e)}")
             self.cleanup_temp_dir()
+
 
     def decompress_file(self, file_path, target_dir, file_extension):
         if os.path.exists(file_path):
@@ -289,10 +293,22 @@ class GCPStudio:
 
     def play_sound(self, sound_path):
         if os.path.exists(sound_path):
-            pygame.mixer.music.load(sound_path)
-            pygame.mixer.music.play()
+            try:
+                # Convert audio to WAV format
+                sound = AudioSegment.from_file(sound_path)
+                wav_path = tempfile.mktemp(suffix='.wav')
+                sound.export(wav_path, format='wav')
+
+                # Play the WAV file using pygame
+                pygame.mixer.music.load(wav_path)
+                pygame.mixer.music.play()
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to play sound: {str(e)}")
         else:
-            messagebox.showerror("Error", "Sound file not found.")
+            messagebox.showerror("Error", f"Sound file not found: {sound_path}")
+
+
 
     def show_context_menu(self, event):
         item = self.decks_tree.identify_row(event.y)
@@ -383,33 +399,84 @@ class GCPStudio:
             self.decks_tree.set(item, 'Image', '')
             self.decks_tree.item(item, image=photo)
             self.decks_tree.images[item] = photo  # Store the image reference
+        else:
+            self.decks_tree.set(item, 'Image', 'No image')
 
 
     def save_gcp(self):
-        if not self.temp_dir or not self.current_gcp_path:
-            messagebox.showerror("Error", "No GCP file is currently open.")
+        # Ask for save location
+        save_path = filedialog.asksaveasfilename(defaultextension=".gcp", filetypes=[("GCP files", "*.gcp")])
+        if not save_path:
             return
 
-        # Update info.json
-        info_path = os.path.join(self.temp_dir, "info.json")
-        with open(info_path, 'r') as f:
-            info = json.load(f)
+        # Validate required fields
+        if not self.pack_id_entry.get():
+            self.show_field_error(self.pack_id_entry, "Pack ID is required")
+            return
+        if not self.pack_name_entry.get():
+            self.show_field_error(self.pack_name_entry, "Pack Name is required")
+            return
 
-        info['id'] = self.pack_id_entry.get()
-        info['name'] = self.pack_name_entry.get()
+        # Create info.json
+        info = {
+            "id": self.pack_id_entry.get(),
+            "name": self.pack_name_entry.get(),
+            "cards": []
+        }
 
-        info['cards'] = []
         for item in self.decks_tree.get_children():
             values = self.decks_tree.item(item)['values']
+            if not values[1] or not values[2] or not values[3]:
+                messagebox.showerror("Error", f"Deck {values[1]} is missing required fields (ID, Name, or Color)")
+                return
             info['cards'].append({values[3]: {"id": values[1], "name": values[2], "color": values[3]}})
 
-        with open(info_path, 'w') as f:
-            json.dump(info, f, indent=2)
+        # Create temporary directory for packing
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Save info.json
+            with open(os.path.join(temp_dir, "info.json"), 'w') as f:
+                json.dump(info, f, indent=2)
 
-        # Compress the pack
-        self.compress_pack(self.temp_dir, self.current_gcp_path)
+            # Create deck, image, and sound directories
+            os.makedirs(os.path.join(temp_dir, "deck"))
+            os.makedirs(os.path.join(temp_dir, "image"))
+            os.makedirs(os.path.join(temp_dir, "sound"))
 
-        messagebox.showinfo("Success", f"Pack saved as {self.current_gcp_path}")
+            # Copy or create placeholder files
+            for card in info['cards']:
+                deck_id = list(card.values())[0]['id']
+                
+                # Deck JSON
+                deck_path = os.path.join(temp_dir, "deck", f"{deck_id}.json")
+                if self.temp_dir and os.path.exists(os.path.join(self.temp_dir, "deck", f"{deck_id}.json")):
+                    shutil.copy(os.path.join(self.temp_dir, "deck", f"{deck_id}.json"), deck_path)
+                else:
+                    with open(deck_path, 'w') as f:
+                        json.dump({"name": list(card.values())[0]['name'], "color": list(card.values())[0]['color'], "cards": []}, f, indent=2)
+
+                # Image
+                image_path = os.path.join(temp_dir, "image", f"{deck_id}.png")
+                if self.temp_dir and os.path.exists(os.path.join(self.temp_dir, "image", f"{deck_id}.png")):
+                    shutil.copy(os.path.join(self.temp_dir, "image", f"{deck_id}.png"), image_path)
+                else:
+                    Image.new('RGB', (1, 1), color='white').save(image_path)
+
+                # Sound
+                sound_path = os.path.join(temp_dir, "sound", f"{deck_id}.m4a")
+                if self.temp_dir and os.path.exists(os.path.join(self.temp_dir, "sound", f"{deck_id}.m4a")):
+                    shutil.copy(os.path.join(self.temp_dir, "sound", f"{deck_id}.m4a"), sound_path)
+                else:
+                    open(sound_path, 'wb').close()  # Create empty file
+
+            # Compress the pack
+            self.compress_pack(temp_dir, save_path)
+
+        messagebox.showinfo("Success", f"Pack saved as {save_path}")
+
+    def show_field_error(self, widget, message):
+        error_label = ttk.Label(widget.master, text=message, foreground="red")
+        error_label.grid(row=widget.grid_info()['row'], column=widget.grid_info()['column']+1)
+        widget.master.after(3000, error_label.destroy)  # Remove error message after 3 seconds
 
     def add_deck(self):
         # Open a dialog to get deck details
@@ -558,15 +625,24 @@ class GCPStudio:
 
         # Save button
         def save_deck():
-            deck_data['cards'] = []
-            for answer_entry, hint_entries in card_widgets:
-                deck_data['cards'].append({
-                    "answer": answer_entry.get(),
-                    "hints": [hint.get() for hint in hint_entries]
-                })
-            with open(deck_path, 'w') as f:
-                json.dump(deck_data, f, indent=2)
-            deck_window.destroy()
+                deck_data['name'] = deck_name_entry.get()
+                deck_data['color'] = deck_color_entry.get()
+                deck_data['cards'] = []
+                for answer_entry, hint_entries in card_widgets:
+                    deck_data['cards'].append({
+                        "answer": answer_entry.get(),
+                        "hints": [hint.get() for hint in hint_entries]
+                    })
+                with open(deck_path, 'w') as f:
+                    json.dump(deck_data, f, indent=2)
+                
+                # Update main treeview
+                for item in self.decks_tree.get_children():
+                    if self.decks_tree.item(item, "values")[1] == deck_id:
+                        self.decks_tree.item(item, values=('', deck_id, deck_data['name'], deck_data['color'], self.decks_tree.item(item, "values")[4], 'Edit'))
+                        break
+                
+                deck_window.destroy()
 
         ttk.Button(deck_window, text="Save Deck", command=save_deck).pack(pady=10)
 
