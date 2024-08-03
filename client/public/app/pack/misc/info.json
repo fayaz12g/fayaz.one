@@ -15,6 +15,13 @@
           "name": "CCNA Networking",
           "color": "green-500"
         }
+      },
+      {
+        "red": {
+          "id": "gcp_studio",
+          "name": "GCP Studio Trivia",
+          "color": "blue-550"
+        }
       }
     ]
   }
