@@ -1,0 +1,247 @@
+{
+    "id": "gcp_studio",
+    "name": "GCP Studio Trivia",
+    "color": "blue-550",
+    "cards": [
+      {
+        "hints": [
+          "This file format combines JSONs, images, and sound files",
+          "GCP Studio manages files in this format",
+          "It's an acronym with three letters"
+        ],
+        "answer": "GCP"
+      },
+      {
+        "hints": [
+          "This programming language is used to write GCP Studio",
+          "It's known for its readability and versatility",
+          "Its name is derived from a British comedy group"
+        ],
+        "answer": "Python"
+      },
+      {
+        "hints": [
+          "This GUI toolkit is used in GCP Studio",
+          "It's a standard library in Python",
+          "Its name starts with 'tk'"
+        ],
+        "answer": "tkinter"
+      },
+      {
+        "hints": [
+          "This library is used for image processing in GCP Studio",
+          "Its name is an acronym for Python Imaging Library",
+          "It's commonly used for opening, manipulating, and saving images"
+        ],
+        "answer": "PIL"
+      },
+      {
+        "hints": [
+          "This file format is used for deck files in GCP",
+          "It's a compressed version of JSON files",
+          "Its extension ends with 'p'"
+        ],
+        "answer": "gcdp"
+      },
+      {
+        "hints": [
+          "This file format is used for image files in GCP",
+          "It's a compressed version of PNG files",
+          "Its extension ends with 'p'"
+        ],
+        "answer": "gcip"
+      },
+      {
+        "hints": [
+          "This file format is used for sound files in GCP",
+          "It's a compressed version of M4A files",
+          "Its extension ends with 'p'"
+        ],
+        "answer": "gcsp"
+      },
+      {
+        "hints": [
+          "This method is used to shift bits in GCP Studio",
+          "It's applied to deck files during compression",
+          "It involves moving bits left or right"
+        ],
+        "answer": "shift_bits"
+      },
+      {
+        "hints": [
+          "This data structure is used to display decks in GCP Studio",
+          "It's a hierarchical view of items",
+          "Its name suggests it shows a 'view' of a 'tree'"
+        ],
+        "answer": "Treeview"
+      },
+      {
+        "hints": [
+          "This library is used for playing audio in GCP Studio",
+          "It's a set of Python modules for multimedia applications",
+          "Its name is similar to a snake"
+        ],
+        "answer": "pygame"
+      },
+      {
+        "hints": [
+          "This method is used to extract GCP files",
+          "It's the opposite of compressing files",
+          "Its name suggests 'taking all out'"
+        ],
+        "answer": "extractall"
+      },
+      {
+        "hints": [
+          "This type of directory is used for temporary file operations in GCP Studio",
+          "It's created and deleted as needed during runtime",
+          "Its name suggests it's not permanent"
+        ],
+        "answer": "temp_dir"
+      },
+      {
+        "hints": [
+          "This file contains the main information about a GCP pack",
+          "It's in JSON format",
+          "Its name suggests it provides 'information'"
+        ],
+        "answer": "info.json"
+      },
+      {
+        "hints": [
+          "This method is used to show context menus in GCP Studio",
+          "It's triggered by right-clicking on items",
+          "Its name suggests it 'shows' a 'context' 'menu'"
+        ],
+        "answer": "show_context_menu"
+      },
+      {
+        "hints": [
+          "This library is used for creating custom themed widgets in GCP Studio",
+          "It's an extension of the standard tkinter library",
+          "Its name starts with 'custom'"
+        ],
+        "answer": "customtkinter"
+      },
+      {
+        "hints": [
+          "This method is used to create a new deck in GCP Studio",
+          "It opens a dialog for entering deck details",
+          "Its name suggests 'adding' a 'deck'"
+        ],
+        "answer": "add_deck"
+      },
+      {
+        "hints": [
+          "This method is used to save changes to a GCP file",
+          "It compresses the deck, image, and sound files",
+          "Its name suggests 'saving' a 'gcp'"
+        ],
+        "answer": "save_gcp"
+      },
+      {
+        "hints": [
+          "This method is used to open an existing GCP file",
+          "It extracts the contents of the GCP file",
+          "Its name suggests 'opening' a 'gcp'"
+        ],
+        "answer": "open_gcp"
+      },
+      {
+        "hints": [
+          "This widget is used for user input in GCP Studio",
+          "It allows users to enter text",
+          "Its name suggests 'entering' data"
+        ],
+        "answer": "Entry"
+      },
+      {
+        "hints": [
+          "This widget is used for displaying messages in GCP Studio",
+          "It shows text that can't be edited by the user",
+          "Its name suggests 'labeling' something"
+        ],
+        "answer": "Label"
+      },
+      {
+        "hints": [
+          "This method is used to update the image of a deck in the treeview",
+          "It resizes and displays the deck's image",
+          "Its name suggests 'updating' a 'tree item' 'image'"
+        ],
+        "answer": "update_tree_item_image"
+      },
+      {
+        "hints": [
+          "This method is used to compress the entire GCP pack",
+          "It creates a zip file containing all pack components",
+          "Its name suggests 'compressing' a 'pack'"
+        ],
+        "answer": "compress_pack"
+      },
+      {
+        "hints": [
+          "This method is used to rename files associated with a deck",
+          "It's called when a deck's ID is changed",
+          "Its name suggests 'renaming' 'associated' 'files'"
+        ],
+        "answer": "rename_associated_files"
+      },
+      {
+        "hints": [
+          "This method is used to replace the image of a deck",
+          "It allows users to select a new image file",
+          "Its name suggests 'replacing' an 'image'"
+        ],
+        "answer": "replace_image"
+      },
+      {
+        "hints": [
+          "This method is used to replace the sound of a deck",
+          "It allows users to select a new audio file",
+          "Its name suggests 'replacing' a 'sound'"
+        ],
+        "answer": "replace_sound"
+      },
+      {
+        "hints": [
+          "This method is used to play the sound associated with a deck",
+          "It uses pygame to play the audio file",
+          "Its name suggests 'playing' a 'sound'"
+        ],
+        "answer": "play_sound"
+      },
+      {
+        "hints": [
+          "This method is used to change the color of a deck",
+          "It opens a color chooser dialog",
+          "Its name suggests 'changing' a 'color'"
+        ],
+        "answer": "change_color"
+      },
+      {
+        "hints": [
+          "This method is used to download GCP packs from a remote source",
+          "It fetches packs listed in a packstore.json file",
+          "Its name suggests 'downloading' 'packs'"
+        ],
+        "answer": "download_packs"
+      },
+      {
+        "hints": [
+          "This class is the main class of GCP Studio",
+          "It initializes the application and sets up the UI",
+          "Its name combines 'GCP' and 'Studio'"
+        ],
+        "answer": "GCPStudio"
+      },
+      {
+        "hints": [
+          "This method is used to set up the user interface of GCP Studio",
+          "It creates all the necessary widgets and frames",
+          "Its name suggests 'setting up' the 'ui'"
+        ],
+        "answer": "setup_ui"
+      }
+    ]
+  }
