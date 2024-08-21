@@ -125,6 +125,7 @@ const PlayerScreen = ({
         ...prevState,
         buzzedIn: false,
         someoneElse: false,
+        buzzer: null,
       }));
     });
 
@@ -140,25 +141,25 @@ const PlayerScreen = ({
       case 'question':
         return (
           <div>
-            <h4 style={{ fontSize: '4rem' }}>{gameState.currentQuestion.deckName}</h4>
-            <p style={{ fontSize: '4rem' }}>{gameState.currentQuestion.hint}</p>
+            <h4 style={{ fontSize: '2rem' }}>{gameState.currentQuestion.deckName}</h4>
+            <p style={{ fontSize: '2rem' }}>{gameState.currentQuestion.hint}</p>
             {gameState.someoneElse && <p>{gameState.buzzer} buzzed in!</p>}
             {gameState.isMyTurn && !gameState.buzzedIn && (
-              <button style={{ fontSize: '3rem' }} onClick={handleMakeGuessClick}>Buzz in and Answer</button>
+              <button style={{ fontSize: '2rem' }} onClick={handleMakeGuessClick}>Buzz in and Answer</button>
             )}
           </div>
         );
       case 'judging':
         return (
           <div>
-            <h4 style={{ fontSize: '4rem' }}>{gameState.currentQuestion.deckName}</h4>
-            <p style={{ fontSize: '3rem' }}>{gameState.currentQuestion.hint}</p>
-            <p style={{ fontSize: '2rem' }}><strong>Answer:</strong> {gameState.currentQuestion.answer}</p>
+            <h4 style={{ fontSize: '2rem' }}>{gameState.currentQuestion.deckName}</h4>
+            <p style={{ fontSize: '2rem' }}>{gameState.currentQuestion.hint}</p>
+            <p style={{ fontSize: '1rem' }}><strong>Answer:</strong> {gameState.currentQuestion.answer}</p>
             {gameState.buzzer && (
               <div>
-                <p style={{ fontSize: '5rem' }}>{gameState.buzzer} buzzed in! Is the answer correct?</p>
-                <button style={{ fontSize: '3rem' }} onClick={() => submitJudgeDecision(true)}>Correct</button>
-                <button style={{ fontSize: '3rem' }} onClick={() => submitJudgeDecision(false)}>Incorrect</button>
+                <p style={{ fontSize: '1rem' }}>{gameState.buzzer} buzzed in! Is the answer correct?</p>
+                <button style={{ fontSize: '1rem' }} onClick={() => submitJudgeDecision(true)}>Correct</button>
+                <button style={{ fontSize: '1rem' }} onClick={() => submitJudgeDecision(false)}>Incorrect</button>
               </div>
             )}
           </div>
