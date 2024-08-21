@@ -183,6 +183,8 @@ function initializeLearnGame(io, sessions) {
                 currentPlayer.score += -1;
             }
             io.to(sessionId).emit('updatePointsLearn', { points: { [currentPlayer.name]: currentPlayer.score } });
+
+            const players = sessions[sessionId].players;
             io.to(sessionId).emit('updateLeaderboardLearn', players);
             moveToNextTurn(io, sessionId, sessions);
         });

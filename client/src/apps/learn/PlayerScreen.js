@@ -140,25 +140,25 @@ const PlayerScreen = ({
       case 'question':
         return (
           <div>
-            <h1>{gameState.currentQuestion.deckName}</h1>
-            <h2>{gameState.currentQuestion.hint}</h2>
+            <h4 style={{ fontSize: '4rem' }}>{gameState.currentQuestion.deckName}</h4>
+            <p style={{ fontSize: '4rem' }}>{gameState.currentQuestion.hint}</p>
             {gameState.someoneElse && <p>{gameState.buzzer} buzzed in!</p>}
             {gameState.isMyTurn && !gameState.buzzedIn && (
-              <button onClick={handleMakeGuessClick}>Buzz in and Answer</button>
+              <button style={{ fontSize: '3rem' }} onClick={handleMakeGuessClick}>Buzz in and Answer</button>
             )}
           </div>
         );
       case 'judging':
         return (
           <div>
-            <h4>{gameState.currentQuestion.deckName}</h4>
-            <p>{gameState.currentQuestion.hint}</p>
-            <p><strong>Answer:</strong> {gameState.currentQuestion.answer}</p>
+            <h4 style={{ fontSize: '4rem' }}>{gameState.currentQuestion.deckName}</h4>
+            <p style={{ fontSize: '3rem' }}>{gameState.currentQuestion.hint}</p>
+            <p style={{ fontSize: '2rem' }}><strong>Answer:</strong> {gameState.currentQuestion.answer}</p>
             {gameState.buzzer && (
               <div>
-                <p>{gameState.buzzer} buzzed in! Is the answer correct?</p>
-                <button onClick={() => submitJudgeDecision(true)}>Correct</button>
-                <button onClick={() => submitJudgeDecision(false)}>Incorrect</button>
+                <p style={{ fontSize: '5rem' }}>{gameState.buzzer} buzzed in! Is the answer correct?</p>
+                <button style={{ fontSize: '3rem' }} onClick={() => submitJudgeDecision(true)}>Correct</button>
+                <button style={{ fontSize: '3rem' }} onClick={() => submitJudgeDecision(false)}>Incorrect</button>
               </div>
             )}
           </div>
