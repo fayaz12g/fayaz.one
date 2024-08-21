@@ -1,0 +1,415 @@
+{
+    "id": "friends_trivia",
+    "name": "Friends Trivia",
+    "color": "pink-177",
+    "cards": [
+        {
+            "hints": [
+                "Who said it: 'Oh, I wish I could, but I don't want to.'"
+            ],
+            "answer": "Phoebe"
+        },
+        {
+            "hints": [
+                "What is Joey's agent's name?"
+            ],
+            "answer": "Estelle"
+        },
+        {
+            "hints": [
+                "Who said it: 'I mean, sure, I have my bad days, but then I remember what a cute smile I have.'"
+            ],
+            "answer": "Chandler"
+        },
+        {
+            "hints": [
+                "How many seasons of Friends are there in total?"
+            ],
+            "answer": "10 seasons"
+        },
+        {
+            "hints": [
+                "What meaningful gift does Ross buy Rachel in the Season 1 finale?"
+            ],
+            "answer": "An antique pin"
+        },
+        {
+            "hints": [
+                "Chandler couldn't remember which of Joey's sisters he kissed — can you?"
+            ],
+            "answer": "Mary-Angela"
+        },
+        {
+            "hints": [
+                "When Monica's cooking got a bad review, which fish dish was called out specifically?"
+            ],
+            "answer": "The mahi-mahi"
+        },
+        {
+            "hints": [
+                "What phenomenon scares the bejesus out of Chandler?"
+            ],
+            "answer": "Michael Flatley, 'Lord of the Dance'"
+        },
+        {
+            "hints": [
+                "Who said it: 'I say more dumb things before 9 a.m. than most people say all day.'"
+            ],
+            "answer": "Chandler"
+        },
+        {
+            "hints": [
+                "True or false: Ross says 'L is for love' in his famous 'L-O-V-E' speech."
+            ],
+            "answer": "False"
+        },
+        {
+            "hints": [
+                "In the series finale, where do Chandler and Monica decide to move to start a new life with their adopted twins?"
+            ],
+            "answer": "Westchester"
+        },
+        {
+            "hints": [
+                "What is the name of the actress who plays Joey's agent, Estelle Leonard?"
+            ],
+            "answer": "June Gable"
+        },
+        {
+            "hints": [
+                "What is the name of the restaurant where Monica works as a chef for most of the series?"
+            ],
+            "answer": "Alessandro's"
+        },
+        {
+            "hints": [
+                "Which Sprouse brother played Ross's son, Ben: Dylan or Cole?"
+            ],
+            "answer": "Cole"
+        },
+        {
+            "hints": [
+                "In the episode 'The One with Ross's Wedding,' who does Ross say the wrong name to at the altar?"
+            ],
+            "answer": "Emily"
+        },
+        {
+            "hints": [
+                "Which actress originally played the role of Ross's first ex-wife, Carol?"
+            ],
+            "answer": "Anita Barone"
+        },
+        {
+            "hints": [
+                "In the episode 'The One Where Everybody Finds Out,' who moves out of their apartment?"
+            ],
+            "answer": "Ross"
+        },
+        {
+            "hints": [
+                "Who has a turkey on their head first: Joey or Monica?"
+            ],
+            "answer": "Joey"
+        },
+        {
+            "hints": [
+                "What are the names of Joey's sisters?"
+            ],
+            "answer": "Gina, Mary Angela, Mary Therese, and Veronica"
+        },
+        {
+            "hints": [
+                "What is the name of Phoebe's husband who she marries to help him get a green card?"
+            ],
+            "answer": "Duncan Sullivan"
+        },
+        {
+            "hints": [
+                "What was the name of the character played by Adam Goldberg who lived with Chandler for a while?"
+            ],
+            "answer": "Eddie Menuek"
+        },
+        {
+            "hints": [
+                "What was engraved on the bracelet that Joey gave Chandler?"
+            ],
+            "answer": "'To my best bud.'"
+        },
+        {
+            "hints": [
+                "What is the name of the book that Joey keeps in the freezer?"
+            ],
+            "answer": "The Shining"
+        },
+        {
+            "hints": [
+                "What stuffed animal does Joey own?"
+            ],
+            "answer": "A penguin"
+        },
+        {
+            "hints": [
+                "What is the name of Chandler's ex-girlfriend who punches him in the face?"
+            ],
+            "answer": "Kathy"
+        },
+        {
+            "hints": [
+                "What's the name of Phoebe's very enthusiastic date, played by Alec Baldwin?"
+            ],
+            "answer": "Parker"
+        },
+        {
+            "hints": [
+                "What is the name of Phoebe's most famous song?"
+            ],
+            "answer": "'Smelly Cat'"
+        },
+        {
+            "hints": [
+                "What is the name of Joey's soap opera character who has a twin?"
+            ],
+            "answer": "Dr. Drake Ramoray"
+        },
+        {
+            "hints": [
+                "What is the name of Ross and Monica's dog when they were kids?"
+            ],
+            "answer": "Chi Chi"
+        },
+        {
+            "hints": [
+                "How long is the letter Rachel writes Ross at the beach house?"
+            ],
+            "answer": "18 pages, front and back"
+        },
+        {
+            "hints": [
+                "What does Ross famously scream when trying to help his friends move a couch?"
+            ],
+            "answer": "'Pivot!'"
+        },
+        {
+            "hints": [
+                "What name does Chandler's coworker call him?"
+            ],
+            "answer": "Toby"
+        },
+        {
+            "hints": [
+                "What's the name of Chandler's ex-roommate who was phased out of the group?"
+            ],
+            "answer": "Kip"
+        },
+        {
+            "hints": [
+                "What is the name of Joey's Cabbage Patch Kid?"
+            ],
+            "answer": "Alicia May Emory"
+        },
+        {
+            "hints": [
+                "How does Joey say he knows Mike when he sets Phoebe up on the blind date?"
+            ],
+            "answer": "From high school"
+        },
+        {
+            "hints": [
+                "Which of these is NOT a feature in Phoebe's homemade dollhouse: the Aroma room, a Tootsie-Rollaway bed, the Licorice Room, or a Red Hots hot tub?"
+            ],
+            "answer": "A Red Hots hot tub"
+        },
+        {
+            "hints": [
+                "What is the name of Ross's second wife's father?"
+            ],
+            "answer": "Stephen Waltham"
+        },
+        {
+            "hints": [
+                "Which letter encyclopedia volume does Joey buy?"
+            ],
+            "answer": "V"
+        },
+        {
+            "hints": [
+                "Who said it: 'Some girl ate Monica!'"
+            ],
+            "answer": "Joey"
+        },
+        {
+            "hints": [
+                "Who does Rachel set Chandler up with?"
+            ],
+            "answer": "Her boss, Joanna"
+        },
+        {
+            "hints": [
+                "How did Phoebe's brother Frank meet his wife Alice?"
+            ],
+            "answer": "Frank was Alice's student"
+        },
+        {
+            "hints": [
+                "Which of these was NOT one of Rachel's suggestions for a baby name: James, Willow, Rain, or Sandrine?"
+            ],
+            "answer": "Willow"
+        },
+        {
+            "hints": [
+                "How does Dr. Drake Ramoray die in Days of Our Lives?"
+            ],
+            "answer": "He falls down an elevator shaft"
+        },
+        {
+            "hints": [
+                "What does Pete aspire to become?"
+            ],
+            "answer": "A UFC champion"
+        },
+        {
+            "hints": [
+                "When Rachel and Ross are together, who is Ross threatened by?"
+            ],
+            "answer": "Mark"
+        },
+        {
+            "hints": [
+                "What is the profession of Joey's imaginary friend?"
+            ],
+            "answer": "Space cowboy"
+        },
+        {
+            "hints": [
+                "Phoebe dated David the scientist until he had to move where for work?"
+            ],
+            "answer": "Minsk, Belarus"
+        },
+        {
+            "hints": [
+                "What's the name of Mr. Tribbiani's mistress?"
+            ],
+            "answer": "Ronni"
+        },
+        {
+            "hints": [
+                "Who does Ross sleep with that sparked the classic phrase 'We were on a break!'?"
+            ],
+            "answer": "Chloe the copy girl"
+        },
+        {
+            "hints": [
+                "What does Rachel have a fear of?"
+            ],
+            "answer": "Swings"
+        },
+        {
+            "hints": [
+                "When Ross goes on his first date after divorcing Carol, who does he see at Benihana?"
+            ],
+            "answer": "Carol and Susan"
+        },
+        {
+            "hints": [
+                "What does Rachel's ex-fiancé Barry do for a living?"
+            ],
+            "answer": "Orthodontist"
+        },
+        {
+            "hints": [
+                "What fruit is Ross allergic to?"
+            ],
+            "answer": "Kiwi"
+        },
+        {
+            "hints": [
+                "Who said it: 'If you want to receive emails about my upcoming shows, please give me money so I can buy a computer.'"
+            ],
+            "answer": "Phoebe"
+        },
+        {
+            "hints": [
+                "Who plays the role of Phoebe's husband Mike Hannigan?"
+            ],
+            "answer": "Paul Rudd"
+        },
+        {
+            "hints": [
+                "Which famous American musician's poster did Joey have on his bedroom door?"
+            ],
+            "answer": "Led Zeppelin"
+        },
+        {
+            "hints": [
+                "Who said it: 'It's a Moo Point...it's like a cow's opinion.'"
+            ],
+            "answer": "Joey"
+        },
+        {
+            "hints": [
+                "What is the name of the soap opera that Joey stars in?"
+            ],
+            "answer": "Days of Our Lives"
+        },
+        {
+            "hints": [
+                "What's the name of the character played by Jennifer Saunders in the episode 'The One with Ross's Wedding'?"
+            ],
+            "answer": "Emily's stepmother"
+        },
+        {
+            "hints": [
+                "What does Ross give to Ugly Naked Guy to win him over?"
+            ],
+            "answer": "Muffin baskets"
+        },
+        {
+            "hints": [
+                "What is the name of Phoebe's sister?"
+            ],
+            "answer": "Ursula"
+        },
+        {
+            "hints": [
+                "What was the name of Ross and Monica's dog when they were kids?"
+            ],
+            "answer": "Chi-Chi"
+        },
+        {
+            "hints": [
+                "What is the name of Ross's second wife?"
+            ],
+            "answer": "Emily"
+        },
+        {
+            "hints": [
+                "What is the name of the character played by Reese Witherspoon in Friends?"
+            ],
+            "answer": "Jill Green"
+        },
+        {
+            "hints": [
+                "What name does Ross give to his failed self-defense technique?"
+            ],
+            "answer": "Unagi"
+        },
+        {
+            "hints": [
+                "What fruit is Ross allergic to?"
+            ],
+            "answer": "Kiwi"
+        },
+        {
+            "hints": [
+                "What is the name of Joey's sister that Chandler kisses?"
+            ],
+            "answer": "Mary Angela"
+        },
+        {
+            "hints": [
+                "What does Joey never share?"
+            ],
+            "answer": "Food"
+        }
+    ]
+}

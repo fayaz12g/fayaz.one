@@ -3,6 +3,7 @@ import AnimatedTitle from './AnimatedTitle.js';
 import ImprovHost from './improvimania/HostScreen.js';
 import GuessingHost from './guessing/HostScreen.js';
 import TriviaHost from './trivia/HostScreen.js';
+import LearnHost from './learn/HostScreen.js';
 
 const Hosts = ({
   socket,
@@ -130,40 +131,84 @@ const Hosts = ({
     />
   );
 
+  const renderLearnHost = () => (
+    <LearnHost
+      socket={socket}
+      ipAddress={serverIP}
+      sessionCreated={sessionCreated}
+      createSession={createSession}
+      gameStarted={gameStarted}
+      sessionId={sessionId}
+      players={players}
+      setPlayers={setPlayers}
+      rounds={rounds}
+      setRounds={setRounds}
+      currentRound={currentRound}
+      sessionList={sessionList}
+      leaderboard={leaderboard}
+      removePlayer={removePlayer}
+      titleTheme={titleTheme}
+      AudioPlayer={AudioPlayer}
+      isEndScene={isEndScene}
+      speakingTheme={speakingTheme}
+      guessingTheme={guessingTheme}
+      gameMode={gameMode}
+      setGameMode={setGameMode}
+      currentLine={currentLine}
+      isEndGame={isEndGame}
+      scriptFile={scriptFile}
+      setForceRemove={setForceRemove}
+      forceRemove={forceRemove}
+      setLeaderboard={setLeaderboard}
+    />
+  );
 
   return (
     <div>
       {!sessionCreated ? (
         <div className="App">
-          <h3>Pick a Game:</h3>
-          <button
-            onClick={() => {
-              setGame('improv');
-              sessionStorage.setItem('game', 'improv');
-              createSession('improv');
-            }}
-          >
-            <AnimatedTitle />
-          </button>
-          <br />
-          <button
-            onClick={() => {
-              setGame('guessing');
-              sessionStorage.setItem('game', 'guessing');
-              createSession('guessing');
-            }}
-          >
-            <AnimatedTitle title="Guessing" />
-          </button>
-          <br />
-          <button
-            onClick={() => {
-              setGame('trivia');
-              createSession('trivia');
-            }}
-          >
-            <AnimatedTitle title="Trivia" />
-          </button>
+          <div className="game-categories">
+            <div className="category">
+              <h3>Acting</h3>
+              <button
+                onClick={() => {
+                  setGame('improv');
+                  sessionStorage.setItem('game', 'improv');
+                  createSession('improv');
+                }}
+              >
+                <AnimatedTitle title="Improvimania" />
+              </button>
+            </div>
+            <div className="category">
+              <h3>Trivia</h3>
+              <button
+                onClick={() => {
+                  setGame('trivia');
+                  createSession('trivia');
+                }}
+              >
+                <AnimatedTitle title="Classic" />
+              </button>
+              <button
+                onClick={() => {
+                  setGame('guessing');
+                  sessionStorage.setItem('game', 'guessing');
+                  createSession('guessing');
+                }}
+              >
+                <AnimatedTitle title="Guessing" />
+              </button>
+              <button
+                onClick={() => {
+                  setGame('learn');
+                  createSession('learn');
+                }}
+              >
+                <AnimatedTitle title="Learning" />
+              </button>
+            </div>
+          </div>
         </div>
       ) : game === 'improv' ? (
         <div>{renderImprovHost()}</div>
@@ -171,6 +216,8 @@ const Hosts = ({
         <div>{renderGuessingHost()}</div>
       ) : game === 'trivia' ? (
         <div>{renderTriviaHost()}</div>
+      ) : game === 'learn' ? (
+        <div>{renderLearnHost()}</div>
       ) : null}
     </div>
   );

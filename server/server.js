@@ -3,9 +3,11 @@ const http = require('http');
 const { Server } = require("socket.io");
 const serverVersion = '0.8 Super';
 const os = require('os');
-const improv = require('./improv');
-const guessing = require('./guessing');
-const trivia = require('./trivia');
+const improv = require('./apps/improv');
+const guessing = require('./apps/guessing');
+const trivia = require('./apps/trivia');
+const learn = require('./apps/learn');
+
 
 const app = express();
 const server = http.createServer(app);
@@ -75,6 +77,7 @@ io.on('connection', (socket) => {
             sessionId: shortSessionId, 
             game: game,
             players: [],
+            currentPlayerIndex: 0,
             gameStarted: false,
             hostSocket: socket.id
         };
@@ -173,6 +176,9 @@ guessing.initializeGuessingGame(io, sessions);
 
 // Initialize the trivia game
 trivia.initializeTriviaGame(io, sessions);
+
+// Initialize the learning game
+learn.initializeLearnGame(io, sessions);
 
 const PORT = process.env.PORT || 443;
 server.listen(PORT, () => {

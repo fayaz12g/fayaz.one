@@ -29,6 +29,13 @@
             "name": "Literary Legends",
             "color": "indigo"
         }
-    }
+    },
+    {
+      "pink": {
+          "id": "friends",
+          "name": "FRIENDS Trivia",
+          "color": "red-177"
+      }
+  }
     ]
   }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ImprovPlayer from './improvimania/PlayerScreen';
 import GuessingPlayer from './guessing/PlayerScreen';
 import TriviaPlayer from './trivia/PlayerScreen';
+import LearnPlayer from './learn/PlayerScreen';
 
 const Players = ({
   socket,
@@ -151,6 +152,38 @@ const Players = ({
     />
   );
 
+  const renderLearnPlayerScreen = () => (
+    <LearnPlayer
+      socket={socket}
+      isEndGame={isEndGame}
+      joinedSession={joinedSession}
+      sessionId={sessionId}
+      setSessionId={setSessionId}
+      playerName={playerName}
+      setPlayerName={setPlayerName}
+      joinSession={joinSession}
+      gameStarted={gameStarted}
+      setGameStarted={setGameStarted}
+      players={players}
+      playerRole={playerRole}
+      isEndScene={isEndScene}
+      currentLine={currentLine}
+      isSpeaker={isSpeaker}
+      nextLine={nextLine}
+      guessAdlibber={guessAdlibber}
+      sessionList={sessionList}
+      leaderboard={leaderboard}
+      kicked={kicked}
+      titleTheme={titleTheme}
+      Audio={Audio}
+      speakingTheme={speakingTheme}
+      guessingTheme={guessingTheme}
+      sentGuess={sentGuess}
+      game={game}
+      setLeaderboard={setLeaderboard}
+    />
+  );
+
   return (
     <div>
       {!game ? (
@@ -225,7 +258,9 @@ const Players = ({
       ) : game === 'guessing' ? (
         renderGuessingPlayerScreen()
     ) : game === 'trivia' ? (
-        renderTriviaPlayerScreen()
+      renderTriviaPlayerScreen()
+    ): game === 'learn' ? (
+        renderLearnPlayerScreen()
       ) :null}
     </div>
   );
